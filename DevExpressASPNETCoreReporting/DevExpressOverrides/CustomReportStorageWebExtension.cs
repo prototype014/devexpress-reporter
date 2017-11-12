@@ -63,8 +63,6 @@ namespace DevExpressASPNETCoreReporting.DevExpressOverrides
 
         public override bool IsValidUrl(string url)
         {
-            // Check if the specified URL is valid for the current report storage.
-            // In this example, a URL should be a string containing a numeric value that is used as a data row primary key.
             int n;
             return int.TryParse(url, out n);
         }
@@ -72,49 +70,37 @@ namespace DevExpressASPNETCoreReporting.DevExpressOverrides
 
         public override void SetData(XtraReport report, string url)
         {
-            /*
-            // Write a report to the storage under the specified URL.
-            DataRow row = reportsTable.Rows.Find(int.Parse(url));
-
-            if (row != null)
-            {
+            int id = 0;
+            int.TryParse(url, out id);
+            Report dbReport = _db.Reports.FirstOrDefault(r => r.Id == id);
+            if (dbReport != null) {
                 using (MemoryStream ms = new MemoryStream())
                 {
                     report.SaveLayoutToXml(ms);
-                    row["LayoutData"] = ms.GetBuffer();
+                    dbReport.Content = ms.GetBuffer();
                 }
-                reportsTableAdapter.Update(catalogDataSet);
-                catalogDataSet.AcceptChanges();
+                _db.Entry(dbReport).State = EntityState.Modified;
+                _db.SaveChanges();
             }
-
-            //Now save this row as an entity
-            */
         }
 
 
         public override string SetNewData(XtraReport report, string defaultUrl)
         {
-            /*
-            // Save a report to the storage under a new URL. 
-            // The defaultUrl parameter contains the report display name specified by a user.
-            DataRow row = reportsTable.NewRow();
+            Report dbReport = new Report()
+            {
+                Name = defaultUrl
+            };
 
-            row["DisplayName"] = defaultUrl;
             using (MemoryStream ms = new MemoryStream())
             {
                 report.SaveLayoutToXml(ms);
-                row["LayoutData"] = ms.GetBuffer();
+                dbReport.Content = ms.GetBuffer();
             }
 
-            reportsTable.Rows.Add(row);
-            reportsTableAdapter.Update(catalogDataSet);
-            catalogDataSet.AcceptChanges();
-
-            // Refill the dataset to obtain the actual value of the new row's autoincrement key field.
-            reportsTableAdapter.Fill(catalogDataSet.Reports);
-            return catalogDataSet.Reports.FirstOrDefault(x => x.DisplayName == defaultUrl).ReportID.ToString();
-            */
-            return "";
+            _db.Reports.Add(dbReport);
+            _db.SaveChanges();
+            return dbReport.Id.ToString();
         }
     }
 }
