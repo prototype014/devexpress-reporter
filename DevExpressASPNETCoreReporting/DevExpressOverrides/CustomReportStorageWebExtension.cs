@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using DevExpress.XtraReports.UI;
 using DevExpress.XtraReports.Web.Extensions;
-using System.Data;
 using DevExpressASPNETCoreReporting.Data;
 using DevExpressASPNETCoreReporting.Models;
 using Microsoft.EntityFrameworkCore;

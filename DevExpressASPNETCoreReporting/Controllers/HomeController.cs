@@ -5,11 +5,18 @@ using DevExpress.XtraReports.Web.ReportDesigner;
 using DevExpress.XtraReports.Web.WebDocumentViewer;
 using DevExpressASPNETCoreReporting.Models;
 using Microsoft.AspNetCore.Mvc;
+using DevExpressASPNETCoreReporting.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DevExpressASPNETCoreReporting.Controllers {
     public class HomeController : Controller {
         public IActionResult Index() {
-            return View();
+            var optionsBuilder = new DbContextOptionsBuilder<ReportContext>();
+            optionsBuilder.UseSqlServer("Data Source=LOCALHOST\\SQLExpress;Initial Catalog=ManageWithReports;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            ReportContext _db = new ReportContext(optionsBuilder.Options);
+            List<Report> model = _db.Reports.ToList();
+            return View(model);
         }
 
         public IActionResult ReportDesigner() {
