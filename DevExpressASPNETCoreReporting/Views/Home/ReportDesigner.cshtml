@@ -1,0 +1,27 @@
+﻿@model DevExpressASPNETCoreReporting.Models.ClientControlModel
+@{
+    ViewData["Title"] = "Report Designer";
+}
+<h2>@ViewData["Title"].</h2>
+@section Scripts {
+    <link rel="stylesheet" href="~/lib/xtrareportsjs/css/report-designer-light.min.css" />
+    <script type="text/html" src="~/lib/xtrareportsjs/html/report-designer.html"></script>
+    <script src="~/lib/xtrareportsjs/js/report-designer.min.js"></script>
+    <script src="~/lib/xtrareportsjs/js/localization/report-designer.en.js"></script>
+    <script type="text/javascript">
+        (function initialize() {
+            var reportUrl = "";//'XtraReportsDemos.TableReport.Report';
+            var modelJson = ko.observable(@Html.Raw(Model.ModelJson));
+            var designerModel = ko.observable(null);
+            ko.applyBindings({ designerModelToBind: designerModel, observableJsonModel: modelJson }, $("#reportDesignerContainer")[0]);
+        })()
+    </script>
+}
+<style>
+    #reportDesignerContainer {
+        height: 800px;
+        width: 100%;
+    }
+</style>
+
+<div id="reportDesignerContainer" data-bind="dxReportDesigner: { designerModel: designerModelToBind, initializationData: observableJsonModel }"></div>

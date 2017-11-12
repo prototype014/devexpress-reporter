@@ -1,0 +1,29 @@
+﻿@model DevExpressASPNETCoreReporting.Models.ClientControlModel
+@{
+    ViewData["Title"] = "Report Viewer";
+}
+<h2>@ViewData["Title"].</h2>
+@section Scripts {
+    <link rel="stylesheet" href="~/lib/xtrareportsjs/css/web-document-viewer-light.min.css" />
+    <script type="text/html" src="~/lib/xtrareportsjs/html/web-document-viewer.html">
+    </script>
+    <script src="~/lib/xtrareportsjs/js/web-document-viewer.js"></script>
+    <script src="~/lib/xtrareportsjs/js/localization/web-document-viewer.en.js"></script>
+    <script type="text/javascript">
+        (function initialize() {
+            var modelJson = @Html.Raw(Model.ModelJson);
+            var viewerModel = ko.observable(null);
+            var openReportSubscription = viewerModel.subscribe(function (newModel) {
+                    newModel && newModel.OpenReport('Categories') && openReportSubscription.dispose();
+                });
+            ko.applyBindings($.extend(modelJson, { viewerModel: viewerModel }), $("#reportViewerContainer")[0]);
+        })()
+    </script>
+}
+<style>
+    #reportViewerContainer {
+        width: 100%;
+        height: 800px;
+    }
+</style>
+<div id="reportViewerContainer" data-bind="dxReportViewer: $data"></div>
