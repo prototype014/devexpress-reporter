@@ -20,6 +20,8 @@ using DevExpress.XtraReports.Web.ReportDesigner;
 using DevExpress.XtraReports.Web.QueryBuilder;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using DevExpressASPNETCoreReporting.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevExpressASPNETCoreReporting {
     public class Startup {
@@ -44,17 +46,7 @@ namespace DevExpressASPNETCoreReporting {
                    manager.FeatureProviders.Remove(oldMetadataReferenceFeatureProvider);
                    manager.FeatureProviders.Add(new ReferencesMetadataReferenceFeatureProvider());
                });
-            //services.Configure((Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions options) => {
-            //    var prev = options.CompilationCallback;
-            //    options.CompilationCallback = (context) =>
-            //    {
-            //        prev?.Invoke(context);
-
-            //        var reference = Microsoft.CodeAnalysis.MetadataReference.CreateFromFile(typeof(DevExpress.Charts.Model.Axis).Assembly.Location);
-            //        context.Compilation = context.Compilation.AddReferences(reference);
-            //    };
-            //});
-            this.serviceRegistrator = new AppBuilderServiceRegistrator(services);
+              this.serviceRegistrator = new AppBuilderServiceRegistrator(services);
             WebDocumentViewerBootstrapper.RegisterStandardServices(serviceRegistrator);
             QueryBuilderBootstrapper.RegisterStandardServices(serviceRegistrator);
             ReportDesignerBootstrapper.RegisterStandardServices(serviceRegistrator,
@@ -66,8 +58,9 @@ namespace DevExpressASPNETCoreReporting {
             );
             services.AddTransient<ISqlDataSourceConnectionParametersPatcher, BlankSqlDataSourceConnectionParametersPatcher>();
             services.AddTransient<IWebDocumentViewerUriProvider, ASPNETCoreUriProvider>();
-            //services.AddSingleton<IDataSourceWizardConnectionStringsProvider, DataSourceWizardConnectionStringsProvider>();
             services.AddTransient<IWebDocumentViewerReportResolver, ASPNETCoreReportResolver>();
+            services.AddDbContext<ReportContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("ManageConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,7 +88,7 @@ namespace DevExpressASPNETCoreReporting {
             serviceRegistrator.UseGeneratedServices(app.ApplicationServices);
             DefaultWebDocumentViewerContainer.Current = DefaultQueryBuilderContainer.Current = DefaultReportDesignerContainer.Current = app.ApplicationServices;
 
-            ReportStorageWebExtension.RegisterExtensionGlobal(new CustomReportStorageWebExtension(env));
+            ReportStorageWebExtension.RegisterExtensionGlobal(new CustomReportStorageWebExtension());
         }
     }
 }
