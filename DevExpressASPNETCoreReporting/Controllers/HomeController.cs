@@ -44,16 +44,16 @@ namespace DevExpressASPNETCoreReporting.Controllers {
             MemoryStream ms = new MemoryStream(dbReport.Content);
             myReport.LoadLayoutFromXml(ms);
 
-            //var clientSideModelGenerator = new WebDocumentViewerClientSideModelGenerator();
-            //var clientSideModelSettings = new ClientSideModelSettings { IncludeLocalization = false };
-            ////var report = new CategoriesReport();
-            //var modelString = clientSideModelGenerator.GetJsonModelScript((XtraReport) null/*report*/, "/DXXRDV", clientSideModelSettings);
-            //var model = new ClientControlModel {
-            //    ModelJson = modelString
-            //};
+            var clientSideModelGenerator = new WebDocumentViewerClientSideModelGenerator();
+            var clientSideModelSettings = new ClientSideModelSettings { IncludeLocalization = false };
+            //var report = new CategoriesReport();
+            var modelString = clientSideModelGenerator.GetJsonModelScript(myReport, "/DXXRDV", clientSideModelSettings);
+            var model = new ClientControlModel
+            {
+                ModelJson = modelString
+            };
 
-
-            return View(myReport);
+            return View(model);
 
         }
 

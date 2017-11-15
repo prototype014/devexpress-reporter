@@ -1,4 +1,4 @@
-﻿@model DevExpress.XtraReports.UI.XtraReport
+﻿@model DevExpressASPNETCoreReporting.Models.ClientControlModel
 @{
     ViewData["Title"] = "Report Viewer";
 }
@@ -9,6 +9,13 @@
     </script>
     <script src="~/lib/xtrareportsjs/js/web-document-viewer.js"></script>
     <script src="~/lib/xtrareportsjs/js/localization/web-document-viewer.en.js"></script>
+<script type="text/javascript">
+     (function initialize() {
+         var modelJson = @Html.Raw(Model.ModelJson);
+         var viewerModel = ko.observable(null);
+         ko.applyBindings($.extend(modelJson, { viewerModel: viewerModel }), $("#reportViewerContainer")[0]);
+     })()
+</script>
 }
 
 <style>
@@ -17,8 +24,4 @@
         height: 700px;
     }
 </style>
-
-@Html.DevExpress().WebDocumentViewer(settings =>
-{
-    settings.Name = "webDocumentViewer";
-}).Bind(Model).GetHtml()
+<div id="reportViewerContainer" data-bind="dxReportViewer: $data"></div>
