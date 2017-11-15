@@ -21,7 +21,7 @@ namespace DevExpressASPNETCoreReporting.Controllers {
             return View(model);
         }
 
-        public IActionResult ReportDesigner() {
+        public IActionResult CreateReport() {
             var contentGenerator = new ReportDesignerClientSideModelGenerator();
             var clientSideModelSettings = new ClientSideModelSettings { IncludeLocalization = false };
             var globalDataSources = new Dictionary<string, object>();
@@ -31,7 +31,30 @@ namespace DevExpressASPNETCoreReporting.Controllers {
             var model = new ClientControlModel {
                 ModelJson = modelString
             };
-            return View(model);
+            return View("ReportDesigner", model);
+        }
+
+        public IActionResult EditReport(int id)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ReportContext>();
+            optionsBuilder.UseSqlServer("Data Source=LOCALHOST\\SQLExpress;Initial Catalog=ManageWithReports;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            ReportContext _db = new ReportContext(optionsBuilder.Options);
+
+            XtraReport myReport = new XtraReport();
+            Report dbReport = _db.Reports.FirstOrDefault(r => r.Id == id);
+            MemoryStream ms = new MemoryStream(dbReport.Content);
+            myReport.LoadLayoutFromXml(ms);
+
+            var contentGenerator = new ReportDesignerClientSideModelGenerator();
+            var clientSideModelSettings = new ClientSideModelSettings { IncludeLocalization = false };
+            var globalDataSources = new Dictionary<string, object>();
+            globalDataSources.Add("nwindDS", new CategoriesReport().DataSource);
+            var modelString = contentGenerator.GetJsonModelScript(myReport, globalDataSources, "/DXXRD", "/DXXRDV", "/DXQB", clientSideModelSettings);
+            var model = new ClientControlModel
+            {
+                ModelJson = modelString
+            };
+            return View("ReportDesigner", model);
         }
 
         public IActionResult ReportViewer(int id) {

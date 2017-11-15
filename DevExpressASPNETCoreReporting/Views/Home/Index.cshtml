@@ -8,6 +8,7 @@
     <thead>
         <tr>
             <th>Report Name</th>
+            <th colspan="2" class="text-right"><a asp-area="" asp-controller="Home" asp-action="CreateReport" class="btn btn-success">Add Report</a></th>
         </tr>
     </thead>
     <tbody>
@@ -15,7 +16,13 @@
         {
             <tr>
                 <td>
-                    <a href="~/Home/ReportViewer/@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td width="70px" class="text-right">
+                    <a href="~/Home/ReportViewer/@item.Id" class="btn btn-primary">View</a>
+                </td>
+                <td width="100px" class="text-right">
+                    <a href="~/Home/EditReport/@item.Id" class="btn btn-warning">Design</a>
                 </td>
             </tr>
         }
