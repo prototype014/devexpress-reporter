@@ -10,59 +10,53 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.IO;
 using System.Text;
+using DevExpress.XtraReports.Native;
+using System.Data;
+using DevExpress.DataAccess.Sql;
 
 namespace DevExpressASPNETCoreReporting.Controllers {
     public class HomeController : Controller {
         public IActionResult Index() {
-            var optionsBuilder = new DbContextOptionsBuilder<ReportContext>();
-            optionsBuilder.UseSqlServer("Data Source=LOCALHOST\\SQLExpress;Initial Catalog=ManageWithReports;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-            ReportContext _db = new ReportContext(optionsBuilder.Options);
+            ReportContext _db = GetDB();
             List<Report> model = _db.Reports.ToList();
             return View(model);
         }
 
         public IActionResult CreateReport() {
-            var contentGenerator = new ReportDesignerClientSideModelGenerator();
-            var clientSideModelSettings = new ClientSideModelSettings { IncludeLocalization = false };
-            var globalDataSources = new Dictionary<string, object>();
-            globalDataSources.Add("nwindDS", new CategoriesReport().DataSource);
-            var report = new XtraReport();
-            var modelString = contentGenerator.GetJsonModelScript(report, globalDataSources, "/DXXRD", "/DXXRDV", "/DXQB", clientSideModelSettings);
-            var model = new ClientControlModel {
-                ModelJson = modelString
+            var myReport = new XtraReport();
+            var model = new Models.ReportDesignerModel
+            {
+                DataSource = CreateData(),
+                // Open your report here. 
+                Report = myReport
             };
             return View("ReportDesigner", model);
         }
 
         public IActionResult EditReport(int id)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<ReportContext>();
-            optionsBuilder.UseSqlServer("Data Source=LOCALHOST\\SQLExpress;Initial Catalog=ManageWithReports;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-            ReportContext _db = new ReportContext(optionsBuilder.Options);
+            ReportContext _db = GetDB();
 
             XtraReport myReport = new XtraReport();
             Report dbReport = _db.Reports.FirstOrDefault(r => r.Id == id);
             MemoryStream ms = new MemoryStream(dbReport.Content);
+            var globalDataSources = new Dictionary<string, object>();
             myReport.LoadLayoutFromXml(ms);
 
-            var contentGenerator = new ReportDesignerClientSideModelGenerator();
-            var clientSideModelSettings = new ClientSideModelSettings { IncludeLocalization = false };
-            var globalDataSources = new Dictionary<string, object>();
-            globalDataSources.Add("nwindDS", new CategoriesReport().DataSource);
-            var modelString = contentGenerator.GetJsonModelScript(myReport, globalDataSources, "/DXXRD", "/DXXRDV", "/DXQB", clientSideModelSettings);
-            var model = new ClientControlModel
+            var model = new Models.ReportDesignerModel
             {
-                ModelJson = modelString
+                DataSource = CreateData(),
+                // Open your report here. 
+                Report = myReport
             };
             return View("ReportDesigner", model);
         }
 
         public IActionResult ReportViewer(int id) {
-            var optionsBuilder = new DbContextOptionsBuilder<ReportContext>();
-            optionsBuilder.UseSqlServer("Data Source=LOCALHOST\\SQLExpress;Initial Catalog=ManageWithReports;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-            ReportContext _db = new ReportContext(optionsBuilder.Options);
+            ReportContext _db = GetDB();
 
             XtraReport myReport = new XtraReport();
+            myReport.Extensions[SerializationService.Guid] = DataTableSerializer.Name;
             Report dbReport = _db.Reports.FirstOrDefault(r => r.Id == id);
             MemoryStream ms = new MemoryStream(dbReport.Content);
             myReport.LoadLayoutFromXml(ms);
@@ -70,18 +64,28 @@ namespace DevExpressASPNETCoreReporting.Controllers {
             var clientSideModelGenerator = new WebDocumentViewerClientSideModelGenerator();
             var clientSideModelSettings = new ClientSideModelSettings { IncludeLocalization = false };
             //var report = new CategoriesReport();
-            var modelString = clientSideModelGenerator.GetJsonModelScript(myReport, "/DXXRDV", clientSideModelSettings);
-            var model = new ClientControlModel
-            {
-                ModelJson = modelString
-            };
-
-            return View(model);
-
+            return View(myReport);
         }
 
         public IActionResult Error() {
             return View();
+        }
+
+        private ReportContext GetDB()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ReportContext>();
+            optionsBuilder.UseSqlServer("Data Source=LOCALHOST\\SQLExpress;Initial Catalog=ManageWithReports;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            return new ReportContext(optionsBuilder.Options);
+        }
+
+        private SqlDataSource CreateData()
+        {
+            SqlDataSource dataSource = new SqlDataSource("ManageConnection");
+            SelectQuery query = SelectQueryFluentBuilder.AddTable("Product").SelectAllColumnsFromTable().Build("Products");
+            dataSource.Queries.Add(query);
+            dataSource.RebuildResultSchema();
+
+            return dataSource;
         }
     }
 }

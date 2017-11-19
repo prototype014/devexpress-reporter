@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.aspnet.mvc.js)
-* Version: 17.1.3
-* Build date: Wed May 17 2017
+* Version: 17.2.3
+* Build date: Wed Nov 15 2017
 *
 * Copyright (c) 2012 - 2017 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,13 +10,13 @@
 ! function(factory) {
     if ("function" === typeof define && define.amd) {
         define(function(require, exports, module) {
-            module.exports = factory(require("jquery"), require("./ui/set_template_engine"), require("./ui/widget/ui.template_base").renderedCallbacks, require("./core/guid"))
+            module.exports = factory(require("jquery"), require("./ui/set_template_engine"), require("./ui/widget/ui.template_base").renderedCallbacks, require("./core/guid"), require("./ui/validation_engine"), require("./core/utils/iterator"))
         })
     } else {
         var ui = DevExpress.ui;
-        DevExpress.aspnet = factory(window.jQuery, ui && ui.setTemplateEngine, ui && ui.templateRendered, DevExpress.data.Guid)
+        DevExpress.aspnet = factory(window.jQuery, ui && ui.setTemplateEngine, ui && ui.templateRendered, DevExpress.data.Guid, DevExpress.validationEngine, DevExpress.utils.iterator)
     }
-}(function($, setTemplateEngine, templateRendered, Guid) {
+}(function($, setTemplateEngine, templateRendered, Guid, validationEngine, iteratorUtils) {
     var templateCompiler = createTemplateCompiler();
 
     function createTemplateCompiler() {
@@ -44,7 +44,7 @@
                 bag.push(encode ? encodeHtml(value) : value);
                 bag.push(");")
             } else {
-                bag.push(code)
+                bag.push(code + "\n")
             }
         }
         return function(text) {
@@ -59,7 +59,7 @@
                 acceptCode(bag, tmp[0]);
                 acceptText(bag, tmp[1])
             }
-            bag.push("};", "return _.join('')");
+            bag.push("}", "return _.join('')");
             return new Function("obj", bag.join(""))
         }
     }
@@ -84,17 +84,49 @@
             }
         }
     }
+
+    function getValidationSummary(validationGroup) {
+        var result;
+        $(".dx-validationsummary").each(function(_, element) {
+            var summary = $(element).data("dxValidationSummary");
+            if (summary && summary.option("validationGroup") === validationGroup) {
+                result = summary;
+                return false
+            }
+        });
+        return result
+    }
+
+    function createValidationSummaryItemsFromValidators(validators, editorNames) {
+        var items = [];
+        iteratorUtils.each(validators, function(_, validator) {
+            var widget = validator.$element().data("dx-validation-target");
+            if (widget && $.inArray(widget.option("name"), editorNames) > -1) {
+                items.push({
+                    text: widget.option("validationError.message"),
+                    validator: validator
+                })
+            }
+        });
+        return items
+    }
+
+    function createComponent(name, options, id, validatorOptions) {
+        var render = function(_, container) {
+            var selector = "#" + id.replace(/[^\w-]/g, "\\$&"),
+                $component = $(selector, container)[name](options);
+            if ($.isPlainObject(validatorOptions)) {
+                $component.dxValidator(validatorOptions)
+            }
+            templateRendered.remove(render)
+        };
+        templateRendered.add(render)
+    }
     return {
+        createComponent: createComponent,
         renderComponent: function(name, options, id, validatorOptions) {
             id = id || "dx-" + new Guid;
-            var render = function(_, container) {
-                var $component = $("#" + id, container)[name](options);
-                if ($.isPlainObject(validatorOptions)) {
-                    $component.dxValidator(validatorOptions)
-                }
-                templateRendered.remove(render)
-            };
-            templateRendered.add(render);
+            createComponent(name, options, id, validatorOptions);
             return '<div id="' + id + '"></div>'
         },
         getEditorValue: function(inputName) {
@@ -108,7 +140,19 @@
             }
         },
         setTemplateEngine: function() {
-            setTemplateEngine(createTemplateEngine())
+            if (setTemplateEngine) {
+                setTemplateEngine(createTemplateEngine())
+            }
+        },
+        createValidationSummaryItems: function(validationGroup, editorNames) {
+            var groupConfig, items, summary = getValidationSummary(validationGroup);
+            if (summary) {
+                groupConfig = validationEngine.getGroupConfig(validationGroup);
+                if (groupConfig) {
+                    items = createValidationSummaryItemsFromValidators(groupConfig.validators, editorNames);
+                    items.length && summary.option("items", items)
+                }
+            }
         }
     }
 });

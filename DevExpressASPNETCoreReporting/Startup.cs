@@ -22,6 +22,10 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using DevExpressASPNETCoreReporting.Data;
 using Microsoft.EntityFrameworkCore;
+using DevExpress.XtraReports.Native;
+using DevExpress.Xpo;
+using DevExpress.AspNetCore;
+using DevExpress.AspNetCore.Reporting;
 
 namespace DevExpressASPNETCoreReporting {
     public class Startup {
@@ -47,20 +51,21 @@ namespace DevExpressASPNETCoreReporting {
                    manager.FeatureProviders.Add(new ReferencesMetadataReferenceFeatureProvider());
                });
               this.serviceRegistrator = new AppBuilderServiceRegistrator(services);
-            WebDocumentViewerBootstrapper.RegisterStandardServices(serviceRegistrator);
-            QueryBuilderBootstrapper.RegisterStandardServices(serviceRegistrator);
-            ReportDesignerBootstrapper.RegisterStandardServices(serviceRegistrator,
-                () => serviceRegistrator.GetService<IReportManagementService>(),
-                () => serviceRegistrator.GetService<IStoragesCleaner>(),
-                () => serviceRegistrator.GetService<IConnectionProviderFactory>(),
-                () => serviceRegistrator.GetService<IReportSqlDataSourceWizardService>(),
-                () => serviceRegistrator.GetService<ISqlDataSourceConnectionParametersPatcher>()
-            );
+            
             services.AddTransient<ISqlDataSourceConnectionParametersPatcher, BlankSqlDataSourceConnectionParametersPatcher>();
             services.AddTransient<IWebDocumentViewerUriProvider, ASPNETCoreUriProvider>();
-            services.AddTransient<IWebDocumentViewerReportResolver, ASPNETCoreReportResolver>();
             services.AddDbContext<ReportContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ManageConnection")));
+
+            // Register reporting services in an application's dependency injection container. 
+            services.AddDevExpressControls();
+            services.ConfigureReportingServices(configurator => {
+                configurator.ConfigureReportDesigner(designerConfigurator => {
+                    designerConfigurator.RegisterDataSourceWizardConfigFileConnectionStringsProvider();
+                });
+            });
+            // Adds MVC controllers for processing requests with the default routes. 
+            services.AddMvc().AddDefaultReportingControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +83,7 @@ namespace DevExpressASPNETCoreReporting {
             }
 
             app.UseStaticFiles();
+            app.UseDevExpressControls();
 
             app.UseMvc(routes => {
                 routes.MapRoute(
@@ -87,6 +93,7 @@ namespace DevExpressASPNETCoreReporting {
 
             serviceRegistrator.UseGeneratedServices(app.ApplicationServices);
             DefaultWebDocumentViewerContainer.Current = DefaultQueryBuilderContainer.Current = DefaultReportDesignerContainer.Current = app.ApplicationServices;
+            SerializationService.RegisterSerializer(DataTableSerializer.Name, new DataTableSerializer());
 
             ReportStorageWebExtension.RegisterExtensionGlobal(new CustomReportStorageWebExtension());
         }

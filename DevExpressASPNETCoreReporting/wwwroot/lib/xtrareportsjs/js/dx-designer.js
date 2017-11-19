@@ -1,24 +1,32 @@
-/*! DevExpress HTML/JS Designer - v17.1.3 - 2017-05-02
-* http://www.devexpress.com
-* Copyright (c) 2017 Developer Express Inc; Licensed Commercial */
+/**
+* DevExpress HTML/JS Analytics Core (dx-designer.js)
+* Version: 17.2.3
+* Build date: 2017-11-14
+* Copyright (c) 2012 - 2017 Developer Express Inc. ALL RIGHTS RESERVED
+* License: https://www.devexpress.com/Support/EULAs/NetComponents.xml
+*/
 
 var DevExpress;
 (function (DevExpress) {
     var JS;
     (function (JS) {
-        JS.Localization = {
-            messages: {},
-            addCultureInfo: function (json) {
-                $.extend(JS.Localization.messages, json.messages);
-            },
-            localize: function (val) {
-                return JS.Localization.messages[val];
-            },
-            parseDate: function (val) {
+        var Localization;
+        (function (Localization) {
+            Localization.Globalize = DevExpress.JS.Localization.Globalize || window["Globalize"];
+            Localization.messages = {};
+            function addCultureInfo(json) {
+                $.extend(Localization.messages, json.messages);
+            }
+            Localization.addCultureInfo = addCultureInfo;
+            function localize(val) {
+                return Localization.messages[val];
+            }
+            Localization.localize = localize;
+            function parseDate(val) {
                 if (val) {
                     if (val instanceof Date)
                         return val;
-                    var enGlobalize = new window["Globalize"]("en");
+                    var enGlobalize = new Localization.Globalize("en");
                     var date = enGlobalize["parseDate"](val, { raw: "MM/dd/yyyy HH:mm:ss" });
                     if (!date)
                         date = enGlobalize["parseDate"](val, { raw: "yyyy-MM-dd" });
@@ -26,7 +34,16 @@ var DevExpress;
                 }
                 return null;
             }
-        };
+            Localization.parseDate = parseDate;
+            function selectPlaceholder() {
+                return DevExpress.Designer.getLocalization("Select...", "ASPxReportsStringId.ReportDesigner_PropertyGrid_Editor_EmptyText");
+            }
+            Localization.selectPlaceholder = selectPlaceholder;
+            function noDataText() {
+                return DevExpress.Designer.getLocalization("No data to display", "ASPxReportsStringId.ReportDesigner_DataPreview_Empty");
+            }
+            Localization.noDataText = noDataText;
+        })(Localization = JS.Localization || (JS.Localization = {}));
     })(JS = DevExpress.JS || (DevExpress.JS = {}));
 })(DevExpress || (DevExpress = {}));
 var DevExpress;
@@ -37,15 +54,25 @@ var DevExpress;
             return (DevExpress.JS.Localization.localize(Designer.localization_values[text]) || DevExpress.JS.Localization.localize(text)) || text;
         }
         var custom_localization_values = {};
+        function isCustomizedWithUpdateLocalizationMethod(text) {
+            return !!custom_localization_values[text];
+        }
+        Designer.isCustomizedWithUpdateLocalizationMethod = isCustomizedWithUpdateLocalizationMethod;
         function getLocalization(text, id) {
             if (id === void 0) { id = null; }
             var result;
-            if (id && !custom_localization_values[text]) {
+            if (id && !isCustomizedWithUpdateLocalizationMethod(text)) {
                 result = DevExpress.JS.Localization.localize(id);
             }
             return result || _getLocalization(text);
         }
         Designer.getLocalization = getLocalization;
+        function getSpecificLocalizationWithAddition(text, defaultText, addition, id) {
+            if (addition === void 0) { addition = ""; }
+            if (id === void 0) { id = null; }
+            return isCustomizedWithUpdateLocalizationMethod(text) ? getLocalization(text) : (getLocalization(defaultText, id) + addition);
+        }
+        Designer.getSpecificLocalizationWithAddition = getSpecificLocalizationWithAddition;
         function updateLocalization(object) {
             $.extend(custom_localization_values, object);
             var messages = {};
@@ -88,514 +115,6 @@ var DevExpress;
     var Designer;
     (function (Designer) {
         Designer.localization_values = {
-            'Data Preview': 'DataAccessUIStringId.DataPreviewForm_Title',
-            'Select the data provider and specify the connection properties.': 'DataAccessUIStringId.WizardPageConnectionProperties',
-            'Edit...': 'DataAccessUIStringId.EFDataSourceDesignerVerbEdit',
-            'Finish': 'ASPxReportsStringId.ReportDesigner_Wizard_Finish',
-            'Query Editor': 'DataAccessUIStringId.QueryEditorTitle',
-            'Cancel': 'ASPxReportsStringId.SearchDialog_Cancel',
-            'The column name cannot be empty.': 'DataAccessUIStringId.WizardPageConfigureExcelFileColumns_ColumnNameEmptyError',
-            'Retrieve the actual data': 'DataAccessUIStringId.WizardPageChooseObjectBindingMode_RetrieveData',
-            'Skip hidden columns': 'DataAccessUIStringId.WizardPageChooseFileOptions_SkipHiddenColumns',
-            'Excel File': 'DataAccessUIStringId.DSTypeExcel',
-            'Cannot resolve the specified object type. To specify the object’s assembly, return type, data member and/or constructor parameters, use the Data Source editor.': 'DataAccessUIStringId.ODSEditorsCannotResolveDataSource',
-            'Select an assembly containing the class type definition of a data source.': 'DataAccessUIStringId.WizardPageChooseObjectAssembly',
-            'Retrieve the data source schema': 'DataAccessUIStringId.WizardPageChooseObjectBindingMode_RetrieveSchema',
-            'Port:': 'DataAccessUIStringId.ConnectionProperties_Port',
-            'Rebuild Result Schema': 'DataAccessUIStringId.SqlDataSourceDesignerVerbRebuildSchema',
-            'Error message:\r\n{0}\r\n': 'DataAccessUIStringId.LoadingDataCustomError',
-            'The expression contains errors.': 'DataAccessUIStringId.ExpressionEditor_ExpressionContainsErrors',
-            'Is less than': 'DataAccessUIStringId.JoinEditorLessOperator',
-            'The FileName and SourceOptions properties should be assigned.': 'DataAccessUIStringId.UpdateSchemaDataSourceIsNotReady',
-            'Manage Stored Procedures': 'DataAccessUIStringId.EFStoredProcsEditorTitle',
-            'Trim blanks': 'DataAccessUIStringId.WizardPageChooseFileOptions_TrimBlanks',
-            'Worksheet': 'DataAccessUIStringId.ExcelDataSourceWizard_WorksheetItem',
-            'Sorting Type': 'DataAccessUIStringId.QueryBuilderColumns_SortingType',
-            'An error occurred during query validation: {0}\r\nUpdate the connection settings so that they match the database schema or discard this query.': 'DataAccessUIStringId.FilterStringEditorInvalidQuery',
-            'Skip hidden rows': 'DataAccessUIStringId.WizardPageChooseFileOptions_SkipHiddenRows',
-            'The {0} data member cannot receive parameters, because this is a method without parameters.': 'DataAccessUIStringId.ODSEditorsNoParametersMessage',
-            'Yes, let me choose from list': 'DataAccessUIStringId.WizardPageChooseEFConnectionString_ChooseConnection',
-            'No, I\'d like to specify the connection parameters myself': 'DataAccessUIStringId.WizardPageChooseConnection_SpecifyCustomConnection',
-            'Do you want to use an existing data connection?': 'DataAccessUIStringId.WizardPageChooseConnection',
-            'Request Database Schema': 'DataAccessUIStringId.UpdateDBSchemaCaption',
-            'records starting with index': 'DataAccessUIStringId.FiltersView_TopAndSkipText',
-            'Newline type:': 'DataAccessUIStringId.WizardPageChooseFileOptions_NewLineType',
-            'Unable to load data into one or several datasources. See information below for details.': 'DataAccessUIStringId.ErrorFormDatasourceInitializationText',
-            'Column': 'DataAccessUIStringId.QueryBuilderColumn',
-            'Loading Data...': 'DataAccessUIStringId.WaitFormWithCancel_Loading',
-            'Edit Relation': 'DataAccessUIStringId.MasterDetailEditorEditRelation',
-            'Create Query Parameter': 'DataAccessUIStringId.QueryFilter_CreateQueryParameter',
-            'Query': 'DataAccessUIStringId.ParametersColumn_QueryName',
-            '<select a parameter>': 'DataAccessUIStringId.QueryFilter_SelectParameter',
-            'Select an object to include in your data source': 'DataAccessUIStringId.WizardFinishPageText',
-            'The current security policy prohibits loading of third-party assemblies.\r\n\r\nClick OK to discard the current data source settings and configure them from scratch.\r\nClick Cancel to keep the current settings without configuring the data source': 'DataAccessUIStringId.EFConnectionEditorMessageCustomAssembliesProhibited',
-            'Show only highlighted members': 'DataAccessUIStringId.WizardPageChooseObjectMember_ShowOnlyHighlighted',
-            'The connection uses server authentication.\r\nDo you want to save the user name and password?': 'DataAccessUIStringId.WizardPageSaveConnection_SaveCredentialsQuestion',
-            'Select a data source constructor.': 'DataAccessUIStringId.WizardPageChooseObjectConstructor',
-            'Select only distinct values': 'DataAccessUIStringId.FiltersView_Distinct',
-            'Column with \'{0}\' name allready exists.': 'DataAccessUIStringId.WizardPageConfigureExcelFileColumns_ColumnExist',
-            'Password:': 'DataAccessUIStringId.ConnectionProperties_Password',
-            'Delete Relation': 'DataAccessUIStringId.QueryBuilder_DeleteRelation',
-            'Configure Data Member': 'DataAccessUIStringId.ODSDataMemberEditorTitle',
-            'Remove from Query': 'DataAccessUIStringId.QueryBuilder_RemoveFromSelect',
-            'Culture:': 'DataAccessUIStringId.WizardPageChooseFileOptions_Culture',
-            'Windows authentication': 'DataAccessUIStringId.ConnectionProperties_AuthenticationType_MSSqlWindows',
-            'Do not select a member, bind to the entire object.': 'DataAccessUIStringId.WizardPageChooseObjectMember_BindToObject',
-            'OK': 'DataAccessUIStringId.Button_OK',
-            'Provider:': 'DataAccessUIStringId.ConnectionProperties_Provider',
-            'Choose a data context.': 'DataAccessUIStringId.WizardPageChooseEFContext',
-            'Add a relation to the detail query': 'DataAccessUIStringId.MasterDetailEditorAddRelationMessage',
-            'Local': 'DataAccessUIStringId.ConnectionProperties_AdvantageServerTypeLocal',
-            'Preview...': 'DataAccessUIStringId.Button_Preview',
-            'Select the data source type.': 'DataAccessUIStringId.WizardPageChooseDSType',
-            'Warning': 'DataAccessUIStringId.MessageBoxWarningTitle',
-            'Specify the method parameters.': 'DataAccessUIStringId.WizardPageObjectMemberParameters',
-            'Cannot use a constructor to create an object of the {0} type that is a static or abstract class, or interface.': 'DataAccessUIStringId.ODSEditorsAbstractTypeMessage',
-            'No connection has been specified.': 'DataAccessUIStringId.MessageMissingConnection',
-            'Validating query...': 'DataAccessUIStringId.QueryEditorWaitFormValidating',
-            'Select a member to bind.': 'DataAccessUIStringId.WizardPageChooseObjectMember_BindToMember',
-            'Skip empty rows': 'DataAccessUIStringId.WizardPageChooseFileOptions_SkipEmptyRows',
-            'Select a data source type.': 'DataAccessUIStringId.WizardPageChooseObjectType',
-            'Data loading failed because the exception occurred.': 'DataAccessUIStringId.LoadingDataException',
-            'Output': 'DataAccessUIStringId.QueryBuilderColumns_Output',
-            'Connection string:': 'DataAccessUIStringId.ConnectionProperties_ConnectionString',
-            'Filter Editor': 'DataAccessUIStringId.FiltersView',
-            'Join {0}': 'DataAccessUIStringId.QueryDesignControlJoinCommandPattern',
-            'Preview Results...': 'DataAccessUIStringId.QueryBuilderButtons_PreviewResults',
-            'Connection name: {0}\r\nError message: {1}': 'DataAccessUIStringId.ConnectionErrorFormDetailPattern',
-            'Connection error': 'DataAccessUIStringId.DataConnectionParametersDialog',
-            'Sort Ascending': 'DataAccessUIStringId.QueryBuilder_SortAscending',
-            'Database:': 'DataAccessUIStringId.ConnectionProperties_Database',
-            'Bind To': 'DataAccessUIStringId.QueryFilter_BindTo',
-            'The following errors occurred during query validation:{0}': 'DataAccessUIStringId.MasterDetailEditorMultipleValidationErrorsMessage',
-            'Cannot find the specified query: "{0}". Specify an existing query name before selecting a column.': 'DataAccessUIStringId.MasterDetailEditorInvalidColumnQueryNameMessage',
-            'Add Query Parameter': 'DataAccessUIStringId.QueryFilter_AddQueryParameter',
-            'Group By': 'DataAccessUIStringId.QueryBuilderColumns_GroupBy',
-            'The data source schema has been updated successfully.': 'DataAccessUIStringId.UpdateSchemaComplete',
-            'Invalid property: \'{0}\'.': 'DataAccessUIStringId.ExpressionEditor_InvalidProperty',
-            '<b>A data source with the specified name already exists</b>': 'DataAccessUIStringId.WizardDataSourceNameExistsMessage',
-            'Yes, save the connection as:': 'DataAccessUIStringId.WizardPageSaveConnection_ConfirmSaving',
-            'Create a query or select a stored procedure.\r\nData columns selected from specific tables and/or views will be automatically included into a separate query.': 'DataAccessUIStringId.WizardPageConfigureMultiQuery',
-            '{0} invalid relation(s)': 'DataAccessUIStringId.MasterDetailEditorLabelInvalidRelationsText',
-            '<Select a column>': 'DataAccessUIStringId.JoinEditorEmptyColumnText',
-            'Specify a custom connection string': 'DataAccessUIStringId.WizardPageEFConnectionProperties_CustomConnection',
-            'Allow Edit SQL': 'DataAccessUIStringId.QueryBuilder_AllowEdit',
-            'Error has occurred during loading databases list.': 'DataAccessUIStringId.MessageCannotLoadDatabasesList',
-            'Query Builder': 'DataAccessUIStringId.QueryBuilder',
-            'Add stored procedures to the data source, configure their parameters and preview the result.': 'DataAccessUIStringId.WizardPageConfigureStoredProcedures',
-            'Unable to connect to the database. See details below.': 'DataAccessUIStringId.DataConnectionParametersDialog_Header_UnableConnect',
-            'Alias': 'DataAccessUIStringId.QueryBuilderColumns_Alias',
-            'Join Editor': 'DataAccessUIStringId.JoinEditor',
-            'SQL execution error:\r\n{0}\r\n': 'DataAccessUIStringId.LoadingDataSqlError',
-            'Enter the data source name': 'DataAccessUIStringId.WizardPageChooseDataSourceName',
-            'Use values of the first row as field names': 'DataAccessUIStringId.WizardPageChooseFileOptions_FirstRowAsFieldNames',
-            'Save the connection string.': 'DataAccessUIStringId.WizardPageSaveConnection',
-            'No column has been selected. Please select at least one column to proceed.': 'DataAccessUIStringId.QueryDesignControlNoSelection',
-            'Do you want to select a connection string from the list of available settings?': 'DataAccessUIStringId.WizardPageChooseEFConnectionString',
-            'Table': 'DataAccessUIStringId.ExcelDataSourceWizard_Title',
-            'Client ID:': 'DataAccessUIStringId.ConnectionProperties_ClientID',
-            'The {0} data source type does not provide any members suitable for binding.': 'DataAccessUIStringId.ODSEditorsNoMembersInType',
-            'The specified alias already exists. Do you want to correct the value?': 'DataAccessUIStringId.QueryDesignControlAliasAlreadyExists',
-            'The expression string cannot be empty.': 'DataAccessUIStringId.ExpressionEditor_EmptyExpression',
-            'ObjectDataSource Wizard': 'DataAccessUIStringId.WizardTitleODS',
-            'Name': 'DataAccessUIStringId.ParametersColumn_Name',
-            'Type': 'DataAccessUIStringId.ParametersColumn_Type',
-            'Cannot retrieve the list of available databases. See the details below.': 'DataAccessUIStringId.WizardCannotRetrieveDatabasesMessage',
-            'Select a stored procedure:': 'DataAccessUIStringId.StoredProcControl_Caption',
-            'Data Source Wizard': 'ASPxReportsStringId.ReportDesigner_Wizard_DataSourceHeader',
-            'Server type:': 'DataAccessUIStringId.ConnectionProperties_ServerType',
-            'Server name:': 'DataAccessUIStringId.ConnectionProperties_ServerName',
-            'Show only highlighted assemblies': 'DataAccessUIStringId.WizardPageChooseObjectAssembly_ShowOnlyHighlighted',
-            'Hostname:': 'DataAccessUIStringId.ConnectionProperties_Hostname',
-            'Defined Name': 'DataAccessUIStringId.ExcelDataSourceWizard_DefinedNameItem',
-            'Configure Connection...': 'DataAccessUIStringId.SqlDataSourceDesignerVerbEditConnection',
-            'Remote': 'DataAccessUIStringId.ConnectionProperties_AdvantageServerTypeRemote',
-            'Manage Queries...': 'DataAccessUIStringId.SqlDataSourceDesignerVerbManageQueries',
-            'Key file': 'DataAccessUIStringId.ConnectionProperties_AuthenticationType_BigQueryKeyFile',
-            'Columns of {0}': 'DataAccessUIStringId.QueryBuilderColumnsOf',
-            'Show only highlighted types': 'DataAccessUIStringId.WizardPageChooseObjectType_ShowOnlyHighlighted',
-            'Delete': 'DataAccessUIStringId.QueryBuilder_Delete',
-            'Cannot create a relation between two columns that belong to the same table {0}.': 'DataAccessUIStringId.QueryBuilderRelationBetweenTwoColumnsOfTheSameTable',
-            'Select only': 'DataAccessUIStringId.FiltersView_CheckText',
-            'The object data source automatically creates an instance of the specified type by using one of the available constructors. If only one constructor is available, this constructor will be used.': 'DataAccessUIStringId.WizardPageChooseObjectBindingMode_RetrieveDataDescription',
-            'Save the connection string to config file as:': 'DataAccessUIStringId.WizardPageEFConnectionProperties_SaveToConfig',
-            'The current operation cannot be accomplished unless the data source has been specified.': 'DataAccessUIStringId.ODSEditorsNoDataSetMessage',
-            'Error': 'DataAccessUIStringId.MessageBoxErrorTitle',
-            'The new join type will be applied to all existing relations between the following two tables: {0}, {1}. Do you wish to continue?': 'DataAccessUIStringId.QueryBuilderJoinTypeUpdatingConfirmation',
-            'The {0} data member is a property. To be able to receive parameters, a data member must be a method.': 'DataAccessUIStringId.ODSEditorsIsPropertyMessage',
-            'Excel Data Source Editor': 'DataAccessUIStringId.ExcelDataSourceEditorTitle',
-            'Edit Relations for the \'{0}\' Query': 'DataAccessUIStringId.MasterDetailEditorEditQueryRelations',
-            'Cannot find the specified query: "{0}". Specify an existing query name.': 'DataAccessUIStringId.MasterDetailEditorInvalidQueryNameMessage',
-            'Show only highlighted constructors': 'DataAccessUIStringId.WizardPageChooseObjectConstructor_ShowOnlyHighlighted',
-            'Yes, let me choose an existing connection from the list': 'DataAccessUIStringId.WizardPageChooseConnection_ChooseExistingConnection',
-            'Use default connection string': 'DataAccessUIStringId.WizardPageEFConnectionProperties_DefaultConnection',
-            'Connection Editor': 'DataAccessUIStringId.ConnectionEditorTitle',
-            'Specify import settings.': 'DataAccessUIStringId.WizardPageChooseFileOptions',
-            'Server authentication': 'DataAccessUIStringId.ConnectionProperties_AuthenticationType_MSSqlServer',
-            'OAuth': 'DataAccessUIStringId.ConnectionProperties_AuthenticationType_BigQueryOAuth',
-            'Not enough memory to load data': 'DataAccessUIStringId.LoadingDatasourceOutOfMemoryError',
-            'Error loading file': 'DataAccessUIStringId.PasswordRequest',
-            'A table with the specified name already exists. Please specify a different table name.': 'DataAccessUIStringId.QueryDesignControlTableNameAlreadyExists',
-            'Delete Condition': 'DataAccessUIStringId.QueryBuilder_DeleteCondition',
-            'Do you want to execute the query on the server and obtain the resulting query schema?': 'DataAccessUIStringId.WizardConfirmExecutionMessage',
-            'Value separator:': 'DataAccessUIStringId.WizardPageChooseFileOptions_ValueSeparator',
-            'Entity Framework Data Member Editor': 'DataAccessUIStringId.EFDataMemberEditorTitle',
-            'Run Query Builder...': 'DataAccessUIStringId.Button_QueryBuilder',
-            'Join type:': 'DataAccessUIStringId.JoinEditor_JoinType',
-            'Ascending': 'DataAccessUIStringId.SortingTypeAscending',
-            '<b>The data source name cannot be empty.</b>': 'DataAccessUIStringId.WizardDataSourceEmptyNameMessage',
-            'Configure Constructor Settings': 'DataAccessUIStringId.ODSConstructorEditorTitle',
-            'Configure Parameters': 'DataAccessUIStringId.ODSParametersEditorTitle',
-            'The \'{0}\'.\'{1}\' and \'{3}\'.\'{4}\' columns have different types ({2} and {5}). Do you wish to continue?': 'DataAccessUIStringId.MasterDetailEditorColumnsHasDifferentTypesConfirmation',
-            'Select an Excel workbook or CSV file.': 'DataAccessUIStringId.WizardPageChooseFile',
-            'Remove the relation': 'DataAccessUIStringId.MasterDetailEditorRemoveRelationMessage',
-            'Only the data source schema is retrieved from the specified object, without feeding the actual data.\r\n\r\nTo manually retrieve the actual data, create a data source object’s instance in code and assign it to the ObjectDataSource.DataSource property.': 'DataAccessUIStringId.WizardPageChooseObjectBindingMode_RetrieveSchemaDescription',
-            'Is greater than': 'DataAccessUIStringId.JoinEditorGreaterOperator',
-            'Database': 'DataAccessUIStringId.DSTypeSql',
-            'Close': 'DataAccessUIStringId.Button_Close',
-            'This action will reset the SQL expression, and all your changes will be discarded. Do you want to continue?': 'DataAccessUIStringId.QueryDesignControlExpressionChanged',
-            'Database List Loading Error': 'DataAccessUIStringId.ConnectionProperties_DatabaseListLoadingError',
-            'Connection name: {0}\r\nError message:\r\n{1}\r\n': 'DataAccessUIStringId.LoadingDataSourceOpeningConnectionError',
-            'Select the required worksheet, table or defined name referring to the specified range.': 'DataAccessUIStringId.WizardPageChooseExcelFileDataRange',
-            'Options': 'DataAccessUIStringId.WizardPageChooseFileOptions_Options',
-            'You are about to load a third-party library: \'{0}\'.\r\n\r\nBefore you proceed, please consider resulting security risks and make sure that this library is supplied from a trusted source.': 'DataAccessUIStringId.CustomAssemblyWarning',
-            'Group Filter': 'DataAccessUIStringId.FiltersView_GroupFilter',
-            'At least two queries are required to create a master-detail relation.': 'DataAccessUIStringId.MessageLessThanTwoQueries',
-            'Rename': 'DataAccessUIStringId.QueryBuilder_Rename',
-            'Service account email:': 'DataAccessUIStringId.ConnectionProperties_ServiceAccountEmail',
-            'Confirmation': 'DataAccessUIStringId.MessageBoxConfirmationTitle',
-            'Sort Descending': 'DataAccessUIStringId.QueryBuilder_SortDescending',
-            'To view the errors, click the drop-down button in the editor\'s status bar.': 'DataAccessUIStringId.ExpressionEditor_NavigateToErrors',
-            'Filter': 'DataAccessUIStringId.FiltersView_Filter',
-            'Encoding:': 'DataAccessUIStringId.WizardPageChooseFileOptions_Encoding',
-            'An error occurred during query validation: {0}\r\n\r\nTo discard this query and invoke the wizard, click OK.\r\n\r\nTo keep this query, click Cancel.': 'DataAccessUIStringId.QueryEditorMessageInvalidQuery',
-            '<Select a table>': 'DataAccessUIStringId.JoinEditorEmptyTableText',
-            'Embedded': 'DataAccessUIStringId.ConnectionProperties_ServerTypeEmbedded',
-            'Value': 'DataAccessUIStringId.ParametersColumn_Value',
-            'Expression Editor': 'DataAccessUIStringId.ExpressionEditorViewTitle',
-            'Selected': 'DataAccessUIStringId.ParametersColumn_Selected',
-            'Update schema': 'DataAccessUIStringId.UpdateSchemaCaption',
-            'Select a data connection.': 'DataAccessUIStringId.WizardPageChooseConnectionNoChoice',
-            'Add': 'DataAccessUIStringId.Button_Add',
-            'Configure query parameters and preview the result.': 'DataAccessUIStringId.WizardPageConfigureParameters',
-            'Entity Framework Data Source Editor': 'DataAccessUIStringId.EFDataSourceEditorTitle',
-            'Client Secret:': 'DataAccessUIStringId.ConnectionProperties_ClientSecret',
-            'Data loading has been aborted.': 'DataAccessUIStringId.LoadingDataSourceAborted',
-            'Previous': 'ASPxReportsStringId.ReportDesigner_Wizard_Previous',
-            'Entity Framework': 'DataAccessUIStringId.DSTypeEF',
-            'Key file name:': 'DataAccessUIStringId.ConnectionProperties_KeyFileName',
-            'Server': 'DataAccessUIStringId.ConnectionProperties_ServerTypeServer',
-            'Cannot create an empty data source. Please select an object to include.': 'DataAccessUIStringId.WizardCannotCreateDataSourceMessage',
-            'Bound to {0}': 'DataAccessUIStringId.QueryFilter_BoundTo',
-            'Detect automatically': 'DataAccessUIStringId.WizardPageChooseFileOptions_DetectAutomatically',
-            'DataSet ID:': 'DataAccessUIStringId.ConnectionProperties_DataSetID',
-            'Unsorted': 'DataAccessUIStringId.SortingTypeNone',
-            'Query Parameters': 'DataAccessUIStringId.ParametersGridForm_Title',
-            'Expression': 'DataAccessUIStringId.ParametersColumn_Expression',
-            'Next': 'ASPxReportsStringId.ReportDesigner_Wizard_Next',
-            'Cannot resolve the specified data member. To specify the data member and its parameters, use the Data Member editor.': 'DataAccessUIStringId.ODSEditorsCannotResolveDataMember',
-            'A relation with the specified name already exists.': 'DataAccessUIStringId.MasterDetailEditorInvalidRelationNameMessage',
-            'The query contains parameters and cannot be executed before they are declared. \r\nPlease go to the next wizard page to declare the required query parameters and preview the results.': 'DataAccessUIStringId.QueryBuilderCustomSqlRequiresParameters',
-            'Create a new condition': 'DataAccessUIStringId.MasterDetailEditorAddConditionMessage',
-            'Cannot find the specified column: "{0}". Specify an existing column name.': 'DataAccessUIStringId.MasterDetailEditorInvalidColumnNameMessage',
-            'Sort Order': 'DataAccessUIStringId.QueryBuilderColumns_SortOrder',
-            'Result schema is rebuilt successfully.': 'DataAccessUIStringId.RebuildResultSchemaComplete',
-            'SQL string:': 'DataAccessUIStringId.QueryControl_SqlString',
-            'Specify a connection string.': 'DataAccessUIStringId.WizardPageEFConnectionProperties',
-            'Manage Relations...': 'DataAccessUIStringId.SqlDataSourceDesignerVerbManageRelations',
-            'Join Information': 'DataAccessUIStringId.JoinInformation',
-            'Stored Procedure': 'DataAccessUIStringId.WizardPageConfigureQuery_StoredProcedure',
-            'Database schema is updated successfully.': 'DataAccessUIStringId.UpdateDBSchemaComplete',
-            'No, specify a custom connection string': 'DataAccessUIStringId.WizardPageChooseEFConnectionString_CustomConnection',
-            'Authentication type:': 'DataAccessUIStringId.ConnectionProperties_AuthenticationType',
-            'Filter...': 'DataAccessUIStringId.QueryBuilderButtons_Filter',
-            'Yes, save all required parameters': 'DataAccessUIStringId.WizardPageSaveConnection_SaveCredentials',
-            'Data Preview (First 1000 Rows Displayed)': 'DataAccessUIStringId.QueryDesignControlDataPreviewCaption',
-            'No stored procedures are available in the data context.': 'DataAccessUIStringId.EFEditorsNoStoredProcs',
-            'Text qualifier:': 'DataAccessUIStringId.WizardPageChooseFileOptions_TextQualifier',
-            'Object Binding': 'DataAccessUIStringId.DSTypeObject',
-            'Save password': 'DataAccessUIStringId.PasswordRequest_SavePassword',
-            'User name:': 'DataAccessUIStringId.ConnectionProperties_UserName',
-            'Remove': 'DataAccessUIStringId.Button_Remove',
-            'Cannot specify parameters unless the DataMember property has been assigned a value.': 'DataAccessUIStringId.ODSEditorsNoDataMemberMessage',
-            'Create a query or select a stored procedure.': 'DataAccessUIStringId.WizardPageConfigureQuery',
-            'Is greater than or equal to': 'DataAccessUIStringId.JoinEditorGreaterOrEqualOperator',
-            'A data schema contains a duplicated column \'{0}\'. Modify the query so that all columns have unique names.': 'DataAccessUIStringId.WizardDuplicatingColumnNameMessage',
-            'There are no any stored procedures in current database.': 'DataAccessUIStringId.WizardEmptyStoredProceduresListMessage',
-            'Descending': 'DataAccessUIStringId.SortingTypeDescending',
-            'Version': 'DataAccessUIStringId.ParametersColumn_Version',
-            'Configure Data Source': 'DataAccessUIStringId.ODSDataSourceEditorTitle',
-            'Select a data source member (if required).': 'DataAccessUIStringId.WizardPageChooseObjectMember',
-            'Remove the condition': 'DataAccessUIStringId.MasterDetailEditorRemoveConditionMessage',
-            'Entity Framework Data Connection Editor': 'DataAccessUIStringId.EFConnectionEditorTitle',
-            'Do you want to save the connection string to the application\'s configuration file?': 'DataAccessUIStringId.WizardPageSaveConnection_SaveConnectionString',
-            'The table name cannot be empty.': 'DataAccessUIStringId.QueryDesignControlTableNameEmpty',
-            '{0} is a static member. Using a constructor to create an instance of the {1} class is not appropriate.': 'DataAccessUIStringId.ODSEditorsStaticMemberMessage',
-            'This option is only available when the result set is sorted.': 'DataAccessUIStringId.FiltersView_SkipTooltip',
-            'Do you want to execute the following queries on the server and obtain the resulting schema?': 'DataAccessUIStringId.RebuildResultSchemaConfirmationText',
-            'Specify the constructor parameters.': 'DataAccessUIStringId.WizardPageObjectConstructorParameters',
-            'Manage Queries': 'DataAccessUIStringId.SqlQueryCollectionEditorForm_Title',
-            'Data source name: {0}': 'DataAccessUIStringId.DataSourceName',
-            'Refresh Token:': 'DataAccessUIStringId.ConnectionProperties_RefreshToken',
-            'Is less than or equal to': 'DataAccessUIStringId.JoinEditorLessOrEqualOperator',
-            'Select required columns and specify their settings.': 'DataAccessUIStringId.WizardPageConfigureExcelFileColumns',
-            'The link between {0}.{1} and {2}.{3} results in a circular relation and cannot be added.': 'DataAccessUIStringId.QueryBuilderCircularRelationWarning',
-            'Internet': 'DataAccessUIStringId.ConnectionProperties_AdvantageServerTypeInternet',
-            'Add to Query': 'DataAccessUIStringId.QueryBuilder_AddToSelect',
-            'Select a data member': 'DataAccessUIStringId.WizardPageChooseEFDataMember',
-            'Project ID:': 'DataAccessUIStringId.ConnectionProperties_ProjectID',
-            'Some fields are empty. Please fill all empty fields or remove the corresponding conditions to proceed.': 'DataAccessUIStringId.JoinEditorFillAllFieldsException',
-            'Equals to': 'DataAccessUIStringId.JoinEditorEqualOperator',
-            'Browse...': 'DataAccessUIStringId.Button_Browse',
-            'No, skip credentials for security reasons': 'DataAccessUIStringId.WizardPageSaveConnection_SkipSaveCredentials',
-            'The following tables will be removed from the query.\r\n\r\n{0}\r\nDo you want to continue?': 'DataAccessUIStringId.QueryDesignControlRemoveTables',
-            'Aggregate': 'DataAccessUIStringId.QueryBuilderColumns_Aggregate',
-            'File name:': 'DataAccessUIStringId.PasswordRequest_FileName',
-            'Cannot connect to the database. See the details below.': 'DataAccessUIStringId.WizardCannotConnectMessage',
-            'Master-Detail Relation Editor': 'DataAccessUIStringId.MasterDetailEditorForm_Title',
-            'Select the data binding mode.': 'DataAccessUIStringId.WizardPageChooseObjectBindingMode',
-            'Does not equal to': 'DataAccessUIStringId.JoinEditorNotEqualOperator',
-            'The data source has been successfully created': 'DataAccessUIStringId.WizardDataSourceCreatedMessage',
-            'Select stored procedures to add': 'DataAccessUIStringId.ChooseEFStoredProceduresDialog',
-            'Returns the index of the current data row in a datasource. Note that this index is zero-based.': 'XtraEditorsExpressionEditor.CurrentRowIndex.Description',
-            'Log10(Value)\r\nReturns the base 10 logarithm of a specified number.': 'XtraEditorsExpressionEditor.Log10.Description',
-            'AddMinutes(DateTime, MinutesCount)\r\nReturns a date-time value that is the specified number of minutes away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddMinutes.Description',
-            'Sqr(Value)\r\nReturns the square root of a given number.': 'XtraEditorsExpressionEditor.Sqr.Description',
-            'IsNovember(DateTime)\r\nReturns True if the specified date falls within November.': 'XtraEditorsExpressionEditor.IsNovember.Description',
-            'Greater than or equal to operator. Used to compare expressions.': 'XtraEditorsExpressionEditor.GreaterOrEqual.Description',
-            'LocalDateTimeNextYear()\r\nReturns a date-time value corresponding to the first day of the following year.': 'XtraEditorsExpressionEditor.LocalDateTimeNextYear.Description',
-            'Returns the remainder (modulus) obtained by dividing one numeric expression into another.': 'XtraEditorsExpressionEditor.Modulo.Description',
-            'IsApril(DateTime)\r\nReturns True if the specified date falls within April.': 'XtraEditorsExpressionEditor.IsApril.Description',
-            'ToFloat(Value)\r\nConverts Value to an equivalent 32-bit single-precision floating-point number.': 'XtraEditorsExpressionEditor.ToFloat.Description',
-            'IsLastYear(DateTime)\r\nReturns True if the specified date falls within the previous year.': 'XtraEditorsExpressionEditor.IsLastYear.Description',
-            'Sign(Value)\r\nReturns the positive (+1), zero (0), or negative (-1) sign of the given expression.': 'XtraEditorsExpressionEditor.Sign.Description',
-            'GetHour(DateTime)\r\nExtracts an hour from the defined DateTime.': 'XtraEditorsExpressionEditor.GetHour.Description',
-            'Compares each bit of its first operand to the corresponding bit of its second operand. If either bit is 1, the corresponding result bit is set to 1. Otherwise, the corresponding result bit is set to 0.': 'XtraEditorsExpressionEditor.BitwiseOr.Description',
-            'IsJune(DateTime)\r\nReturns True if the specified date falls within June.': 'XtraEditorsExpressionEditor.IsJune.Description',
-            'DateDiffMilliSecond(startDate, endDate)\r\nReturns the number of millisecond boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffMilliSecond.Description',
-            'Math': 'XtraEditorsExpressionEditor.functionsTypes.Properties.MathItems',
-            'expressionEdit': 'XtraEditorsExpressionEditor.>>expressionEdit.Name',
-            'DevExpress.XtraEditors.MemoEdit, DevExpress.XtraEditors.v16.2, Version=16.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>expressionEdit.Type',
-            'Date-time': 'XtraEditorsExpressionEditor.functionsTypes.Properties.DateTimeItems',
-            'Concat(String1, ... , StringN)\r\nReturns a string value containing the concatenation of the current string with any additional strings.': 'XtraEditorsExpressionEditor.Concat.Description',
-            'Cos(Value)\r\nReturns the cosine of the angle defined in radians.': 'XtraEditorsExpressionEditor.Cos.Description',
-            '$this': 'XtraEditorsExpressionEditor.>>layoutItemButton12.Parent',
-            'PadLeft(String, Length, Char)\r\nLeft-aligns characters in the defined string, padding its left side with the specified Char up to a specified total length.': 'XtraEditorsExpressionEditor.PadLeft3Param.Description',
-            'IsFebruary(DateTime)\r\nReturns True if the specified date falls within February.': 'XtraEditorsExpressionEditor.IsFebruary.Description',
-            'Exists()\r\nDetermines whether the object exists in the collection.': 'XtraEditorsExpressionEditor.ExistsAggregate.Description',
-            'LocalDateTimeThisYear()\r\nReturns a date-time value corresponding to the first day of the current year.': 'XtraEditorsExpressionEditor.LocalDateTimeThisYear.Description',
-            'listOfInputParameters': 'XtraEditorsExpressionEditor.>>listOfInputParameters.Name',
-            'DevExpress.XtraEditors.ListBoxControl, DevExpress.XtraEditors.v16.2, Version=16.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>listOfInputParameters.Type',
-            '0': 'XtraEditorsExpressionEditor.>>functionsTypes.ZOrder',
-            'LocalDateTimeToday()\r\nReturns a date-time value corresponding to Today.': 'XtraEditorsExpressionEditor.LocalDateTimeToday.Description',
-            '6': 'XtraEditorsExpressionEditor.>>layoutItemButton12.ZOrder',
-            'IsSeptember(DateTime)\r\nReturns True if the specified date falls within September.': 'XtraEditorsExpressionEditor.IsSeptember.Description',
-            'IsNextYear(DateTime)\r\nReturns True if the specified date falls within the next year.': 'XtraEditorsExpressionEditor.IsNextYear.Description',
-            'IsJuly(DateTime)\r\nReturns True if the specified date falls within July.': 'XtraEditorsExpressionEditor.IsJuly.Description',
-            '3': 'XtraEditorsExpressionEditor.>>listOfInputTypes.ZOrder',
-            'Divides the first operand by the second.': 'XtraEditorsExpressionEditor.Divide.Description',
-            'Lower(String)\r\nReturns the String in lowercase.': 'XtraEditorsExpressionEditor.Lower.Description',
-            '13': 'XtraEditorsExpressionEditor.>>layoutItemButton8.ZOrder',
-            '8': 'XtraEditorsExpressionEditor.>>layoutItemButton14.ZOrder',
-            'Operators': 'XtraEditorsExpressionEditor.Operators.Text',
-            'Format rule expression editor': 'XtraEditorsExpressionEditor.FormatRule.Caption',
-            'LocalDateTimeTwoWeeksAway()\r\nReturns a date-time value corresponding to the first day of the week that is after next week.': 'XtraEditorsExpressionEditor.LocalDateTimeTwoWeeksAway.Description',
-            'IsMay(DateTime)\r\nReturns True if the specified date falls within May.': 'XtraEditorsExpressionEditor.IsMay.Description',
-            'Upper(String)\r\nReturns String in uppercase.': 'XtraEditorsExpressionEditor.Upper.Description',
-            'LocalDateTimeYesterday()\r\nReturns a date-time value corresponding to Yesterday.': 'XtraEditorsExpressionEditor.LocalDateTimeYesterday.Description',
-            'Between (,)\r\nSpecifies a range to test. Returns true if a value is greater than or equal to the first operand and less than or equal to the second operand.': 'XtraEditorsExpressionEditor.Between.Description',
-            '16': 'XtraEditorsExpressionEditor.>>labelControl1.ZOrder',
-            '9': 'XtraEditorsExpressionEditor.>>labelControl2.ZOrder',
-            'layoutItemButton9': 'XtraEditorsExpressionEditor.>>layoutItemButton9.Name',
-            'DevExpress.XtraReports.Native.LayoutItemButton, DevExpress.XtraReports.v16.2, Version=16.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>layoutItemButton9.Type',
-            'Constants': 'XtraEditorsExpressionEditor.Constants.Text',
-            'ToInt(Value)\r\nConverts Value to an equivalent 32-bit signed integer.': 'XtraEditorsExpressionEditor.ToInt.Description',
-            '19': 'XtraEditorsExpressionEditor.>>layoutItemButton3.ZOrder',
-            'layoutItemButton8': 'XtraEditorsExpressionEditor.>>layoutItemButton8.Name',
-            'Variables': 'XtraEditorsExpressionEditor.Variables.Text',
-            'UtcNow()\r\nReturns the current system date and time, expressed as Coordinated Universal Time (UTC).': 'XtraEditorsExpressionEditor.UtcNow.Description',
-            'plusItemButton': 'XtraEditorsExpressionEditor.>>plusItemButton.Name',
-            'IsYearToDate(DateTime)\r\nReturns True if the specified date falls within the year-to-date period (starting from the first day of the current year and continuing up to the current date).': 'XtraEditorsExpressionEditor.IsYearToDate.Description',
-            'Count()\r\nReturns the number of objects in a collection.': 'XtraEditorsExpressionEditor.CountAggregate.Description',
-            'layoutItemButton5': 'XtraEditorsExpressionEditor.>>layoutItemButton5.Name',
-            'Len(Value)\r\nReturns an integer containing either the number of characters in a string or the nominal number of bytes required to store a variable.': 'XtraEditorsExpressionEditor.Len.Description',
-            'Trim(String)\r\nRemoves all leading and trailing SPACE characters from String.': 'XtraEditorsExpressionEditor.Trim.Description',
-            'layoutItemButton4': 'XtraEditorsExpressionEditor.>>layoutItemButton4.Name',
-            'BigMul(Value1, Value2)\r\nReturns an Int64 containing the full product of two specified 32-bit numbers.': 'XtraEditorsExpressionEditor.BigMul.Description',
-            'GetMinute(DateTime)\r\nExtracts minutes from the defined DateTime.': 'XtraEditorsExpressionEditor.GetMinute.Description',
-            'Parameters': 'XtraEditorsExpressionEditor.Parameters.Text',
-            'layoutItemButton7': 'XtraEditorsExpressionEditor.>>layoutItemButton7.Name',
-            'PadRight(String, Length)\r\nRight-aligns characters in the defined string, padding its left side with white space characters up to a specified total length.': 'XtraEditorsExpressionEditor.PadRight.Description',
-            'Floor(Value)\r\nReturns the largest integer less than or equal to the given numeric expression.': 'XtraEditorsExpressionEditor.Floor.Description',
-            'Exp(Value)\r\nReturns the exponential value of the given float expression.': 'XtraEditorsExpressionEditor.Exp.Description',
-            'AddYears(DateTime, YearsCount)\r\nReturns a date-time value that is the specified number of years away from the specieid DateTime.': 'XtraEditorsExpressionEditor.AddYears.Description',
-            'IsNextMonth(DateTime)\r\nReturns True if the specified date falls within the next month.': 'XtraEditorsExpressionEditor.IsNextMonth.Description',
-            'layoutItemButton6': 'XtraEditorsExpressionEditor.>>layoutItemButton6.Name',
-            'ToStr(Value)\r\nReturns a string representation of an object.': 'XtraEditorsExpressionEditor.ToStr.Description',
-            'LocalDateTimeThisMonth()\r\nReturns a date-time value corresponding to the first day of the current month.': 'XtraEditorsExpressionEditor.LocalDateTimeThisMonth.Description',
-            '1': 'XtraEditorsExpressionEditor.>>labelControl4.ZOrder',
-            'Performs a logical conjunction on two expressions.': 'XtraEditorsExpressionEditor.And.Description',
-            '17': 'XtraEditorsExpressionEditor.>>layoutItemButton5.ZOrder',
-            '15': 'XtraEditorsExpressionEditor.>>layoutItemButton6.ZOrder',
-            'Field Information\r\nCaption: {1}\r\nThe type of this field is: {2}': 'XtraEditorsExpressionEditor.GridFields Description Prefix',
-            'DateDiffMinute(startDate, endDate)\r\nReturns the number of minute boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffMinute.Description',
-            'layoutItemButton3': 'XtraEditorsExpressionEditor.>>layoutItemButton3.Name',
-            'Logical': 'XtraEditorsExpressionEditor.functionsTypes.Properties.LogicalItems',
-            'DateDiffMonth(startDate, endDate)\r\nReturns the number of month boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffMonth.Description',
-            'layoutItemButton2': 'XtraEditorsExpressionEditor.>>layoutItemButton2.Name',
-            '2': 'XtraEditorsExpressionEditor.>>listOfInputParameters.ZOrder',
-            'Today()\r\nReturns the current date. Regardless of the actual time, this function returns midnight of the current date.': 'XtraEditorsExpressionEditor.Today.Description',
-            'Atn2(Value1, Value2)\r\nReturns the angle whose tangent is the quotient of two specified numbers, in radians.': 'XtraEditorsExpressionEditor.Atn2.Description',
-            'Sin(Value)\r\nReturns the sine of the angle, defined in radians.': 'XtraEditorsExpressionEditor.Sin.Description',
-            'AddDays(DateTime, DaysCount)\r\nReturns a date-time value that is the specified number of days away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddDays.Description',
-            'LocalDateTimeLastWeek()\r\nReturns a date-time value corresponding to the first day of the previous week.': 'XtraEditorsExpressionEditor.LocalDateTimeLastWeek.Description',
-            'LocalDateTimeTomorrow()\r\nReturns a date-time value corresponding to Tomorrow.': 'XtraEditorsExpressionEditor.LocalDateTimeTomorrow.Description',
-            'IsNull(Value)\r\nReturns True if the specified Value is NULL.': 'XtraEditorsExpressionEditor.IsNull.Description',
-            'CharIndex(String1, String2)\r\nReturns the starting position of String1 within String2, beginning from the zero character position to the end of a string.': 'XtraEditorsExpressionEditor.CharIndex.Description',
-            'GetDay(DateTime)\r\nExtracts a day from the defined DateTime.': 'XtraEditorsExpressionEditor.GetDay.Description',
-            'String': 'XtraEditorsExpressionEditor.functionsTypes.Properties.StringItems',
-            'IsThisMonth(DateTime)\r\nReturns True if the specified date falls within the current month.': 'XtraEditorsExpressionEditor.IsThisMonth.Description',
-            'IsThisWeek(DateTime)\r\nReturns True if the specified date falls within the current week.': 'XtraEditorsExpressionEditor.IsThisWeek.Description',
-            'Insert(String1, StartPosition, String2)\r\nInserts String2 into String1 at the position specified by StartPositon': 'XtraEditorsExpressionEditor.Insert.Description',
-            'LocalDateTimeThisWeek()\r\nReturns a date-time value corresponding to the first day of the current week.': 'XtraEditorsExpressionEditor.LocalDateTimeThisWeek.Description',
-            'IsLastMonth(DateTime)\r\nReturns True if the specified date falls within the previous month.': 'XtraEditorsExpressionEditor.IsLastMonth.Description',
-            'ToDouble(Value)\r\nConverts Value to an equivalent 64-bit double-precision floating-point number.': 'XtraEditorsExpressionEditor.ToDouble.Description',
-            'Functions': 'XtraEditorsExpressionEditor.Functions.Text',
-            'Now()\r\nReturns the current system date and time.': 'XtraEditorsExpressionEditor.Now.Description',
-            'IsNullOrEmpty(String)\r\nReturns True if the specified String object is NULL or an empty string; otherwise, False is returned.': 'XtraEditorsExpressionEditor.IsNullOrEmpty.Description',
-            'IsDecember(DateTime)\r\nReturns True if the specified date falls within December.': 'XtraEditorsExpressionEditor.IsDecember.Description',
-            'Round(Value)\r\nRounds the given value to the nearest integer.': 'XtraEditorsExpressionEditor.Round.Description',
-            'DateDiffDay(startDate, endDate)\r\nReturns the number of day boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffDay.Description',
-            '11': 'XtraEditorsExpressionEditor.>>layoutItemButton10.ZOrder',
-            '7': 'XtraEditorsExpressionEditor.>>layoutItemButton13.ZOrder',
-            '24': 'XtraEditorsExpressionEditor.>>buttonOK.ZOrder',
-            'Ascii(String)\r\nReturns the ASCII code value of the leftmost character in a character expression.': 'XtraEditorsExpressionEditor.Ascii.Description',
-            'Log(Value, Base)\r\nReturns the logarithm of a specified number in a specified Base.': 'XtraEditorsExpressionEditor.Log2Param.Description',
-            'Performs a logical disjunction on two Boolean expressions.': 'XtraEditorsExpressionEditor.Or.Description',
-            'IsThisYear(DateTime)\r\nReturns True if the specified date falls within the current year.': 'XtraEditorsExpressionEditor.IsThisYear.Description',
-            'Char(Number)\r\nConverts an integerASCIICode to a character.': 'XtraEditorsExpressionEditor.Char.Description',
-            'DateDiffSecond(startDate, endDate)\r\nReturns the number of second boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffSecond.Description',
-            'Returns true if both operands have the same value; otherwise, it returns false.': 'XtraEditorsExpressionEditor.Equal.Description',
-            'Represents the Boolean False value.': 'XtraEditorsExpressionEditor.False.Description',
-            'Atn(Value)\r\nReturns the arctangent of a number (the angle, in radians, whose tangent is the given float expression).': 'XtraEditorsExpressionEditor.Atn.Description',
-            'AddMilliSeconds(DateTime, MilliSecondsCount)\r\nReturns a date-time value that is the specified number of milliseconds away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddMilliSeconds.Description',
-            'GetTimeOfDay(DateTime)\r\nExtracts the time of the day from the defined DateTime, in ticks.': 'XtraEditorsExpressionEditor.GetTimeOfDay.Description',
-            'IsSameDay(DateTime, DateTime)\r\nReturns True if the specified date-time values fall within the same day.': 'XtraEditorsExpressionEditor.IsSameDay.Description',
-            'Rnd()\r\nReturns a random number that is less than 1, but greater than or equal to zero.': 'XtraEditorsExpressionEditor.Rnd.Description',
-            'layoutItemButton14': 'XtraEditorsExpressionEditor.>>layoutItemButton14.Name',
-            'Performs a logical exclusion on two Boolean expressions, or a bitwise exclusion on two numeric expressions.': 'XtraEditorsExpressionEditor.BitwiseXor.Description',
-            'Tan(Value)\r\nReturns the tangent of the angle defined in radians.': 'XtraEditorsExpressionEditor.Tan.Description',
-            'layoutItemButton15': 'XtraEditorsExpressionEditor.>>layoutItemButton15.Name',
-            '4': 'XtraEditorsExpressionEditor.>>descriptionControl.ZOrder',
-            'DevExpress.XtraEditors.SimpleButton, DevExpress.XtraEditors.v16.2, Version=16.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>buttonOK.Type',
-            'buttonOK': 'XtraEditorsExpressionEditor.>>buttonOK.Name',
-            'IsOctober(DateTime)\r\nReturns True if the specified date falls within October.': 'XtraEditorsExpressionEditor.IsOctober.Description',
-            'Less than or equal to operator. Used to compare expressions.': 'XtraEditorsExpressionEditor.LessOrEqual.Description',
-            'layoutItemButton10': 'XtraEditorsExpressionEditor.>>layoutItemButton10.Name',
-            'The type of this field is: ': 'XtraEditorsExpressionEditor.Fields Description Prefix',
-            'IsJanuary(DateTime)\r\nReturns True if the specified date falls within January.': 'XtraEditorsExpressionEditor.IsJanuary.Description',
-            'DateDiffTick(startDate, endDate)\r\nReturns the number of tick boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffTick.Description',
-            'layoutItemButton11': 'XtraEditorsExpressionEditor.>>layoutItemButton11.Name',
-            'Tanh(Value)\r\nReturns the hyperbolic tangent of the angle defined in radians.': 'XtraEditorsExpressionEditor.Tanh.Description',
-            'listOfInputTypes': 'XtraEditorsExpressionEditor.>>listOfInputTypes.Name',
-            'GetDayOfWeek(DateTime)\r\nExtracts a day of the week from the defined DateTime.': 'XtraEditorsExpressionEditor.GetDayOfWeek.Description',
-            'layoutItemButton12': 'XtraEditorsExpressionEditor.>>layoutItemButton12.Name',
-            'Represents the Boolean True value.': 'XtraEditorsExpressionEditor.True.Description',
-            '18': 'XtraEditorsExpressionEditor.>>layoutItemButton4.ZOrder',
-            'Min(Value)\r\nReturns the minimum expression value in a collection.': 'XtraEditorsExpressionEditor.MinAggregate.Description',
-            '20': 'XtraEditorsExpressionEditor.>>layoutItemButton2.ZOrder',
-            'layoutItemButton13': 'XtraEditorsExpressionEditor.>>layoutItemButton13.Name',
-            'PadRight(String, Length, Char)\r\nRight-aligns characters in the defined string, padding its left side with the specified Char up to a specified total length.': 'XtraEditorsExpressionEditor.PadRight3Param.Description',
-            'Expression editor': 'XtraEditorsExpressionEditor.UnboundColumn.Caption',
-            'Avg(Value)\r\nEvaluates the average of the values in the collection.': 'XtraEditorsExpressionEditor.AvgAggregate.Description',
-            'IsMarch(DateTime)\r\nReturns True if the specified date falls within March.': 'XtraEditorsExpressionEditor.IsMarch.Description',
-            'LocalDateTimeYearBeforeToday()\r\nReturns a date-time value corresponding to the day one year ago.': 'XtraEditorsExpressionEditor.LocalDateTimeYearBeforeToday.Description',
-            'Replace(String, SubString2, String3)\r\nReturns a copy of String1, in which SubString2 has been replaced with String3.': 'XtraEditorsExpressionEditor.Replace.Description',
-            'AddHours(DateTime, HoursCount)\r\nReturns a date-time value that is the specified number of hours away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddHours.Description',
-            'Reverse(String)\r\nReverses the order of elements within a string.': 'XtraEditorsExpressionEditor.Reverse.Description',
-            'Remove(String, StartPosition, Length)\r\nDeletes a specified number of characters from this instance, beginning at a specified position.': 'XtraEditorsExpressionEditor.Remove3Param.Description',
-            'Remove(String, StartPosition)\r\nDeletes all characters from this instance, beginning at a specified position.': 'XtraEditorsExpressionEditor.Remove2Param.Description',
-            'GetDate(DateTime)\r\nExtracts a date from the defined DateTime.': 'XtraEditorsExpressionEditor.GetDate.Description',
-            '22': 'XtraEditorsExpressionEditor.>>plusItemButton.ZOrder',
-            'DevExpress.XtraEditors.LabelControl, DevExpress.XtraEditors.v16.2, Version=16.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>labelControl4.Type',
-            'labelControl4': 'XtraEditorsExpressionEditor.>>labelControl4.Name',
-            'AddTimeSpan(DateTime, TimeSpan)\r\nReturns a date-time value that is away from the specified DateTime for the given TimeSpan.': 'XtraEditorsExpressionEditor.AddTimeSpan.Description',
-            'labelControl1': 'XtraEditorsExpressionEditor.>>labelControl1.Name',
-            'Performs a bitwise logical AND operation between two integer values.': 'XtraEditorsExpressionEditor.BitwiseAnd.Description',
-            'Represents a null reference, one that does not refer to any object.': 'XtraEditorsExpressionEditor.Null.Description',
-            'LocalDateTimeNextWeek()\r\nReturns a date-time value corresponding to the first day of the following week.': 'XtraEditorsExpressionEditor.LocalDateTimeNextWeek.Description',
-            'ToLong(Value)\r\nConverts Value to an equivalent 64-bit signed integer.': 'XtraEditorsExpressionEditor.ToLong.Description',
-            'labelControl3': 'XtraEditorsExpressionEditor.>>labelControl3.Name',
-            'AddSeconds(DateTime, SecondsCount)\r\nReturns a date-time value that is the specified number of seconds away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddSeconds.Description',
-            'The type of this parameter is: ': 'XtraEditorsExpressionEditor.Parameters Description Prefix',
-            '23': 'XtraEditorsExpressionEditor.>>buttonCancel.ZOrder',
-            'Ceiling(Value)\r\nReturns the smallest integer that is greater than or equal to the given numeric expression.': 'XtraEditorsExpressionEditor.Ceiling.Description',
-            'labelControl2': 'XtraEditorsExpressionEditor.>>labelControl2.Name',
-            'GetSecond(DateTime)\r\nExtracts seconds from the defined DateTime.': 'XtraEditorsExpressionEditor.GetSecond.Description',
-            'CharIndex(String1, String2, StartLocation)\r\nReturns the starting position of String1 within String2, beginning from the StartLocation character position to the end of a string.': 'XtraEditorsExpressionEditor.CharIndex3Param.Description',
-            'Asin(Value)\r\nReturns the arcsine of a number (the angle, in radians, whose sine is the given float expression).': 'XtraEditorsExpressionEditor.Asin.Description',
-            'Round(Value, Precision)\r\nRounds the given value to the nearest integer, or to a specified number of decimal places.': 'XtraEditorsExpressionEditor.Round2Param.Description',
-            'AddTicks(DateTime, TicksCount)\r\nReturns a date-time value that is the specified number of ticks away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddTicks.Description',
-            'IsAugust(DateTime)\r\nReturns True if the specified date falls within August.': 'XtraEditorsExpressionEditor.IsAugust.Description',
-            'Substring(String, StartPosition, Length)\r\nRetrieves a substring from String. The substring starts at StartPosition and has the specified Length.': 'XtraEditorsExpressionEditor.Substring3param.Description',
-            '10': 'XtraEditorsExpressionEditor.>>layoutItemButton11.ZOrder',
-            'CalculatedFieldExpressionEditorForm': 'XtraEditorsExpressionEditor.>>$this.Name',
-            'DevExpress.XtraEditors.XtraForm, DevExpress.Utils.v16.2, Version=16.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>$this.Type',
-            'Condition expression editor': 'XtraEditorsExpressionEditor.Condition.Caption',
-            'ToDecimal(Value)\r\nConverts Value to an equivalent decimal number.': 'XtraEditorsExpressionEditor.ToDecimal.Description',
-            '21': 'XtraEditorsExpressionEditor.>>expressionEdit.ZOrder',
-            'Max(Value1, Value2)\r\nReturns the maximum value from the specified values.': 'XtraEditorsExpressionEditor.Max.Description',
-            'LocalDateTimeTwoMonthsAway()\r\nReturns a date-time value corresponding to the first day of the month after next.': 'XtraEditorsExpressionEditor.LocalDateTimeTwoMonthsAway.Description',
-            'Substring(String, StartPosition)\r\nRetrieves a substring from String. The substring starts at StartPosition.': 'XtraEditorsExpressionEditor.Substring2param.Description',
-            'Acos(Value)\r\nReturns the arccosine of a number (the angle, in radians, whose cosine is the given float expression).': 'XtraEditorsExpressionEditor.Acos.Description',
-            'GetDayOfYear(DateTime)\r\nExtracts a day of the year from the defined DateTime.': 'XtraEditorsExpressionEditor.GetDayOfYear.Description',
-            'Multiplies the value of two expressions.': 'XtraEditorsExpressionEditor.Multiply.Description',
-            'Returns the total amount of data rows in a datasource.': 'XtraEditorsExpressionEditor.RowCount.Description',
-            'LocalDateTimeNow()\r\nReturns a date-time value corresponding to the current moment in time.': 'XtraEditorsExpressionEditor.LocalDateTimeNow.Description',
-            'LocalDateTimeLastYear()\r\nReturns a date-time value corresponding to the first day of the previous year.': 'XtraEditorsExpressionEditor.LocalDateTimeLastYear.Description',
-            'LocalDateTimeDayAfterTomorrow()\r\nReturns a date-time value corresponding to the day after Tomorrow.': 'XtraEditorsExpressionEditor.LocalDateTimeDayAfterTomorrow.Description',
-            'Sum(Value)\r\nReturns the sum of all the expression values in the collection.': 'XtraEditorsExpressionEditor.SumAggregate.Description',
-            'Compares a string against a pattern. If the value of the string matches the pattern, result is true. If the string does not match the pattern, result is false. If both string and pattern are empty strings, the result is true.': 'XtraEditorsExpressionEditor.Like.Description',
-            'Power(Value, Power)\r\nReturns a specified number raised to a specified power.': 'XtraEditorsExpressionEditor.Power.Description',
-            'Fields': 'XtraEditorsExpressionEditor.Fields.Text',
-            'Finds the difference between two numbers.': 'XtraEditorsExpressionEditor.Minus.Description',
-            'Log(Value)\r\nReturns the natural logarithm of a specified number.': 'XtraEditorsExpressionEditor.Log.Description',
-            'LocalDateTimeTwoYearsAway()\r\nReturns a date-time value corresponding to the first day of the year after next.': 'XtraEditorsExpressionEditor.LocalDateTimeTwoYearsAway.Description',
-            'Sinh(Value)\r\nReturns the hyperbolic sine of the angle defined in radians.': 'XtraEditorsExpressionEditor.Sinh.Description',
-            'Max(Value)\r\nReturns the maximum expression value in a collection.': 'XtraEditorsExpressionEditor.MaxAggregate.Description',
-            'Greater than operator. Used to compare expressions.': 'XtraEditorsExpressionEditor.Greater.Description',
-            '(All)': 'XtraEditorsExpressionEditor.functionsTypes.Properties.AllItems',
-            'In (,,,)\r\nTests for the existence of a property in an object.': 'XtraEditorsExpressionEditor.In.Description',
-            'DevExpress.XtraEditors.ComboBoxEdit, DevExpress.XtraEditors.v16.2, Version=16.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>functionsTypes.Type',
-            'functionsTypes': 'XtraEditorsExpressionEditor.>>functionsTypes.Name',
-            'Less than operator. Used to compare expressions.': 'XtraEditorsExpressionEditor.Less.Description',
-            'StartsWith(String, StartString)\r\nReturns True if the beginning of String matches StartString; otherwise, False is returned.': 'XtraEditorsExpressionEditor.StartsWith.Description',
-            '12': 'XtraEditorsExpressionEditor.>>layoutItemButton9.ZOrder',
-            'GetMonth(DateTime)\r\nExtracts a month from the defined DateTime.': 'XtraEditorsExpressionEditor.GetMonth.Description',
-            'EndsWith(String, EndString)\r\nReturns True if the end of String matches EndString; otherwise, False is returned.': 'XtraEditorsExpressionEditor.EndsWith.Description',
-            'Adds the value of one numeric expression to another, or concatenates two strings.': 'XtraEditorsExpressionEditor.Plus.Description',
-            'Single()\r\nReturns a single object from the collection.': 'XtraEditorsExpressionEditor.SingleAggregate.Description',
-            'Contains(String, SubString)\r\nReturns True if SubString occurs within String; otherwise, False is returned.': 'XtraEditorsExpressionEditor.Contains.Description',
-            'DateDiffHour(startDate, endDate)\r\nReturns the number of hour boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffHour.Description',
-            'Returns true if the operands do not have the same value; otherwise, it returns false.': 'XtraEditorsExpressionEditor.NotEqual.Description',
-            'Abs(Value)\r\nReturns the absolute, positive value of the given numeric expression.': 'XtraEditorsExpressionEditor.Abs.Description',
-            'LocalDateTimeNextMonth()\r\nReturns a date-time value corresponding to the first day of next month.': 'XtraEditorsExpressionEditor.LocalDateTimeNextMonth.Description',
-            'AddMonths(DateTime, MonthsCount)\r\nReturns a date-time value that is the specified number of months away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddMonths.Description',
-            'Iif(Expression, TruePart, FalsePart)\r\nReturns either TruePart or FalsePart, depending on the evaluation of the Boolean Expression.': 'XtraEditorsExpressionEditor.Iif.Description',
-            'GetMilliSecond(DateTime)\r\nExtracts milliseconds from the defined DateTime.': 'XtraEditorsExpressionEditor.GetMilliSecond.Description',
-            'LocalDateTimeLastMonth()\r\nReturns a date-time value corresponding to the first day of the previous month.': 'XtraEditorsExpressionEditor.LocalDateTimeLastMonth.Description',
-            'buttonCancel': 'XtraEditorsExpressionEditor.>>buttonCancel.Name',
-            'PadLeft(String, Length)\r\nLeft-aligns characters in the defined string, padding its left side with white space characters up to a specified total length.': 'XtraEditorsExpressionEditor.PadLeft.Description',
-            'descriptionControl': 'XtraEditorsExpressionEditor.>>descriptionControl.Name',
-            'DevExpress.XtraEditors.LabelControl, DevExpress.Utils.v16.2, Version=16.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>descriptionControl.Type',
-            '5': 'XtraEditorsExpressionEditor.>>labelControl3.ZOrder',
-            'Min(Value1, Value2)\r\nReturns the minimum value from the specified values.': 'XtraEditorsExpressionEditor.Min.Description',
-            '14': 'XtraEditorsExpressionEditor.>>layoutItemButton7.ZOrder',
-            'Condition Editor': 'XtraEditorsExpressionEditor.Condition.Text',
-            'Cosh(Value)\r\nReturns the hyperbolic cosine of the angle defined in radians.': 'XtraEditorsExpressionEditor.Cosh.Description',
-            'Performs logical negation on an expression.': 'XtraEditorsExpressionEditor.Not.Description',
-            'GetYear(DateTime)\r\nExtracts a year from the defined DateTime.': 'XtraEditorsExpressionEditor.GetYear.Description',
-            'DateDiffYear(startDate, endDate)\r\nReturns the number of year boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffYear.Description',
             'Page Header': 'DevExpress.XtraReports.UI.PageHeaderBand',
             'Max Nesting Level': 'DevExpress.XtraReports.UI.XRTableOfContents.MaxNestingLevel',
             'Null Value Text': 'DevExpress.XtraReports.UI.XRControl.NullValueText',
@@ -628,6 +147,7 @@ var DevExpress;
             'Data Adapter': 'DevExpress.XtraReports.UI.XRPivotGrid.DataAdapter',
             'Data Source': 'DevExpress.XtraReports.UI.XRSparkline.DataSource',
             'Palette Name': 'DevExpress.XtraReports.UI.XRChart.PaletteName',
+            'Sorting Options': 'DevExpress.XtraReports.UI.SortingOptions',
             'Report Print Options': 'DevExpress.XtraReports.UI.ReportPrintOptions',
             'Filter Separator': 'DevExpress.XtraReports.UI.PivotGrid.XRPivotGridAppearances.FilterSeparator',
             'Column Width': 'DevExpress.XtraReports.UI.MultiColumn.ColumnWidth',
@@ -635,6 +155,7 @@ var DevExpress;
             'Show Text': 'DevExpress.XtraReports.UI.XRBarCode.ShowText',
             'Line Width': 'DevExpress.XtraReports.UI.XRShape.LineWidth',
             'Line Style': 'DevExpress.XtraReports.UI.XRShape.LineStyle',
+            'Parameters': 'DevExpress.XtraReports.UI.XtraReport.Parameters',
             'Edit Options': 'DevExpress.XtraReports.UI.EditOptions',
             'Location': 'DevExpress.XtraReports.UI.XRControl.Location',
             'Group Union': 'DevExpress.XtraReports.UI.GroupHeaderBand.GroupUnion',
@@ -663,6 +184,7 @@ var DevExpress;
             'Data Member': 'DevExpress.XtraReports.UI.XRSparkline.DataMember',
             'Function': 'DevExpress.XtraReports.UI.XRGroupSortingSummary.Function',
             'Condition': 'DevExpress.XtraReports.UI.FormattingRule.Condition',
+            'Interactive Sorting': 'DevExpress.XtraReports.UI.XRLabel.InteractiveSorting',
             'Scripts': 'DevExpress.XtraReports.UI.Band.Scripts',
             'OLAP Connection String': 'DevExpress.XtraReports.UI.XRPivotGrid.OLAPConnectionString',
             'Bound Data Changed': 'DevExpress.XtraReports.UI.XRChartScripts.OnBoundDataChanged',
@@ -690,6 +212,7 @@ var DevExpress;
             'Panel': 'DevExpress.XtraReports.UI.XRPanel',
             'Shape': 'DevExpress.XtraReports.UI.XRShape',
             'Using Style': 'DevExpress.XtraReports.UI.XRControlStyle.StyleUsing',
+            'Table': 'DevExpress.XtraReports.UI.XRTable',
             'Start Point': 'DevExpress.XtraReports.UI.XRCrossBandControl.StartPoint',
             'Chart': 'DevExpress.XtraReports.UI.XRChart',
             'Gauge': 'DevExpress.XtraReports.UI.XRGauge',
@@ -703,6 +226,8 @@ var DevExpress;
             'Double-Click in Preview': 'DevExpress.XtraReports.UI.XRControlEvents.OnPreviewDoubleClick',
             'Field Name': 'DevExpress.XtraReports.UI.XRGroupSortingSummary.FieldName',
             'Request Parameters': 'DevExpress.XtraReports.UI.XtraReport.RequestParameters',
+            'MultiThread': 'DevExpress.XtraReports.UI.DocumentExportMode.MultiThread',
+            'Regular': 'DevExpress.XtraReports.UI.DocumentExportMode.Regular',
             'Count (Distinct)': 'DevExpress.XtraReports.UI.SortingSummaryFunction.DCount',
             'Field Value Grand Total Style': 'DevExpress.XtraReports.UI.PivotGrid.XRPivotGridStyles.FieldValueGrandTotalStyle',
             'Table Row': 'DevExpress.XtraReports.UI.XRTableRow',
@@ -720,6 +245,7 @@ var DevExpress;
             'After the Band, Except for the Last Entry': 'DevExpress.XtraReports.UI.PageBreak.AfterBandExceptLastEntry',
             'Indent': 'DevExpress.XtraReports.UI.XRTableOfContentsLevel.Indent',
             'Sorting Summary Reset': 'DevExpress.XtraReports.UI.GroupHeaderBandScripts.OnSortingSummaryReset',
+            'Value': 'DevExpress.XtraReports.UI.ProcessDuplicatesTarget.Value',
             'Show Printing Warnings': 'DevExpress.XtraReports.UI.XtraReport.ShowPrintingWarnings',
             'Multi-Column Options': 'DevExpress.XtraReports.UI.MultiColumn',
             'Draw the Watermark': 'DevExpress.XtraReports.UI.XtraReport.DrawWatermark',
@@ -774,6 +300,7 @@ var DevExpress;
             'Page Color': 'DevExpress.XtraReports.UI.XtraReport.PageColor',
             'With First Detail': 'DevExpress.XtraReports.UI.GroupUnion.WithFirstDetail',
             'Navigation URL': 'DevExpress.XtraReports.UI.XRControl.NavigateUrl',
+            'Streaming': 'DevExpress.XtraReports.UI.DocumentExportMode.Streaming',
             'Report Header': 'DevExpress.XtraReports.UI.ReportHeaderBand',
             'Custom Field Value Cells': 'DevExpress.XtraReports.UI.XRPivotGridScripts.OnCustomFieldValueCells',
             'Styles': 'DevExpress.XtraReports.UI.XRPivotGrid.Styles',
@@ -785,6 +312,7 @@ var DevExpress;
             'Anchor Vertically': 'DevExpress.XtraReports.UI.XRControl.AnchorVertical',
             'Report Source Url': 'DevExpress.XtraReports.UI.XRSubreport.ReportSourceUrl',
             'Data Source\'s Schema': 'DevExpress.XtraReports.UI.XtraReport.DataSourceSchema',
+            'Snap Grid Step Count': 'DevExpress.XtraReports.UI.XtraReport.SnapGridStepCount',
             'Zip Code': 'DevExpress.XtraReports.UI.XRZipCode',
             'Angle': 'DevExpress.XtraReports.UI.XRLabel.Angle',
             'Process Duplicates': 'DevExpress.XtraReports.UI.XRLabel.ProcessDuplicates',
@@ -813,6 +341,7 @@ var DevExpress;
             'Summary Row Changed': 'DevExpress.XtraReports.UI.XRLabelScripts.OnSummaryRowChanged',
             'Image URL': 'DevExpress.XtraReports.UI.XRPictureBox.ImageUrl',
             'Size': 'DevExpress.XtraReports.UI.XRControl.Size',
+            'Name': 'DevExpress.XtraReports.UI.XRControl.Name',
             'Control Style': 'DevExpress.XtraReports.UI.XRControlStyle',
             'Foreground Color': 'DevExpress.XtraReports.UI.XRControlStyle.ForeColor',
             'Band Level Changed': 'DevExpress.XtraReports.UI.GroupBandScripts.OnBandLevelChanged',
@@ -857,12 +386,15 @@ var DevExpress;
             'Trimming': 'DevExpress.XtraReports.UI.XRAppearanceObject.Trimming',
             'Ignore Null Values': 'DevExpress.XtraReports.UI.XRGroupSortingSummary.IgnoreNullValues',
             'Script References': 'DevExpress.XtraReports.UI.XtraReport.ScriptReferences',
+            'Ascending': 'DevExpress.XtraReports.UI.XRColumnSortOrder.Ascending',
             'Xlsx Format String': 'DevExpress.XtraReports.UI.XRControl.XlsxFormatString',
             'Sparkline Scripts': 'DevExpress.XtraReports.UI.XRSparklineScripts',
+            'Fields': 'DevExpress.XtraReports.UI.XRPivotGrid.Fields',
             'Binding': 'DevExpress.XtraReports.Design.DataBinding.Binding',
             'First Down, then Across': 'DevExpress.XtraReports.UI.ColumnDirection.DownThenAcross',
             'Print Options': 'DevExpress.XtraReports.UI.XRPivotGrid.OptionsPrint',
             'Before Print': 'DevExpress.XtraReports.UI.XRControlEvents.OnBeforePrint',
+            'Sort Order': 'DevExpress.XtraReports.UI.XRGroupSortingSummary.SortOrder',
             'Use WMPaint Recursively': 'DevExpress.XtraReports.UI.WinControlDrawMethod.UseWMPaintRecursive',
             'Page Info': 'DevExpress.XtraReports.UI.XRPageInfo',
             'Field Value Display Text': 'DevExpress.XtraReports.UI.XRPivotGridScripts.OnFieldValueDisplayText',
@@ -927,6 +459,7 @@ var DevExpress;
             'First Across, then Down': 'DevExpress.XtraReports.UI.ColumnDirection.AcrossThenDown',
             'Pivot Grid': 'DevExpress.XtraReports.UI.XRPivotGrid',
             'Header Group Line': 'DevExpress.XtraReports.UI.PivotGrid.XRPivotGridAppearances.HeaderGroupLine',
+            'Descending': 'DevExpress.XtraReports.UI.XRColumnSortOrder.Descending',
             'Table Of Contents Title': 'DevExpress.XtraReports.UI.XRTableOfContentsTitle',
             'Use WMPrint Recursively': 'DevExpress.XtraReports.UI.WinControlDrawMethod.UseWMPrintRecursive',
             'Table Of Contents Level': 'DevExpress.XtraReports.UI.XRTableOfContentsLevel',
@@ -1004,11 +537,13 @@ var DevExpress;
             'Fore Color': 'DevExpress.XtraReports.UI.XRTableOfContentsLevelBase.ForeColor',
             'Field Header': 'DevExpress.XtraReports.UI.PivotGrid.XRPivotGridAppearances.FieldHeader',
             'Merge based on Tag': 'DevExpress.XtraReports.UI.ValueSuppressType.MergeByTag',
+            'Expression': 'DevExpress.XtraReports.UI.CalculatedField.Expression',
             'Picture Box': 'DevExpress.XtraReports.UI.XRPictureBox',
             'Automatic Layout': 'DevExpress.XtraReports.UI.XRChart.AutoLayout',
             'Summary Calculated': 'DevExpress.XtraReports.UI.XRLabelScripts.OnSummaryCalculated',
             'Actual Width': 'DevExpress.XtraReports.UI.XRPivotGrid.ActualWidth',
             'Navigation Target': 'DevExpress.XtraReports.UI.XRControl.Target',
+            'Auto': 'DevExpress.XtraReports.UI.DocumentExportMode.Auto',
             'Summary Calculated Field': 'DevExpress.XtraReports.UI.SummaryCalculatedField',
             'Field Value': 'DevExpress.XtraReports.UI.PivotGrid.XRPivotGridAppearances.FieldValue',
             'Parent Bookmark': 'DevExpress.XtraReports.UI.XRControl.BookmarkParent',
@@ -1048,6 +583,7 @@ var DevExpress;
             'Style': 'DevExpress.XtraReports.UI.ConditionFormatting.Style',
             'Indicators Palette Name': 'DevExpress.XtraReports.UI.XRChart.IndicatorsPaletteName',
             'After Print': 'DevExpress.XtraReports.UI.XRControlEvents.OnAfterPrint',
+            'Target Band': 'DevExpress.XtraReports.UI.SortingOptions.TargetBand',
             'As Bricks': 'DevExpress.XtraReports.UI.WinControlPrintMode.AsBricks',
             'Cell': 'DevExpress.XtraReports.UI.PivotGrid.XRPivotGridAppearances.Cell',
             'Grand Total Cell': 'DevExpress.XtraReports.UI.PivotGrid.XRPivotGridAppearances.GrandTotalCell',
@@ -1121,6 +657,7 @@ var DevExpress;
             'Always': 'DevExpress.XtraPivotGrid.AllowHideFieldsType.Always',
             'Caption': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportStyle_Caption',
             'XMLA': 'DevExpress.XtraPivotGrid.OLAPDataProvider.Xmla',
+            'Data Processing Engine': 'DevExpress.XtraPivotGrid.PivotGridOptionsData.DataProcessingEngine',
             'Unbound Field Name': 'DevExpress.XtraPivotGrid.PivotGridFieldBase.UnboundFieldName',
             'All Areas': 'DevExpress.XtraPivotGrid.PivotGridAllowedAreas.All',
             'Faces': 'DevExpress.XtraPivotGrid.PivotKPIGraphic.Faces',
@@ -1219,7 +756,6 @@ var DevExpress;
             'Shapes': 'DevExpress.XtraPivotGrid.PivotKPIGraphic.Shapes',
             'Rank In Row Smallest To Largest': 'DevExpress.Data.PivotGrid.PivotSummaryDisplayType.RankInRowSmallestToLargest',
             'Row Header Area': 'DevExpress.XtraPivotGrid.PivotGridAppearances.RowHeaderArea',
-            'Auto': 'DevExpress.XtraPivotGrid.PivotOLAPFilterUsingWhereClause.Auto',
             'Cylinder': 'DevExpress.XtraPivotGrid.PivotKPIGraphic.Cylinder',
             'Filter By UniqueName': 'DevExpress.XtraPivotGrid.PivotGridOptionsOLAP.FilterByUniqueName',
             'Sort Mode': 'DevExpress.XtraPivotGrid.PivotGridFieldBase.SortMode',
@@ -1271,6 +807,7 @@ var DevExpress;
             'Row Field Value Separator': 'DevExpress.XtraPivotGrid.Data.PivotGridOptionsPrint.RowFieldValueSeparator',
             'Apply To Cell': 'DevExpress.XtraPivotGrid.PivotGridStyleFormatCondition.ApplyToCell',
             'Variance Arrow': 'DevExpress.XtraPivotGrid.PivotKPIGraphic.VarianceArrow',
+            'Options': 'DevExpress.XtraPivotGrid.PivotGridFieldBase.Options',
             'Grouping Interval': 'DevExpress.XtraPivotGrid.PivotGridFieldBase.GroupInterval',
             'Data Column Name': 'DevExpress.XtraPivotGrid.PivotGridFieldBase.FieldName',
             'Show Always': 'DevExpress.XtraPivotGrid.PivotShowButtonModeEnum.ShowAlways',
@@ -1311,6 +848,7 @@ var DevExpress;
             'Filter Header Area': 'DevExpress.XtraPivotGrid.PivotGridAppearances.FilterHeaderArea',
             'Allow Hide Fields': 'DevExpress.XtraPivotGrid.PivotGridOptionsCustomization.AllowHideFields',
             'Totals Location': 'DevExpress.XtraPivotGrid.Data.PivotGridOptionsViewBase.TotalsLocation',
+            'Legacy': 'DevExpress.XtraPivotGrid.PivotDataProcessingEngine.Legacy',
             'Print Vertical Lines': 'DevExpress.XtraPivotGrid.Data.PivotGridOptionsPrint.PrintVertLines',
             'Multi Selection': 'DevExpress.XtraPivotGrid.PivotGridCells.MultiSelection',
             'OLAP Use NonEmpty': 'DevExpress.XtraPivotGrid.PivotGridFieldOptions.OLAPUseNonEmpty',
@@ -1332,6 +870,7 @@ var DevExpress;
             'Date': 'DevExpress.XtraPivotGrid.PivotGroupInterval.Date',
             'Hour': 'DevExpress.XtraPivotGrid.PivotGroupInterval.Hour',
             'Date-Hour-Minute-Second': 'DevExpress.XtraPivotGrid.PivotGroupInterval.DateHourMinuteSecond',
+            'Legacy Optimized': 'DevExpress.XtraPivotGrid.PivotDataProcessingEngine.LegacyOptimized',
             'Reversed Status Arrow': 'DevExpress.XtraPivotGrid.PivotKPIGraphic.ReversedStatusArrow',
             'Print Filter Headers': 'DevExpress.XtraPivotGrid.Data.PivotGridOptionsPrint.PrintFilterHeaders',
             'FieldHeader': 'DevExpress.PivotGrid.Printing.PrintAppearance.FieldHeader',
@@ -1355,6 +894,7 @@ var DevExpress;
             'From Center Horizontal': 'DevExpress.XtraCharts.RectangleGradientMode.FromCenterHorizontal',
             'Right Bottom': 'DevExpress.XtraCharts.DockCorner.RightBottom',
             'Reverse': 'DevExpress.XtraCharts.Axis.Reverse',
+            'Close': 'DevExpress.XtraCharts.StockLevel.Close',
             'Line Tension Percent': 'DevExpress.XtraCharts.FullStackedSplineArea3DSeriesView.LineTensionPercent',
             'Equal Bar Width': 'DevExpress.XtraCharts.SideBySideStackedBarSeriesView.EqualBarWidth',
             'Right Outside': 'DevExpress.XtraCharts.LegendAlignmentHorizontal.RightOutside',
@@ -1364,13 +904,16 @@ var DevExpress;
             'Constant Line Collection': 'DevExpress.XtraCharts.ConstantLineCollection',
             'Diamond': 'DevExpress.XtraCharts.MarkerKind.Diamond',
             'Resolve Overlapping Options': 'DevExpress.XtraCharts.AxisLabel.ResolveOverlappingOptions',
+            'Candle Stick Reduction Options': 'DevExpress.XtraCharts.CandleStickReductionOptions',
             'Thousands': 'DevExpress.XtraCharts.NumericGridAlignment.Thousands',
+            'Qualitative Scale Options': 'DevExpress.XtraCharts.AxisXBase.QualitativeScaleOptions',
             'Swift Plot Diagram Secondary Axis X Collection': 'DevExpress.XtraCharts.SwiftPlotDiagramSecondaryAxisXCollection',
             'Label Visibility Mode': 'DevExpress.XtraCharts.Axis2D.LabelVisibilityMode',
             'X-Axis': 'DevExpress.XtraCharts.SwiftPlotDiagram.AxisX',
             'Y-Axis': 'DevExpress.XtraCharts.SwiftPlotDiagram.AxisY',
             'Stacked Area 3D Series Label': 'DevExpress.XtraCharts.StackedArea3DSeriesLabel',
             'Stacked Bar Series Label': 'DevExpress.XtraCharts.StackedBarSeriesLabel',
+            'Marker': 'DevExpress.XtraCharts.LegendMarkerMode.Marker',
             'Left': 'DevExpress.XtraCharts.LegendAlignmentHorizontal.Left',
             'Start To Start': 'DevExpress.XtraCharts.TaskLinkType.StartToStart',
             'Shape Kind': 'DevExpress.XtraCharts.Annotation.ShapeKind',
@@ -1378,7 +921,6 @@ var DevExpress;
             'Retrieve Column Custom Totals': 'DevExpress.XtraCharts.PivotGridDataSourceOptions.RetrieveColumnCustomTotals',
             'Data Filters': 'DevExpress.XtraCharts.SeriesBase.DataFilters',
             'Scrolling Options': 'DevExpress.XtraCharts.Diagram3D.ScrollingOptions',
-            'Custom Panel': 'DevExpress.XtraCharts.SimpleDiagram.CustomPanel',
             'Color': 'DevExpress.XtraCharts.SeriesViewBase.Color',
             'YZX': 'DevExpress.XtraCharts.RotationOrder.YZX',
             'YXZ': 'DevExpress.XtraCharts.RotationOrder.YXZ',
@@ -1408,7 +950,6 @@ var DevExpress;
             'Millisecond': 'DevExpress.XtraCharts.DateTimeMeasureUnit.Millisecond',
             'Signal Smoothing Period': 'DevExpress.XtraCharts.MovingAverageConvergenceDivergence.SignalSmoothingPeriod',
             'No Cap': 'DevExpress.XtraCharts.ErrorBarEndStyle.NoCap',
-            'Marker': 'DevExpress.XtraCharts.Marker',
             'Shadow': 'DevExpress.XtraCharts.XYDiagramSeriesViewBase.Shadow',
             'Hatch Style': 'DevExpress.XtraCharts.HatchFillOptions.HatchStyle',
             'Color Each': 'DevExpress.XtraCharts.SeriesView3DColorEachSupportBase.ColorEach',
@@ -1417,6 +958,7 @@ var DevExpress;
             'Series Selection Mode': 'DevExpress.XtraCharts.Native.Chart.SeriesSelectionMode',
             'Finish To Finish': 'DevExpress.XtraCharts.TaskLinkType.FinishToFinish',
             'Pyramid': 'DevExpress.XtraCharts.Bar3DModel.Pyramid',
+            'End Second': 'DevExpress.XtraCharts.TimeInterval.EndSecond',
             'Solid': 'DevExpress.XtraCharts.FillMode3D.Solid',
             'Spin Grow Up': 'DevExpress.XtraCharts.PieSpinGrowUpAnimation',
             'Top Left to Bottom Right': 'DevExpress.XtraCharts.RectangleGradientMode.TopLeftToBottomRight',
@@ -1433,10 +975,12 @@ var DevExpress;
             'Sine': 'DevExpress.XtraCharts.SineEasingFunction',
             'Rotation Count': 'DevExpress.XtraCharts.PieSpinAnimationBase.RotationCount',
             'Child Color': 'DevExpress.XtraCharts.TaskLinkColorSource.ChildColor',
+            'Time Interval Collection': 'DevExpress.XtraCharts.TimeIntervalCollection',
             'Chart Measure Unit': 'DevExpress.XtraCharts.ChartRangeControlClientSnapMode.ChartMeasureUnit',
             'Dimension': 'DevExpress.XtraCharts.SimpleDiagram3D.Dimension',
             'Range Control Client Numeric Grid Options': 'DevExpress.XtraCharts.ChartRangeControlClientNumericGridOptions',
             'Series Animation': 'DevExpress.XtraCharts.LineSeriesView.SeriesAnimation',
+            'Work Intervals': 'DevExpress.XtraCharts.WorkTimeRule.WorkIntervals',
             'Minor Length': 'DevExpress.XtraCharts.TickmarksBase.MinorLength',
             'Show for Zero Values': 'DevExpress.XtraCharts.BarSeriesLabel.ShowForZeroValues',
             'Minor Color': 'DevExpress.XtraCharts.GridLines.MinorColor',
@@ -1448,13 +992,16 @@ var DevExpress;
             'Tens': 'DevExpress.XtraCharts.NumericMeasureUnit.Tens',
             'Ones': 'DevExpress.XtraCharts.NumericMeasureUnit.Ones',
             'On Load': 'DevExpress.XtraCharts.ChartAnimationMode.OnLoad',
+            'Always Filled': 'DevExpress.XtraCharts.CandleStickFillMode.AlwaysFilled',
             'Bar Distance': 'DevExpress.XtraCharts.SideBySideFullStackedBar3DSeriesView.BarDistance',
             'Minor Thickness': 'DevExpress.XtraCharts.TickmarksBase.MinorThickness',
             'Allow Stagger': 'DevExpress.XtraCharts.AxisLabelResolveOverlappingOptions.AllowStagger',
             'From Right Bottom Corner': 'DevExpress.XtraCharts.XYMarkerSlideAnimationDirection.FromRightBottomCorner',
             'Signal Line Color': 'DevExpress.XtraCharts.MovingAverageConvergenceDivergence.SignalLineColor',
             'Text Color': 'DevExpress.XtraCharts.CustomAxisLabel.TextColor',
+            'Aggregate Function': 'DevExpress.XtraCharts.XYDiagram3DSeriesViewBase.AggregateFunction',
             'Max Horizontal Percentage': 'DevExpress.XtraCharts.Legend.MaxHorizontalPercentage',
+            'Work Time Only': 'DevExpress.XtraCharts.DateTimeScaleOptions.WorkTimeOnly',
             'Colorizer': 'DevExpress.XtraCharts.SeriesBase.Colorizer',
             'Signal Line Style': 'DevExpress.XtraCharts.MovingAverageConvergenceDivergence.SignalLineStyle',
             'Center': 'DevExpress.XtraCharts.FunnelSeriesLabelPosition.Center',
@@ -1487,7 +1034,6 @@ var DevExpress;
             'Top Right to Bottom Left': 'DevExpress.XtraCharts.PolygonGradientMode.TopRightToBottomLeft',
             'Tail': 'DevExpress.XtraCharts.AnnotationConnectorStyle.Tail',
             'Use Weight': 'DevExpress.XtraCharts.PaneSizeMode.UseWeight',
-            'Date-Time Options': 'DevExpress.XtraCharts.AxisLabel.DateTimeOptions',
             'Show Others': 'DevExpress.XtraCharts.TopNOptions.ShowOthers',
             'Checkable in Legend': 'DevExpress.XtraCharts.Indicator.CheckableInLegend',
             'Dot': 'DevExpress.XtraCharts.DashStyle.Dot',
@@ -1504,6 +1050,7 @@ var DevExpress;
             'Begin Time': 'DevExpress.XtraCharts.AnimationBase.BeginTime',
             'Power': 'DevExpress.XtraCharts.PowerEasingFunction.Power',
             'Shape Fillet': 'DevExpress.XtraCharts.Annotation.ShapeFillet',
+            'Dependent Axes Y Range': 'DevExpress.XtraCharts.XYDiagram2D.DependentAxesYRange',
             'Tickmarks': 'DevExpress.XtraCharts.RadarAxisY.Tickmarks',
             'Size As Percentage': 'DevExpress.XtraCharts.Pie3DSeriesView.SizeAsPercentage',
             'Currency': 'DevExpress.XtraCharts.NumericFormat.Currency',
@@ -1540,7 +1087,6 @@ var DevExpress;
             'Top Left': 'DevExpress.XtraCharts.ToolTipDockCorner.TopLeft',
             'Moving Average And Envelope': 'DevExpress.XtraCharts.MovingAverageKind.MovingAverageAndEnvelope',
             'Max Line Count': 'DevExpress.XtraCharts.SeriesLabelBase.MaxLineCount',
-            'Grid Offset': 'DevExpress.XtraCharts.ScaleOptionsBase.GridOffset',
             'Thickness': 'DevExpress.XtraCharts.TickmarksBase.Thickness',
             'Minor Count': 'DevExpress.XtraCharts.AxisBase.MinorCount',
             'Fibonacci Indicator Label': 'DevExpress.XtraCharts.FibonacciIndicatorLabel',
@@ -1574,12 +1120,15 @@ var DevExpress;
             'Marker 2': 'DevExpress.XtraCharts.RangeAreaSeriesView.Marker2',
             'Marker 1': 'DevExpress.XtraCharts.RangeAreaSeriesView.Marker1',
             'Show for Each Series': 'DevExpress.XtraCharts.CrosshairLabelMode.ShowForEachSeries',
+            'Stick to End': 'DevExpress.XtraCharts.SwiftPlotDiagramAxisXBase.StickToEnd',
             'End Style': 'DevExpress.XtraCharts.ErrorBars.EndStyle',
+            'Work Time Rules': 'DevExpress.XtraCharts.DateTimeScaleOptions.WorkTimeRules',
             'Zoom Rectangle': 'DevExpress.XtraCharts.ZoomRectangle',
             'Scrolling Options 2D': 'DevExpress.XtraCharts.ScrollingOptions2D',
             'Right': 'DevExpress.XtraCharts.RectangleIndents.Right',
             'Reduction Stock Options': 'DevExpress.XtraCharts.ReductionStockOptions',
             'From Top Center': 'DevExpress.XtraCharts.CircularMarkerAnimationDirection.FromTopCenter',
+            'Financial': 'DevExpress.XtraCharts.SeriesAggregateFunction.Financial',
             'Border Visible': 'DevExpress.XtraCharts.MarkerBase.BorderVisible',
             'Value Duration Format': 'DevExpress.XtraCharts.RangePointOptions.ValueDurationFormat',
             'Tool Tip Point Pattern': 'DevExpress.XtraCharts.SeriesBase.ToolTipPointPattern',
@@ -1602,7 +1151,6 @@ var DevExpress;
             'Left Top': 'DevExpress.XtraCharts.DockCorner.LeftTop',
             'Notched Arrow': 'DevExpress.XtraCharts.AnnotationConnectorStyle.NotchedArrow',
             'Inside Rectangular Border': 'DevExpress.XtraCharts.InsideRectangularBorder',
-            'Approximate Colors': 'DevExpress.XtraCharts.RangeColorizer.ApproximateColors',
             'Max Value Label': 'DevExpress.XtraCharts.RangeBarLabelKind.MaxValueLabel',
             'Full-Stacked Bar Series Label': 'DevExpress.XtraCharts.FullStackedBarSeriesLabel',
             'Dock Corner': 'DevExpress.XtraCharts.FreePosition.DockCorner',
@@ -1617,7 +1165,6 @@ var DevExpress;
             'Edge1': 'DevExpress.XtraCharts.ScaleBreak.Edge1',
             'Auto Format': 'DevExpress.XtraCharts.DateTimeOptions.AutoFormat',
             'Unwind from Center': 'DevExpress.XtraCharts.CircularSeriesUnwindFromCenterAnimation',
-            'Auto Grid': 'DevExpress.XtraCharts.ScaleOptionsBase.AutoGrid',
             'Straight': 'DevExpress.XtraCharts.ScaleBreakStyle.Straight',
             'Crosshair Axis Label Options': 'DevExpress.XtraCharts.Axis2D.CrosshairAxisLabelOptions',
             'Labels Visibility': 'DevExpress.XtraCharts.SeriesBase.LabelsVisibility',
@@ -1640,10 +1187,10 @@ var DevExpress;
             'Automatic: Integral': 'DevExpress.XtraCharts.DateTimeScaleMode.AutomaticIntegral',
             'Free Position': 'DevExpress.XtraCharts.ToolTipFreePosition',
             'Spin Zoom In': 'DevExpress.XtraCharts.CircularSeriesSpinZoomInAnimation',
+            'Filled on Increase': 'DevExpress.XtraCharts.CandleStickFillMode.FilledOnIncrease',
             'Retrieve Row Totals': 'DevExpress.XtraCharts.PivotGridDataSourceOptions.RetrieveRowTotals',
             'Drop In': 'DevExpress.XtraCharts.PieDropInAnimation',
             'Automatic: Average': 'DevExpress.XtraCharts.DateTimeScaleMode.AutomaticAverage',
-            'Numeric Options': 'DevExpress.XtraCharts.AxisLabel.NumericOptions',
             'Use Mouse': 'DevExpress.XtraCharts.ScrollingOptions.UseMouse',
             'High': 'DevExpress.XtraCharts.StockLevel.High',
             'Open': 'DevExpress.XtraCharts.StockLevel.Open',
@@ -1662,6 +1209,7 @@ var DevExpress;
             'Y-Axis Max Zoom Percent': 'DevExpress.XtraCharts.ZoomingOptions2D.AxisYMaxZoomPercent',
             'Dash Dot': 'DevExpress.XtraCharts.DashStyle.DashDot',
             'Value Line Style': 'DevExpress.XtraCharts.CrosshairOptions.ValueLineStyle',
+            'Start Second': 'DevExpress.XtraCharts.TimeInterval.StartSecond',
             'Min Limit': 'DevExpress.XtraCharts.Strip.MinLimit',
             'Group Header Text Options': 'DevExpress.XtraCharts.CrosshairOptions.GroupHeaderTextOptions',
             'Vertical Alignment': 'DevExpress.XtraCharts.Legend.AlignmentVertical',
@@ -1669,6 +1217,7 @@ var DevExpress;
             'Key': 'DevExpress.XtraCharts.SeriesPointFilter.Key',
             'Value Line Color': 'DevExpress.XtraCharts.CrosshairOptions.ValueLineColor',
             'Both': 'DevExpress.XtraCharts.ErrorBarDirection.Both',
+            'Auto Grid': 'DevExpress.XtraCharts.ScaleGridOptionsBase.AutoGrid',
             'Positive Error': 'DevExpress.XtraCharts.FixedValueErrorBars.PositiveError',
             'Secondary Axis Y Collection': 'DevExpress.XtraCharts.SecondaryAxisYCollection',
             'Show Open Close': 'DevExpress.XtraCharts.StockSeriesView.ShowOpenClose',
@@ -1677,9 +1226,9 @@ var DevExpress;
             'Doughnut Series Label': 'DevExpress.XtraCharts.DoughnutSeriesLabel',
             'Right Column': 'DevExpress.XtraCharts.FunnelSeriesLabelPosition.RightColumn',
             'Custom Labels': 'DevExpress.XtraCharts.Axis2D.CustomLabels',
-            'Always Show Zero Level': 'DevExpress.XtraCharts.VisualRange.AlwaysShowZeroLevel',
             'Staggered': 'DevExpress.XtraCharts.AxisLabel.Staggered',
             'Tooltip Options': 'DevExpress.XtraCharts.Native.Chart.ToolTipOptions',
+            'Previous to Current Point': 'DevExpress.XtraCharts.ReductionColorMode.PreviousToCurrentPoint',
             'Scroll Bar Options': 'DevExpress.XtraCharts.XYDiagramPaneBase.ScrollBarOptions',
             'Indicator Collection': 'DevExpress.XtraCharts.IndicatorCollection',
             'Runtime Resizing': 'DevExpress.XtraCharts.Annotation.RuntimeResizing',
@@ -1696,7 +1245,6 @@ var DevExpress;
             'Back Image': 'DevExpress.XtraCharts.XYDiagramPaneBase.BackImage',
             'Total Days': 'DevExpress.XtraCharts.TimeSpanFormat.TotalDays',
             'Use Mouse Advanced': 'DevExpress.XtraCharts.RotationType.UseMouseAdvanced',
-            'Aggregate Function': 'DevExpress.XtraCharts.ScaleOptionsBase.AggregateFunction',
             'Hide Overlapped': 'DevExpress.XtraCharts.AxisLabelResolveOverlappingMode.HideOverlapped',
             'Long Date': 'DevExpress.XtraCharts.DateTimeFormat.LongDate',
             'Long Time': 'DevExpress.XtraCharts.DateTimeFormat.LongTime',
@@ -1705,7 +1253,7 @@ var DevExpress;
             'Threshold Value': 'DevExpress.XtraCharts.TopNMode.ThresholdValue',
             'Marker Color': 'DevExpress.XtraCharts.CustomLegendItem.MarkerColor',
             'Crosshair Label Visibility': 'DevExpress.XtraCharts.SeriesBase.CrosshairLabelVisibility',
-            'Size as Percentage': 'DevExpress.XtraCharts.PieSeriesViewBase.SizeAsPercentage',
+            'Grid Offset': 'DevExpress.XtraCharts.ChartRangeControlClientGridOptions.GridOffset',
             'Pane': 'DevExpress.XtraCharts.SwiftPlotSeriesViewBase.Pane',
             'Start Angle in Degrees': 'DevExpress.XtraCharts.RadarDiagram.StartAngleInDegrees',
             'Marker Image': 'DevExpress.XtraCharts.CustomLegendItem.MarkerImage',
@@ -1767,6 +1315,7 @@ var DevExpress;
             'Snap Alignment': 'DevExpress.XtraCharts.ChartRangeControlClientDateTimeGridOptions.SnapAlignment',
             'Tickmarks Y': 'DevExpress.XtraCharts.TickmarksY',
             'Tickmarks X': 'DevExpress.XtraCharts.TickmarksX',
+            'Always Show Zero Level': 'DevExpress.XtraCharts.WholeRange.AlwaysShowZeroLevel',
             'Area Width': 'DevExpress.XtraCharts.Area3DSeriesView.AreaWidth',
             'Fibonacci Retracement': 'DevExpress.XtraCharts.FibonacciIndicatorKind.FibonacciRetracement',
             'Z Order': 'DevExpress.XtraCharts.Annotation.ZOrder',
@@ -1786,6 +1335,7 @@ var DevExpress;
             'Dash': 'DevExpress.XtraCharts.DashStyle.Dash',
             'Max Allowed Series Count': 'DevExpress.XtraCharts.PivotGridDataSourceOptions.MaxAllowedSeriesCount',
             'Use Mouse Standard': 'DevExpress.XtraCharts.RotationType.UseMouseStandard',
+            'Grid Spacing': 'DevExpress.XtraCharts.ScaleGridOptionsBase.GridSpacing',
             'Double Collection': 'DevExpress.XtraCharts.DoubleCollection',
             'Task Link Options': 'DevExpress.XtraCharts.TaskLinkOptions',
             'Border 1': 'DevExpress.XtraCharts.RangeAreaSeriesView.Border1',
@@ -1820,6 +1370,7 @@ var DevExpress;
             'Rotation': 'DevExpress.XtraCharts.PieSeriesView.Rotation',
             'Zoom': 'DevExpress.XtraCharts.ChartImageSizeMode.Zoom',
             'Tile': 'DevExpress.XtraCharts.ChartImageSizeMode.Tile',
+            'Weekdays': 'DevExpress.XtraCharts.WorkTimeRule.Weekdays',
             'Text Options': 'DevExpress.XtraCharts.TextOptions',
             'Rotated': 'DevExpress.XtraCharts.XYDiagram.Rotated',
             'Dash Dot Dot': 'DevExpress.XtraCharts.DashStyle.DashDotDot',
@@ -1827,16 +1378,17 @@ var DevExpress;
             'Pie Fill Style': 'DevExpress.XtraCharts.Pie3DSeriesView.PieFillStyle',
             'Saturday': 'DevExpress.XtraCharts.Weekday.Saturday',
             'Color 2': 'DevExpress.XtraCharts.FillOptionsColor2Base.Color2',
+            'Animation': 'DevExpress.XtraCharts.Indicator.Animation',
             'Secondary Grid Lines Y': 'DevExpress.XtraCharts.SecondaryGridLinesY',
             'Secondary Grid Lines X': 'DevExpress.XtraCharts.SecondaryGridLinesX',
             'Size Mode': 'DevExpress.XtraCharts.Printing.ChartOptionsPrint.SizeMode',
             'From Right': 'DevExpress.XtraCharts.XYMarkerSlideAnimationDirection.FromRight',
+            'Marker and Check Box': 'DevExpress.XtraCharts.LegendMarkerMode.MarkerAndCheckBox',
             'Key Provider': 'DevExpress.XtraCharts.KeyColorColorizer.KeyProvider',
             'Top To Bottom': 'DevExpress.XtraCharts.TextOrientation.TopToBottom',
             'In': 'DevExpress.XtraCharts.EasingMode.In',
             'Two Labels': 'DevExpress.XtraCharts.RangeAreaLabelKind.TwoLabels',
             'Rectangle Indents': 'DevExpress.XtraCharts.RectangleIndents',
-            'Funnel Fill Style': 'DevExpress.XtraCharts.Funnel3DSeriesView.FunnelFillStyle',
             'Mouse Position': 'DevExpress.XtraCharts.ToolTipMousePosition',
             'Value and Weight': 'DevExpress.XtraCharts.BubbleLabelValueToDisplay.ValueAndWeight',
             'Group Header Pattern': 'DevExpress.XtraCharts.CrosshairOptions.GroupHeaderPattern',
@@ -1852,9 +1404,8 @@ var DevExpress;
             'Image Format': 'DevExpress.XtraCharts.Printing.ChartOptionsPrint.ImageFormat',
             'Argument Line Color': 'DevExpress.XtraCharts.CrosshairOptions.ArgumentLineColor',
             'Zooming Options': 'DevExpress.XtraCharts.Diagram3D.ZoomingOptions',
+            'Numeric Options': 'DevExpress.XtraCharts.NumericOptions',
             'Argument Line Style': 'DevExpress.XtraCharts.CrosshairOptions.ArgumentLineStyle',
-            'Animation': 'DevExpress.XtraCharts.FunnelSeriesView.Animation',
-            'Date-time Measure Unit': 'DevExpress.XtraCharts.AxisBase.DateTimeMeasureUnit',
             'Billions': 'DevExpress.XtraCharts.NumericGridAlignment.Billions',
             'Negative Error Data Member': 'DevExpress.XtraCharts.DataSourceBasedErrorBars.NegativeErrorDataMember',
             'Minus': 'DevExpress.XtraCharts.ErrorBarDirection.Minus',
@@ -1868,16 +1419,15 @@ var DevExpress;
             'Show Common for All Series': 'DevExpress.XtraCharts.CrosshairLabelMode.ShowCommonForAllSeries',
             'Total Milliseconds': 'DevExpress.XtraCharts.TimeSpanFormat.TotalMilliseconds',
             'Gantt Diagram': 'DevExpress.XtraCharts.GanttDiagram',
+            'Reduction Options': 'DevExpress.XtraCharts.CandleStickSeriesView.ReductionOptions',
             'And': 'DevExpress.XtraCharts.ConjunctionTypes.And',
             'Logarithmic': 'DevExpress.XtraCharts.AxisBase.Logarithmic',
             'Left Column': 'DevExpress.XtraCharts.FunnelSeriesLabelPosition.LeftColumn',
             'Indent from Marker': 'DevExpress.XtraCharts.BubbleSeriesLabel.IndentFromMarker',
             'Owner': 'DevExpress.XtraCharts.SeriesPointCollection.Owner',
-            'Legend Point Options': 'DevExpress.XtraCharts.SeriesBase.LegendPointOptions',
+            'Marker Offset': 'DevExpress.XtraCharts.Legend.MarkerOffset',
             'Date Time': 'DevExpress.XtraCharts.ScaleType.DateTime',
-            'Grid Spacing': 'DevExpress.XtraCharts.ChartRangeControlClientGridOptions.GridSpacing',
             'Bar Depth Auto': 'DevExpress.XtraCharts.Bar3DSeriesView.BarDepthAuto',
-            'Line Visible': 'DevExpress.XtraCharts.SeriesLabelBase.LineVisible',
             'Crosshair Highlight Points': 'DevExpress.XtraCharts.SeriesBase.CrosshairHighlightPoints',
             'Runtime Anchoring': 'DevExpress.XtraCharts.Annotation.RuntimeAnchoring',
             'Y Axis Scroll Bar Visible': 'DevExpress.XtraCharts.ScrollBarOptions.YAxisScrollBarVisible',
@@ -1898,12 +1448,11 @@ var DevExpress;
             'Tool Tip Series Pattern': 'DevExpress.XtraCharts.SeriesBase.ToolTipSeriesPattern',
             'Show Value Line': 'DevExpress.XtraCharts.CrosshairOptions.ShowValueLine',
             'Value As Duration': 'DevExpress.XtraCharts.RangePointOptions.ValueAsDuration',
-            'Use Checkboxes': 'DevExpress.XtraCharts.Legend.UseCheckBoxes',
+            'Use Check Boxes': 'DevExpress.XtraCharts.Legend.UseCheckBoxes',
             'Envelope Percent': 'DevExpress.XtraCharts.MovingAverage.EnvelopePercent',
             'Show Level 0%': 'DevExpress.XtraCharts.FibonacciIndicator.ShowLevel0',
             'Positive Error Data Member': 'DevExpress.XtraCharts.DataSourceBasedErrorBars.PositiveErrorDataMember',
             'Crosshair Label Mode': 'DevExpress.XtraCharts.CrosshairOptions.CrosshairLabelMode',
-            'Begin Text': 'DevExpress.XtraCharts.AxisLabel.BeginText',
             'Maximum Value Label': 'DevExpress.XtraCharts.RangeAreaLabelKind.MaxValueLabel',
             'Series Point Relation Collection': 'DevExpress.XtraCharts.SeriesPointRelationCollection',
             'Use Points': 'DevExpress.XtraCharts.PieExplodeMode.UsePoints',
@@ -1931,6 +1480,7 @@ var DevExpress;
             'Bounce': 'DevExpress.XtraCharts.BounceEasingFunction',
             'Percentage Accuracy': 'DevExpress.XtraCharts.PercentOptions.PercentageAccuracy',
             'Horizontal Scroll Percent': 'DevExpress.XtraCharts.Diagram3D.HorizontalScrollPercent',
+            'Check Box and Marker': 'DevExpress.XtraCharts.LegendMarkerMode.CheckBoxAndMarker',
             'Link Options': 'DevExpress.XtraCharts.GanttSeriesView.LinkOptions',
             'Argument Date-time Options': 'DevExpress.XtraCharts.PointOptions.ArgumentDateTimeOptions',
             'Palette Base Color Number': 'DevExpress.XtraCharts.Native.Chart.PaletteBaseColorNumber',
@@ -1944,7 +1494,6 @@ var DevExpress;
             'Rotation Order': 'DevExpress.XtraCharts.Diagram3D.RotationOrder',
             'Point Series Label': 'DevExpress.XtraCharts.PointSeriesLabel',
             'Relations': 'DevExpress.XtraCharts.SeriesPoint.Relations',
-            'Date-time Grid Alignment': 'DevExpress.XtraCharts.AxisBase.DateTimeGridAlignment',
             'Total Hours': 'DevExpress.XtraCharts.TimeSpanFormat.TotalHours',
             'Out': 'DevExpress.XtraCharts.EasingMode.Out',
             'Box': 'DevExpress.XtraCharts.Bar3DModel.Box',
@@ -1958,11 +1507,12 @@ var DevExpress;
             'Scale Breaks': 'DevExpress.XtraCharts.Axis.ScaleBreaks',
             'Stacked Bar 3D Series Label': 'DevExpress.XtraCharts.StackedBar3DSeriesLabel',
             'Text Direction': 'DevExpress.XtraCharts.RadarAxisXLabel.TextDirection',
+            'Always Empty': 'DevExpress.XtraCharts.CandleStickFillMode.AlwaysEmpty',
             'Threshold Percent': 'DevExpress.XtraCharts.TopNOptions.ThresholdPercent',
             'Snap Offset': 'DevExpress.XtraCharts.ChartRangeControlClientGridOptions.SnapOffset',
             'Automatic Size': 'DevExpress.XtraCharts.BubbleSeriesView.AutoSize',
             'Equally Spaced Items': 'DevExpress.XtraCharts.Legend.EquallySpacedItems',
-            'Reduction Options': 'DevExpress.XtraCharts.FinancialSeriesViewBase.ReductionOptions',
+            'Unwrap': 'DevExpress.XtraCharts.IndicatorUnwrapAnimation',
             'Crosshair Label Text Options': 'DevExpress.XtraCharts.CrosshairOptions.CrosshairLabelTextOptions',
             'Show Only in Focused Pane': 'DevExpress.XtraCharts.CrosshairOptions.ShowOnlyInFocusedPane',
             'Elastic': 'DevExpress.XtraCharts.ElasticEasingFunction',
@@ -1980,20 +1530,22 @@ var DevExpress;
             'Tool Tip Enabled': 'DevExpress.XtraCharts.SeriesBase.ToolTipEnabled',
             'Crosshair Options': 'DevExpress.XtraCharts.CrosshairOptions',
             'Qualitative': 'DevExpress.XtraCharts.ScaleType.Qualitative',
+            'Date-Time Options': 'DevExpress.XtraCharts.DateTimeOptions',
             'Linear Unwind': 'DevExpress.XtraCharts.CircularSeriesLinearUnwindAnimation',
             'Show in Legend': 'DevExpress.XtraCharts.ChartPaletteColorizerBase.ShowInLegend',
             'Funnel Series Label': 'DevExpress.XtraCharts.FunnelSeriesLabel',
             'Bar Depth': 'DevExpress.XtraCharts.Bar3DSeriesView.BarDepth',
             'Point Order': 'DevExpress.XtraCharts.SeriesPointAnimationBase.PointOrder',
-            'Synchronize With Whole Range': 'DevExpress.XtraCharts.VisualRange.SynchronizeWithWholeRange',
             'From Bottom Center': 'DevExpress.XtraCharts.CircularMarkerAnimationDirection.FromBottomCenter',
             'Range Control Date-Time Grid Options': 'DevExpress.XtraCharts.ChartRangeControlClientDateTimeOptions.RangeControlDateTimeGridOptions',
             'Point Delay': 'DevExpress.XtraCharts.SeriesPointAnimationBase.PointDelay',
             'Short Period': 'DevExpress.XtraCharts.MovingAverageConvergenceDivergence.ShortPeriod',
-            'Unwrap': 'DevExpress.XtraCharts.XYSeriesUnwrapAnimation',
+            'Filled on Reduction': 'DevExpress.XtraCharts.CandleStickFillMode.FilledOnReduction',
             'Stacked Line 3D SeriesLabel': 'DevExpress.XtraCharts.StackedLine3DSeriesLabel',
+            'Color Mode': 'DevExpress.XtraCharts.ReductionStockOptions.ColorMode',
             'Axis Y 3D': 'DevExpress.XtraCharts.AxisY3D',
             'Axis X 3D': 'DevExpress.XtraCharts.AxisX3D',
+            'Work Time Rule Collection': 'DevExpress.XtraCharts.WorkTimeRuleCollection',
             'Show for Nearest Series': 'DevExpress.XtraCharts.CrosshairLabelMode.ShowForNearestSeries',
             'Two Columns': 'DevExpress.XtraCharts.PieSeriesLabelPosition.TwoColumns',
             'Side Margins Value': 'DevExpress.XtraCharts.Range.SideMarginsValue',
@@ -2009,6 +1561,9 @@ var DevExpress;
             'Measure Unit': 'DevExpress.XtraCharts.DateTimeScaleOptions.MeasureUnit',
             'Radar Grid Lines Y': 'DevExpress.XtraCharts.RadarGridLinesY',
             'Radar Grid Lines X': 'DevExpress.XtraCharts.RadarGridLinesX',
+            'Start Hour': 'DevExpress.XtraCharts.TimeInterval.StartHour',
+            'Unwind': 'DevExpress.XtraCharts.IndicatorUnwindAnimation',
+            'Begin Text': 'DevExpress.XtraCharts.SeriesNameTemplate.BeginText',
             'Exact Workdays': 'DevExpress.XtraCharts.WorkdaysOptions.ExactWorkdays',
             'Vertical Scroll Percent': 'DevExpress.XtraCharts.Diagram3D.VerticalScrollPercent',
             'Dock': 'DevExpress.XtraCharts.DockableTitle.Dock',
@@ -2017,6 +1572,7 @@ var DevExpress;
             'Month and Year': 'DevExpress.XtraCharts.DateTimeFormat.MonthAndYear',
             'XY-Diagram Pane Collection': 'DevExpress.XtraCharts.XYDiagramPaneCollection',
             'Series Name': 'DevExpress.XtraCharts.PointView.SeriesName',
+            'Open to Close Value': 'DevExpress.XtraCharts.ReductionColorMode.OpenToCloseValue',
             'Known Date Collection': 'DevExpress.XtraCharts.KnownDateCollection',
             'Nested Doughnut Series Label': 'DevExpress.XtraCharts.NestedDoughnutSeriesLabel',
             'AnchorPoint': 'DevExpress.XtraCharts.Annotation.AnchorPoint',
@@ -2035,10 +1591,10 @@ var DevExpress;
             'Simple Diagram 3D': 'DevExpress.XtraCharts.SimpleDiagram3D',
             'Color Object Colorizer': 'DevExpress.XtraCharts.ColorObjectColorizer',
             'Skip': 'DevExpress.XtraCharts.ProcessMissingPointsMode.Skip',
+            'Marker Mode': 'DevExpress.XtraCharts.Legend.MarkerMode',
             'Tool Tip Hint Data Member': 'DevExpress.XtraCharts.SeriesBase.ToolTipHintDataMember',
             'Value DateTime Options': 'DevExpress.XtraCharts.PointOptions.ValueDateTimeOptions',
             'Align to Center': 'DevExpress.XtraCharts.FunnelSeriesView.AlignToCenter',
-            'Point Options': 'DevExpress.XtraCharts.SeriesLabelBase.PointOptions',
             'Top Inside': 'DevExpress.XtraCharts.BarSeriesLabelPosition.TopInside',
             'Visual Range': 'DevExpress.XtraCharts.AxisBase.VisualRange',
             'Swift Plot Diagram Secondary Axis Y Collection': 'DevExpress.XtraCharts.SwiftPlotDiagramSecondaryAxisYCollection',
@@ -2052,7 +1608,7 @@ var DevExpress;
             'Chart Print Options': 'DevExpress.XtraCharts.Printing.ChartOptionsPrint',
             'Closed': 'DevExpress.XtraCharts.RadarLineSeriesView.Closed',
             'Back': 'DevExpress.XtraCharts.BackEasingFunction',
-            'Linear': 'DevExpress.XtraCharts.LinearEasingFunction',
+            'Linear': 'ASPxReportsStringId.ReportDesigner_GaugeViewType_Linear',
             'Show Group Headers': 'DevExpress.XtraCharts.CrosshairOptions.ShowGroupHeaders',
             'Crosshair Label Back Color': 'DevExpress.XtraCharts.CrosshairOptions.CrosshairLabelBackColor',
             'Quartic': 'DevExpress.XtraCharts.QuarticEasingFunction',
@@ -2067,7 +1623,6 @@ var DevExpress;
             'Link Type': 'DevExpress.XtraCharts.TaskLink.LinkType',
             'Radar Range Area Series Label': 'DevExpress.XtraCharts.RadarRangeAreaSeriesLabel',
             'Inner Indents': 'DevExpress.XtraCharts.FreePosition.InnerIndents',
-            'Date Time Options': 'DevExpress.XtraCharts.AxisBase.DateTimeOptions',
             'Axis Y Title': 'DevExpress.XtraCharts.AxisTitleY',
             'Axis X Title': 'DevExpress.XtraCharts.AxisTitleX',
             'Tool Tip Hint': 'DevExpress.XtraCharts.SeriesPoint.ToolTipHint',
@@ -2106,7 +1661,6 @@ var DevExpress;
             'Hexagon': 'DevExpress.XtraCharts.MarkerKind.Hexagon',
             'Radar Axis Y': 'DevExpress.XtraCharts.RadarAxisY',
             'RadarAxisX': 'DevExpress.XtraCharts.RadarAxisX',
-            'Value to Display': 'DevExpress.XtraCharts.BubbleSeriesLabel.ValueToDisplay',
             'Marker Image Size Mode': 'DevExpress.XtraCharts.CustomLegendItem.MarkerImageSizeMode',
             'Minor Line Style': 'DevExpress.XtraCharts.GridLines.MinorLineStyle',
             'Point Marker Options': 'DevExpress.XtraCharts.PointSeriesView.PointMarkerOptions',
@@ -2121,6 +1675,7 @@ var DevExpress;
             'Insert Empty Points': 'DevExpress.XtraCharts.ProcessMissingPointsMode.InsertEmptyPoints',
             'Item Visibility Mode': 'DevExpress.XtraCharts.Legend.ItemVisibilityMode',
             'Polar Diagram': 'DevExpress.XtraCharts.PolarDiagram',
+            'End Hour': 'DevExpress.XtraCharts.TimeInterval.EndHour',
             'Use Filters': 'DevExpress.XtraCharts.PieExplodeMode.UseFilters',
             'Circular Unwind': 'DevExpress.XtraCharts.CircularSeriesCircularUnwindAnimation',
             'Arrow Width': 'DevExpress.XtraCharts.TaskLinkOptions.ArrowWidth',
@@ -2134,7 +1689,6 @@ var DevExpress;
             'Equal': 'DevExpress.XtraCharts.DataFilterCondition.Equal',
             'Use Angles': 'DevExpress.XtraCharts.RotationType.UseAngles',
             'Easing Mode': 'DevExpress.XtraCharts.EasingFunctionBase.EasingMode',
-            'Unwind': 'DevExpress.XtraCharts.XYSeriesUnwindAnimation',
             'Use Size In Pixels': 'DevExpress.XtraCharts.PaneSizeMode.UseSizeInPixels',
             'Polar Axis X': 'DevExpress.XtraCharts.PolarAxisX',
             'Nearest Argument': 'DevExpress.XtraCharts.CrosshairSnapMode.NearestArgument',
@@ -2156,7 +1710,6 @@ var DevExpress;
             'Value As Percent': 'DevExpress.XtraCharts.PercentOptions.ValueAsPercent',
             'Series Collection': 'DevExpress.XtraCharts.SeriesCollection',
             'Range Control Client Date-Time Grid Options': 'DevExpress.XtraCharts.ChartRangeControlClientDateTimeGridOptions',
-            'Grid Spacing Auto': 'DevExpress.XtraCharts.AxisBase.GridSpacingAuto',
             'Line Join': 'DevExpress.XtraCharts.LineStyle.LineJoin',
             'Point 2': 'DevExpress.XtraCharts.FinancialIndicator.Point2',
             'Point 1': 'DevExpress.XtraCharts.FinancialIndicator.Point1',
@@ -2165,10 +1718,8 @@ var DevExpress;
             'Greater Than Or Equal': 'DevExpress.XtraCharts.DataFilterCondition.GreaterThanOrEqual',
             'Axis X Coordinate': 'DevExpress.XtraCharts.AxisXCoordinate',
             'Visibility In Panes': 'DevExpress.XtraCharts.Axis2D.VisibilityInPanes',
-            'Financial': 'DevExpress.XtraCharts.AggregateFunction.Financial',
             'Rectangle': 'DevExpress.XtraCharts.ShapeKind.Rectangle',
             'Negative Error': 'DevExpress.XtraCharts.FixedValueErrorBars.NegativeError',
-            'Work Days Options': 'DevExpress.XtraCharts.AxisBase.WorkdaysOptions',
             'Ellipse': 'DevExpress.XtraCharts.ShapeKind.Ellipse',
             'Left-to-Right': 'DevExpress.XtraCharts.Direction.LeftToRight',
             'Greater Than': 'DevExpress.XtraCharts.DataFilterCondition.GreaterThan',
@@ -2181,6 +1732,7 @@ var DevExpress;
             'Series Point Animation': 'DevExpress.XtraCharts.PointSeriesViewBase.SeriesPointAnimation',
             'On Data Changed': 'DevExpress.XtraCharts.ChartAnimationMode.OnDataChanged',
             'Exploded Series Point Collection': 'DevExpress.XtraCharts.ExplodedSeriesPointCollection',
+            'Start Minute': 'DevExpress.XtraCharts.TimeInterval.StartMinute',
             'Rounded Rectangle': 'DevExpress.XtraCharts.ShapeKind.RoundedRectangle',
             'Axis Label 3D': 'DevExpress.XtraCharts.AxisLabel3D',
             'Max Vertical Percentage': 'DevExpress.XtraCharts.Legend.MaxVerticalPercentage',
@@ -2193,6 +1745,7 @@ var DevExpress;
             'Cross Axis': 'DevExpress.XtraCharts.TickmarksBase.CrossAxis',
             'Max Value Marker': 'DevExpress.XtraCharts.RangeBarSeriesView.MaxValueMarker',
             'To Center Horizontal': 'DevExpress.XtraCharts.RectangleGradientMode.ToCenterHorizontal',
+            'End Minute': 'DevExpress.XtraCharts.TimeInterval.EndMinute',
             'Radar Tickmarks Y': 'DevExpress.XtraCharts.RadarTickmarksY',
             'Duration': 'DevExpress.XtraCharts.AnimationBase.Duration',
             'Japanese Envelope Chou Number 4': 'System.Drawing.Printing.PaperKind.JapaneseEnvelopeChouNumber4',
@@ -2210,6 +1763,7 @@ var DevExpress;
             'Zoom Image': 'DevExpress.XtraPrinting.ImageSizeMode.ZoomImage',
             'Stop Page Building': 'DevExpress.XtraPrinting.PrintingSystemCommand.StopPageBuilding',
             'JIS B4 Rotated ': 'System.Drawing.Printing.PaperKind.B4JisRotated',
+            'String': 'DevExpress.XtraTreeList.Data.UnboundColumnType.String',
             'Standard 15x11': 'System.Drawing.Printing.PaperKind.Standard15x11',
             'Standard 12x11': 'System.Drawing.Printing.PaperKind.Standard12x11',
             'Standard 10x14': 'System.Drawing.Printing.PaperKind.Standard10x14',
@@ -2279,6 +1833,7 @@ var DevExpress;
             'Smart': 'DevExpress.XtraPrinting.VerticalContentSplitting.Smart',
             'Send File': 'DevExpress.XtraPrinting.PrintingSystemCommand.SendFile',
             'A3 Extra': 'System.Drawing.Printing.PaperKind.A3Extra',
+            'Send as DOCX': 'DevExpress.XtraPrinting.PrintingSystemCommand.SendDocx',
             'Send as XLSX': 'DevExpress.XtraPrinting.PrintingSystemCommand.SendXlsx',
             'Exact': 'DevExpress.XtraPrinting.VerticalContentSplitting.Exact',
             'Dark Vertical': 'System.Drawing.Drawing2D.HatchStyle.DarkVertical',
@@ -2331,6 +1886,7 @@ var DevExpress;
             'A5 Rotated': 'System.Drawing.Printing.PaperKind.A5Rotated',
             'Small Checker Board': 'System.Drawing.Drawing2D.HatchStyle.SmallCheckerBoard',
             'Export as XLSX': 'DevExpress.XtraPrinting.PrintingSystemCommand.ExportXlsx',
+            'Export as DOCX': 'DevExpress.XtraPrinting.PrintingSystemCommand.ExportDocx',
             'Export File': 'DevExpress.XtraPrinting.PrintingSystemCommand.ExportFile',
             'Legal': 'System.Drawing.Printing.PaperKind.Legal',
             'Iso B4': 'System.Drawing.Printing.PaperKind.IsoB4',
@@ -2528,10 +2084,11 @@ var DevExpress;
             'Expanded': 'DevExpress.XtraPrinting.BarCode.DataBarType.Expanded',
             'Rasterization resolution': 'DevExpress.XtraPrinting.PageByPageExportOptionsBase.RasterizationResolution',
             'Allow URLs with JS Content': 'DevExpress.XtraPrinting.HtmlExportOptionsBase.AllowURLsWithJSContent',
+            'Export Mode': 'DevExpress.XtraPrinting.DocxExportOptions.ExportMode',
             'Address': 'DevExpress.XtraPrinting.Recipient.Address',
             'Rasterize Images': 'DevExpress.XtraPrinting.PageByPageExportOptionsBase.RasterizeImages',
-            'Export Mode': 'DevExpress.XtraPrinting.HtmlExportOptionsBase.ExportMode',
             'Human-Readable Text': 'DevExpress.XtraPrinting.BarCode.EAN128Generator.HumanReadableText',
+            'Compatible': 'DevExpress.XtraPrinting.XlEncryptionType.Compatible',
             'Category': 'DevExpress.XtraPrinting.XlDocumentOptions.Category',
             'Different Files': 'DevExpress.XtraPrinting.XlsxExportMode.DifferentFiles',
             'Attachments': 'DevExpress.XtraPrinting.PdfExportOptions.Attachments',
@@ -2551,7 +2108,6 @@ var DevExpress;
             'Show Grid Lines': 'DevExpress.XtraPrinting.XlsExportOptions.ShowGridLines',
             'Slant Line': 'DevExpress.XtraPrinting.Shape.Native.ShapeId.SlantLine',
             'XLS Export Options': 'DevExpress.XtraPrinting.XlsExportOptions',
-            'Keep Row Height': 'DevExpress.XtraPrinting.RtfExportOptions.KeepRowHeight',
             'Image Export Options': 'DevExpress.XtraPrinting.ImageExportOptions',
             'Author': 'DevExpress.XtraPrinting.XlDocumentOptions.Author',
             'Save Mode': 'DevExpress.XtraPrinting.PrintPreviewOptions.SaveMode',
@@ -2567,6 +2123,7 @@ var DevExpress;
             'Binary': 'DevExpress.XtraPrinting.BarCode.PDF417CompactionMode.Binary',
             'Multi-Value': 'DevExpress.XtraReports.Parameters.Parameter.MultiValue',
             'Compaction Mode': 'DevExpress.XtraPrinting.BarCode.QRCodeGenerator.CompactionMode',
+            'Version': 'DevExpress.XtraPrinting.XpsDocumentOptions.Version',
             'Security Options': 'DevExpress.XtraPrinting.PdfExportOptions.PasswordSecurityOptions',
             'Using a Save File Dialog': 'DevExpress.XtraPrinting.SaveMode.UsingSaveFileDialog',
             'Version 40 (177x177)': 'DevExpress.XtraPrinting.BarCode.QRCodeVersion.Version40',
@@ -2601,6 +2158,7 @@ var DevExpress;
             'Version 39 (173x173)': 'DevExpress.XtraPrinting.BarCode.QRCodeVersion.Version39',
             'Version 38 (169x169)': 'DevExpress.XtraPrinting.BarCode.QRCodeVersion.Version38',
             'Tail\'s Length': 'DevExpress.XtraPrinting.Shape.ShapeBrace.TailLength',
+            'Type': 'DevExpress.XtraPrinting.XlEncryptionOptions.Type',
             'Subject': 'DevExpress.XtraPrinting.XlDocumentOptions.Subject',
             'Using Printer Settings': 'DevExpress.XtraPrinting.PrinterSettingsUsing',
             'Matrix Size': 'DevExpress.XtraPrinting.BarCode.DataMatrixGenerator.MatrixSize',
@@ -2619,6 +2177,7 @@ var DevExpress;
             'High Resolution': 'DevExpress.XtraPrinting.PrintingPermissions.HighResolution',
             'Retain Background Transparency': 'DevExpress.XtraPrinting.ImageExportOptions.RetainBackgroundTransparency',
             'OpenPassword': 'DevExpress.XtraPrinting.PdfPasswordSecurityOptions.OpenPassword',
+            'Excel Encryption Options': 'DevExpress.XtraPrinting.XlEncryptionOptions',
             'Suppress 65536 Rows Warning': 'DevExpress.XtraPrinting.XlsExportOptions.Suppress65536RowsWarning',
             'Description': 'DevExpress.XtraReports.Parameters.Parameter.Description',
             'Omnidirectional': 'DevExpress.XtraPrinting.BarCode.DataBarType.Omnidirectional',
@@ -2635,6 +2194,8 @@ var DevExpress;
             'Additional Recipients': 'DevExpress.XtraPrinting.EmailOptions.AdditionalRecipients',
             'Backslant Line': 'DevExpress.XtraPrinting.Shape.Native.ShapeId.BackslantLine',
             'MHT Export Options': 'DevExpress.XtraPrinting.MhtExportOptions',
+            '256-bit AES': 'DevExpress.XtraPrinting.PdfEncryptionLevel.AES256',
+            '128-bit AES': 'DevExpress.XtraPrinting.PdfEncryptionLevel.AES128',
             'Add Leading Zero': 'DevExpress.XtraPrinting.BarCode.Code128Generator.AddLeadingZero',
             'Truncated': 'DevExpress.XtraPrinting.BarCode.DataBarType.Truncated',
             'Image Quality': 'DevExpress.XtraPrinting.PdfExportOptions.ImageQuality',
@@ -2651,6 +2212,8 @@ var DevExpress;
             'Version 3 (29x29)': 'DevExpress.XtraPrinting.BarCode.QRCodeVersion.Version3',
             'Version 8 (49x49)': 'DevExpress.XtraPrinting.BarCode.QRCodeVersion.Version8',
             'Version 9 (53x53)': 'DevExpress.XtraPrinting.BarCode.QRCodeVersion.Version9',
+            'Strong': 'DevExpress.XtraPrinting.XlEncryptionType.Strong',
+            'Export Page Breaks': 'DevExpress.XtraPrinting.FormattedTextExportOptions.ExportPageBreaks',
             'Using a Default Path': 'DevExpress.XtraPrinting.SaveMode.UsingDefaultPath',
             'Wide Narrow Ratio': 'DevExpress.XtraPrinting.BarCode.Interleaved2of5Generator.WideNarrowRatio',
             'CSV Export Options': 'DevExpress.XtraPrinting.CsvExportOptions',
@@ -2658,6 +2221,7 @@ var DevExpress;
             'Skip Empty Columns': 'DevExpress.XtraPrinting.CsvExportOptions.SkipEmptyColumns',
             'Dynamic List': 'DevExpress.XtraReports.Parameters.DynamicListLookUpSettings',
             'Prefix': 'DevExpress.XtraPrinting.Recipient.Prefix',
+            '128-bit ARC4': 'DevExpress.XtraPrinting.PdfEncryptionLevel.ARC4',
             'Recipient Name': 'DevExpress.XtraPrinting.EmailOptions.RecipientName',
             'Horizontal Line Width': 'DevExpress.XtraPrinting.Shape.ShapeCross.HorizontalLineWidth',
             'PermissionsOptions': 'DevExpress.XtraPrinting.PdfPasswordSecurityOptions.PermissionsOptions',
@@ -2671,10 +2235,14 @@ var DevExpress;
             'Signature Options': 'DevExpress.XtraPrinting.PdfExportOptions.SignatureOptions',
             'PrintingPermissions': 'DevExpress.XtraPrinting.PdfPermissionsOptions.PrintingPermissions',
             'Workbook Color Palette Compliance': 'DevExpress.XtraPrinting.XlsExportOptions.WorkbookColorPaletteCompliance',
+            'EncryptionLevel': 'DevExpress.XtraPrinting.PdfPasswordSecurityOptions.EncryptionLevel',
             'Not with Report Header and Report Footer': 'DevExpress.XtraReports.UI.PrintOnPages.NotWithReportHeaderAndReportFooter',
             'Text Rendering Mode': 'DevExpress.XtraPrinting.ImageExportOptions.TextRenderingMode',
             'XLSx Export Options': 'DevExpress.XtraPrinting.XlsxExportOptions',
             'Quote Strings with Separators': 'DevExpress.XtraPrinting.TextExportOptionsBase.QuoteStringsWithSeparators',
+            'Empty First Page Header/Footer': 'DevExpress.XtraPrinting.FormattedTextExportOptions.EmptyFirstPageHeaderFooter',
+            'Encryption Options': 'DevExpress.XtraPrinting.XlExportOptionsBase.EncryptionOptions',
+            'Password': 'DevExpress.XtraPrinting.XlEncryptionOptions.Password',
             'Rotate to the Right': 'DevExpress.XtraPrinting.BarCode.BarCodeOrientation.RotateRight',
             'Brace': 'DevExpress.XtraPrinting.Shape.Native.ShapeId.Brace',
             'Octagon': 'DevExpress.XtraPrinting.Shape.Native.ShapeId.Octagon',
@@ -2688,12 +2256,12 @@ var DevExpress;
             'Suppress 256 Columns Warning': 'DevExpress.XtraPrinting.XlsExportOptions.Suppress256ColumnsWarning',
             'Look-Up Values': 'DevExpress.XtraReports.Parameters.StaticListLookUpSettings.LookUpValues',
             'Remove Secondary Symbols': 'DevExpress.XtraPrinting.HtmlExportOptionsBase.RemoveSecondarySymbols',
-            'Empty First Page Header/Footer': 'DevExpress.XtraPrinting.RtfExportOptions.EmptyFirstPageHeaderFooter',
             'ChangingPermissions': 'DevExpress.XtraPrinting.PdfPermissionsOptions.ChangingPermissions',
             'Native Format Options': 'DevExpress.XtraPrinting.NativeFormatOptions',
             'PermissionsPassword': 'DevExpress.XtraPrinting.PdfPasswordSecurityOptions.PermissionsPassword',
             'Show Options Dialog Before Export': 'DevExpress.XtraPrinting.PrintPreviewOptions.ShowOptionsBeforeExport',
             'Back Slant': 'DevExpress.XtraReports.UI.LineDirection.BackSlant',
+            'Table Layout': 'DevExpress.XtraPrinting.DocxExportOptions.TableLayout',
             'Ask a User': 'DevExpress.XtraPrinting.ActionAfterExport.AskUser',
             'Limited': 'DevExpress.XtraPrinting.BarCode.DataBarType.Limited',
             'Stacked': 'DevExpress.XtraPrinting.BarCode.DataBarType.Stacked',
@@ -2743,6 +2311,8 @@ var DevExpress;
             'Truncate Symbol': 'DevExpress.XtraPrinting.BarCode.PDF417Generator.TruncateSymbol',
             'Lowest': 'DevExpress.XtraPrinting.PdfJpegImageQuality.Lowest',
             'Text Export Mode': 'DevExpress.XtraPrinting.TextExportOptionsBase.TextExportMode',
+            'DOCx Export Options': 'DevExpress.XtraPrinting.DocxExportOptions',
+            'Keep Row Height': 'DevExpress.XtraPrinting.FormattedTextExportOptions.KeepRowHeight',
             '5-Point Star': 'DevExpress.XtraPrinting.Shape.Native.ShapeId.FivePointStar',
             'Recipient Address Prefix': 'DevExpress.XtraPrinting.EmailOptions.RecipientAddressPrefix',
             'Default Send Format': 'DevExpress.XtraPrinting.PrintPreviewOptions.DefaultSendFormat',
@@ -2751,7 +2321,6 @@ var DevExpress;
             'DE': 'DevExpress.XtraPrinting.BarCode.CodabarStartStopPair.DE',
             'AT': 'DevExpress.XtraPrinting.BarCode.CodabarStartStopPair.AT',
             'BN': 'DevExpress.XtraPrinting.BarCode.CodabarStartStopPair.BN',
-            'Export Page Breaks': 'DevExpress.XtraPrinting.RtfExportOptions.ExportPageBreaks',
             'Image Transparency': 'DevExpress.XtraPrinting.Drawing.PageWatermark.ImageTransparency',
             'Text Transparency': 'DevExpress.XtraPrinting.Drawing.PageWatermark.TextTransparency',
             'Horizontal Line': 'DevExpress.XtraPrinting.Shape.Native.ShapeId.HorizontalLine',
@@ -2766,7 +2335,6 @@ var DevExpress;
             'Comments': 'DevExpress.XtraPrinting.XlDocumentOptions.Comments',
             'Page Border\'s Width': 'DevExpress.XtraPrinting.ImageExportOptions.PageBorderWidth',
             'Print Preview Options': 'DevExpress.XtraPrinting.PrintPreviewOptions',
-            'Table Layout': 'DevExpress.XtraPrinting.HtmlExportOptionsBase.TableLayout',
             'CC': 'DevExpress.XtraPrinting.RecipientFieldType.CC',
             'TO': 'DevExpress.XtraPrinting.RecipientFieldType.TO',
             'Any Except Extracting Pages': 'DevExpress.XtraPrinting.ChangingPermissions.AnyExceptExtractingPages',
@@ -2821,9 +2389,16 @@ var DevExpress;
             'Max Point Color': 'DevExpress.Sparkline.SparklineViewBase.MaxPointColor',
             'Show Markers': 'DevExpress.Sparkline.LineSparklineView.ShowMarkers',
             'Min Point Color': 'DevExpress.Sparkline.SparklineViewBase.MinPointColor',
+            'Line Sparkline View': 'DevExpress.Sparkline.LineSparklineView',
+            'Bar Sparkline View Base': 'DevExpress.Sparkline.BarSparklineViewBase',
+            'Sparkline View Base': 'DevExpress.Sparkline.SparklineViewBase',
+            'Win-Loss Sparkline View': 'DevExpress.Sparkline.WinLossSparklineView',
+            'Sparkline Range': 'DevExpress.Sparkline.SparklineRange',
             'Max Point Marker Size': 'DevExpress.Sparkline.LineSparklineView.MaxPointMarkerSize',
             'End Point Color': 'DevExpress.Sparkline.SparklineViewBase.EndPointColor',
+            'Area Sparkline View': 'DevExpress.Sparkline.AreaSparklineView',
             'Negative Point Color': 'DevExpress.Sparkline.SparklineViewBase.NegativePointColor',
+            'Bar Sparkline View': 'DevExpress.Sparkline.BarSparklineView',
             'Start Point Color': 'DevExpress.Sparkline.SparklineViewBase.StartPointColor',
             'Is Auto': 'DevExpress.Sparkline.SparklineRange.IsAuto',
             'Limit 1': 'DevExpress.Sparkline.SparklineRange.Limit1',
@@ -2836,7 +2411,7 @@ var DevExpress;
             'Highlight End Point': 'DevExpress.Sparkline.SparklineViewBase.HighlightEndPoint',
             'Start Point Marker Size': 'DevExpress.Sparkline.LineSparklineView.StartPointMarkerSize',
             'Highlight Max Point': 'DevExpress.Sparkline.SparklineViewBase.HighlightMaxPoint',
-            'Circular': 'DevExpress.XtraGauges.Core.Customization.DashboardGaugeType.Circular',
+            'Circular': 'ASPxReportsStringId.ReportDesigner_GaugeViewType_Circular',
             'Dashboard Gauge Type': 'DevExpress.XtraGauges.Core.Customization.DashboardGaugeType',
             'Half': 'DevExpress.XtraGauges.Core.Customization.DashboardGaugeStyle.Half',
             'Full': 'DevExpress.XtraGauges.Core.Customization.DashboardGaugeStyle.Full',
@@ -2847,6 +2422,50 @@ var DevExpress;
             'Flat Light': 'DevExpress.XtraGauges.Core.Customization.DashboardGaugeTheme.FlatLight',
             'Flat Dark': 'DevExpress.XtraGauges.Core.Customization.DashboardGaugeTheme.FlatDark',
             'Quarter Left': 'DevExpress.XtraGauges.Core.Customization.DashboardGaugeStyle.QuarterLeft',
+            'Close Connection': 'DevExpress.DataAccess.Sql.ConnectionOptions.CloseConnection',
+            'Connection Parameters': 'DevExpress.DataAccess.Sql.SqlDataSource.ConnectionParameters',
+            'Group Filter String': 'DevExpress.DataAccess.Sql.TableQuery.GroupFilterString',
+            'Newline Type': 'DevExpress.DataAccess.Excel.CsvSourceOptions.NewlineType',
+            'Skip Hidden Rows': 'DevExpress.DataAccess.Excel.ExcelSourceOptions.SkipHiddenRows',
+            'CSV Source Options': 'DevExpress.DataAccess.Excel.ExcelDataSource.CsvSourceOptions',
+            'Import Settings': 'DevExpress.DataAccess.Excel.ExcelSourceOptions.ImportSettings',
+            'Constructor': 'DevExpress.DataAccess.ObjectBinding.ObjectDataSource.Constructor',
+            'Excel Worksheet Settings': 'DevExpress.DataAccess.Excel.ExcelSourceOptions.ExcelWorksheetSettings',
+            'Worksheet Name': 'DevExpress.DataAccess.Excel.ExcelWorksheetSettings.WorksheetName',
+            'Connection String Name': 'DevExpress.DataAccess.EntityFramework.EFConnectionParameters.ConnectionStringName',
+            'Distinct': 'DevExpress.DataAccess.Sql.SelectQuery.Distinct',
+            'ObjectDataSource': 'DevExpress.DataAccess.Sql.ObjectDataSource',
+            'Scope': 'DevExpress.DataAccess.Excel.ExcelDefinedNameSettings.Scope',
+            'Excel Table Settings': 'DevExpress.DataAccess.Excel.ExcelSourceOptions.ExcelTableSettings',
+            'Connection': 'DevExpress.DataAccess.EntityFramework.EFDataSource.Connection',
+            'Stored Procedure Name': 'DevExpress.DataAccess.Sql.StoredProcQuery.StoredProcName',
+            'Detect Newline Type': 'DevExpress.DataAccess.Excel.CsvSourceOptions.DetectNewlineType',
+            'Command Timeout': 'DevExpress.DataAccess.Sql.ConnectionOptions.DbCommandTimeout',
+            'Source Options': 'DevExpress.DataAccess.Excel.ExcelDataSource.SourceOptions',
+            'Cell Range': 'DevExpress.DataAccess.Excel.ExcelWorksheetSettings.CellRange',
+            'Value Separator': 'DevExpress.DataAccess.Excel.CsvSourceOptions.ValueSeparator',
+            'File Name': 'DevExpress.DataAccess.Excel.ExcelDataSource.FileName',
+            'Stored Procedures': 'DevExpress.DataAccess.EntityFramework.EFDataSource.StoredProcedures',
+            'Excel Source Options': 'DevExpress.DataAccess.Excel.ExcelDataSource.ExcelSourceOptions',
+            'Connection Name': 'DevExpress.DataAccess.Sql.SqlDataSource.ConnectionName',
+            'Detect Encoding': 'DevExpress.DataAccess.Excel.CsvSourceOptions.DetectEncoding',
+            'Use First Row As Header': 'DevExpress.DataAccess.Excel.ExcelSourceOptionsBase.UseFirstRowAsHeader',
+            'Detect Value Separator': 'DevExpress.DataAccess.Excel.CsvSourceOptions.DetectValueSeparator',
+            'Source': 'DevExpress.DataAccess.EntityFramework.EFConnectionParameters.Source',
+            'Queries': 'DevExpress.DataAccess.Sql.SqlDataSource.Queries',
+            'ExcelDataSource': 'DevExpress.DataAccess.Excel.ExcelDataSource',
+            'Defined Name': 'DevExpress.DataAccess.Excel.ExcelDefinedNameSettings.DefinedName',
+            'Culture': 'DevExpress.DataAccess.Excel.CsvSourceOptions.Culture',
+            'Skip Hidden Columns': 'DevExpress.DataAccess.Excel.ExcelSourceOptions.SkipHiddenColumns',
+            'Connection String': 'DevExpress.DataAccess.EntityFramework.EFConnectionParameters.ConnectionString',
+            'Excel Defined Name Settings': 'DevExpress.DataAccess.Excel.ExcelSourceOptions.ExcelDefinedNameSettings',
+            'EFDataSource': 'DevExpress.DataAccess.EntityFramework.EFDataSource',
+            'Trim Blanks': 'DevExpress.DataAccess.Excel.CsvSourceOptions.TrimBlanks',
+            'SqlDataSource': 'DevExpress.DataAccess.Sql.SqlDataSource',
+            'Text Qualifier': 'DevExpress.DataAccess.Excel.CsvSourceOptions.TextQualifier',
+            'Table Name': 'DevExpress.DataAccess.Excel.ExcelTableSettings.TableName',
+            'Connection Options': 'DevExpress.DataAccess.Sql.SqlDataSource.ConnectionOptions',
+            'SQL': 'DevExpress.DataAccess.Sql.CustomSqlQuery.Sql',
             'Align to Grid': 'ReportStringId.RibbonXRDesign_AlignToGrid_STipTitle',
             'Save the current report.': 'ReportStringId.RibbonXRDesign_SaveFile_Description',
             'Make Same Width': 'ReportStringId.RibbonXRDesign_SizeToControlWidth_STipTitle',
@@ -2897,6 +2516,7 @@ var DevExpress;
             'Customize the current XRPivotGrid\'s layout and preview its data.': 'ReportStringId.PivotGridForm_ItemLayout_Description',
             'Size to Grid': 'ReportStringId.UD_Capt_MakeSameSizeSizeToGrid',
             'Right align the selected controls': 'ReportStringId.UD_Hint_AlignRights',
+            'Delete': 'ReportStringId.Cmd_Delete',
             'Open...': 'ReportStringId.UD_Capt_OpenFile',
             'Error when trying to populate the datasource. The following exception was thrown:': 'ReportStringId.Msg_FillDataError',
             'Can\'t load the report. The file is possibly corrupted or report\'s assembly is missing.': 'ReportStringId.Msg_FileCorrupted',
@@ -2911,6 +2531,7 @@ var DevExpress;
             'Data source:': 'ReportStringId.NewParameterEditorForm_DataSource',
             'Standard Controls': 'ReportStringId.UD_XtraReportsToolboxCategoryName',
             'Main Menu': 'ReportStringId.UD_Capt_MainMenuName',
+            'Load Gallery...': 'ReportStringId.Cmd_LoadGallery',
             'Manage fields.': 'ReportStringId.PivotGridForm_ItemFields_Description',
             'Switch between tabbed and window MDI layout modes': 'ReportStringId.UD_Hint_TabbedInterface',
             'Increase Vertical Spacing': 'ReportStringId.RibbonXRDesign_VertSpaceIncrease_STipTitle',
@@ -2956,6 +2577,8 @@ var DevExpress;
             'Clone Formatting Rule': 'ReportStringId.Cmd_CloneFormattingRule',
             'Validate': 'ReportStringId.ScriptEditor_Validate',
             'Data adapter:': 'ReportStringId.NewParameterEditorForm_DataAdapter',
+            'Error': 'ReportStringId.Msg_ErrorTitle',
+            'Column': 'ReportStringId.Cmd_TableDeleteColumn',
             'New': 'ReportStringId.UD_Capt_NewReport',
             'Click "Validate" to check scripts.': 'ReportStringId.ScriptEditor_ClickValidate',
             'Report StyleSheet files (*.repss)|*.repss|All files (*.*)|*.*': 'ReportStringId.SSForm_Msg_FileFilter',
@@ -2975,6 +2598,7 @@ var DevExpress;
             'Assign Even Style To The XRControl': 'ReportStringId.Cmd_AssignEvenStyleToXRControl',
             'Send to Back': 'ReportStringId.UD_Capt_OrderSendToBack',
             'Report Source: {0}\r\n': 'ReportStringId.XRSubreport_ReportSourceInfo',
+            'Add New Folder': 'ReportStringId.Cmd_AddGalleryFolder',
             'Select All': 'ReportStringId.UD_Capt_SelectAll',
             'You selected more than one formatting rule': 'ReportStringId.FRSForm_Msg_MoreThanOneRule',
             'Hide or show the {0} window': 'ReportStringId.UD_Hint_ViewDockPanels',
@@ -2988,12 +2612,14 @@ var DevExpress;
             'There are following errors in script(s):\r\n{0}': 'ReportStringId.Msg_ScriptError',
             'Description:': 'ReportStringId.ExpressionEditor_FieldDescription',
             'Structure': 'ReportStringId.CatStructure',
-            'Export warning: The following controls are overlapped and may be exported to HTML, RTF, XLS, XLSX, CSV and Text incorrectly - {0}.': 'ReportStringId.Msg_WarningControlsAreOverlapped',
+            'Export warning: The following controls are overlapped and may be exported to HTML, RTF, DOCX, XLS, XLSX, CSV and Text incorrectly - {0}.': 'ReportStringId.Msg_WarningControlsAreOverlapped',
             'Middles': 'ReportStringId.UD_Capt_AlignMiddles',
             'Data member:': 'ReportStringId.NewParameterEditorForm_DataMember',
             'Appearances': 'ReportStringId.PivotGridForm_ItemAppearances_Caption',
             'Processing...': 'ReportStringId.RibbonXRDesign_StatusBar_HtmlProcessing',
+            'The current report layout will be lost. Do you wish to continue?': 'ReportStringId.Gallery_Msg_ApplyLayoutToReport',
             'Select Controls With Formatting Rule': 'ReportStringId.Cmd_SelectControlsWithFormattingRule',
+            'Report Gallery': 'ReportStringId.UD_Title_ReportGallery',
             'Group and Sort': 'ReportStringId.UD_Title_GroupAndSort',
             'GroupFooter': 'ReportStringId.Cmd_GroupFooter',
             'New Report': 'ReportStringId.RibbonXRDesign_NewReport_Caption',
@@ -3022,6 +2648,7 @@ var DevExpress;
             'Tops': 'ReportStringId.UD_Capt_AlignTops',
             'Right align the selected controls.': 'ReportStringId.RibbonXRDesign_AlignRight_STipContent',
             'This operation will remove all formatting rules. Do you wish to proceed?': 'ReportStringId.Msg_WarningRemoveFormattingRules',
+            'New Folder': 'ReportStringId.Gallery_NewFolder',
             '(Not set)': 'ReportStringId.UD_PropertyGrid_NotSetText',
             'Elements': 'ReportStringId.CatElements',
             '"{0}" has been changed. Do you want to save changes ?': 'ReportStringId.UD_Msg_MdiReportChanged',
@@ -3032,6 +2659,7 @@ var DevExpress;
             'Are you sure you want to apply these changes?': 'ReportStringId.Msg_ApplyChangesQuestion',
             'Open a report': 'ReportStringId.UD_Hint_OpenFile',
             'Save Report As': 'ReportStringId.RibbonXRDesign_SaveFileAs_STipTitle',
+            'Add to Report Style Sheet': 'ReportStringId.Cmd_AddToReportStyleSheet',
             'Move Down': 'ReportStringId.Cmd_BandMoveDown',
             'The XRTableOfContents control can be placed only into Report Header and Report Footer bands.': 'ReportStringId.Msg_PlacingXrTocIntoIncorrectContainer',
             'All scripts are valid.': 'ReportStringId.ScriptEditor_ScriptsAreValid',
@@ -3062,6 +2690,7 @@ var DevExpress;
             'Align Middles': 'ReportStringId.RibbonXRDesign_AlignHorizontalCenters_Caption',
             'Send To Back': 'ReportStringId.Cmd_SendToBack',
             'Save/Export...': 'ReportStringId.Verb_Export',
+            'Unable to open file as its contents may be unsafe.': 'ReportStringId.Msg_SuspiciousCodeLoadingCanceled',
             'Top\r\nmargin': 'ReportStringId.SR_Top_Margin',
             'Align the bottoms of the selected controls': 'ReportStringId.UD_Hint_AlignBottoms',
             'Properties': 'ReportStringId.Cmd_Properties',
@@ -3101,6 +2730,7 @@ var DevExpress;
             'Align the centers of the selected controls vertically': 'ReportStringId.UD_Hint_AlignCenters',
             'Find the text on this page.': 'ReportStringId.RibbonXRDesign_HtmlFind_STipContent',
             'Number Across': 'ReportStringId.SR_Number_Across',
+            'Opening this file within the Report Designer may be unsafe.\r\nWas this file obtained from a trusted source?': 'ReportStringId.Msg_SuspiciousCodeLoading',
             'Show or hide the Toolbox, Report Explorer, Field List and Property Grid windows.': 'ReportStringId.RibbonXRDesign_Windows_STipContent',
             'Align Text Left': 'ReportStringId.RibbonXRDesign_JustifyLeft_Caption',
             'TopMargin': 'ReportStringId.Cmd_TopMargin',
@@ -3115,18 +2745,21 @@ var DevExpress;
             'Close the report designer.': 'ReportStringId.RibbonXRDesign_Exit_STipContent',
             '\r\n\r\nData Member: {0}': 'ReportStringId.UD_TTip_DataMemberDescription',
             'Align Text Right': 'ReportStringId.RibbonXRDesign_JustifyRight_STipTitle',
+            'Remove': 'ReportStringId.UD_Capt_SpacingRemove',
             'Printing warning: Save the following reports to preview subreports with recent changes applied - {0}.': 'ReportStringId.Msg_WarningUnsavedReports',
             'Decrease the spacing between the selected controls': 'ReportStringId.UD_Hint_SpacingDecrease',
             'BottomMargin': 'ReportStringId.Cmd_BottomMargin',
             'Left align the selected controls': 'ReportStringId.UD_Hint_AlignLefts',
             'Use Ctrl with the left mouse button to rotate the shape': 'ReportStringId.Msg_ShapeRotationToolTip',
             'Add Style': 'ReportStringId.Cmd_AddStyle',
+            'Save Gallery As...': 'ReportStringId.Cmd_SaveGalleryAs',
             'Redo the last operation.': 'ReportStringId.RibbonXRDesign_Redo_STipContent',
             'New via Wizard...': 'ReportStringId.UD_Capt_NewWizardReport',
             'Move back to the previous page.': 'ReportStringId.RibbonXRDesign_HtmlBackward_STipContent',
             'Windows': 'ReportStringId.RibbonXRDesign_Windows_Caption',
             'XtraReports': 'ReportStringId.Msg_Caption',
             'Add a Group': 'ReportStringId.GroupSort_AddGroup',
+            'Rename': 'ReportStringId.Cmd_RenameGalleryItem',
             'Window': 'ReportStringId.UD_Group_Window',
             'Horizontally center the selected controls within a band.': 'ReportStringId.RibbonXRDesign_CenterHorizontally_STipContent',
             'Edit': 'ReportStringId.UD_Group_Edit',
@@ -3164,7 +2797,9 @@ var DevExpress;
             'Delete the control': 'ReportStringId.UD_Hint_Delete',
             'The Font name can\'t be empty.': 'ReportStringId.Msg_WarningFontNameCantBeEmpty',
             'PageFooter': 'ReportStringId.Cmd_PageFooter',
+            'Add To Gallery': 'ReportStringId.Cmd_AddToGallery',
             'File not found.': 'ReportStringId.Msg_FileNotFound',
+            'Warning: The following controls are outside the report printing area and will not be properly printed and/or exported - {0}.': 'ReportStringId.Msg_WarningControlsAreOutOfColumnPrintingArea',
             'The DrillDownControl property of the \'{0}\' band is not valid.': 'ReportStringId.Msg_InvalidDrillDownControl',
             'You selected more than one style': 'ReportStringId.SSForm_Msg_MoreThanOneStyle',
             'Change the font size.': 'ReportStringId.RibbonXRDesign_FontSize_STipContent',
@@ -3175,6 +2810,7 @@ var DevExpress;
             'Add Field to Area': 'ReportStringId.Verb_AddFieldToArea',
             'Tasks': 'ReportStringId.STag_Capt_Tasks',
             'ReportHeader': 'ReportStringId.Cmd_ReportHeader',
+            'Add to Report Components': 'ReportStringId.Cmd_AddToReportComponents',
             'Add Formatting Rule': 'ReportStringId.Cmd_AddFormattingRule',
             'Refresh this page.': 'ReportStringId.RibbonXRDesign_HtmlRefresh_STipContent',
             'Serialization Error': 'ReportStringId.Msg_SerializationErrorTitle',
@@ -3185,6 +2821,7 @@ var DevExpress;
             'Load Report Template...': 'ReportStringId.Verb_LoadReportTemplate',
             'Delete Unused Styles': 'ReportStringId.Cmd_PurgeStyles',
             'Save \'{0}\'': 'ReportStringId.Dlg_SaveFile_Title',
+            'Cannot obtain data columns. Make sure that the report data source and data member are valid.': 'ReportStringId.Msg_CannotObtainDataColumns',
             'Layout Toolbar': 'ReportStringId.UD_Capt_LayoutToolbarName',
             'Move forward to the next page.': 'ReportStringId.RibbonXRDesign_HtmlForward_STipContent',
             'XRPivotGrid Fields': 'ReportStringId.PivotGridFrame_Fields_ColumnsText',
@@ -3194,6 +2831,7 @@ var DevExpress;
             'to Grid': 'ReportStringId.UD_Capt_AlignToGrid',
             'View Code': 'ReportStringId.Cmd_ViewCode',
             'Edit and Reorder Bands...': 'ReportStringId.Verb_EditBands',
+            'Report Data': 'ReportStringId.CatReportData',
             'one band per report': 'ReportStringId.BandDsg_QuantityPerReport',
             'Importing a report layout. Please, wait...': 'ReportStringId.Msg_ReportImporting',
             'You must select fields for the report before you continue': 'ReportStringId.Wizard_PageChooseFields_Msg',
@@ -3243,6 +2881,7 @@ var DevExpress;
             'This operation will remove all parameters. Do you wish to proceed?': 'ReportStringId.Msg_WarningRemoveParameters',
             'Tile Horizontal': 'ReportStringId.UD_Capt_MdiTileHorizontal',
             'Make the font bold': 'ReportStringId.UD_Hint_FontBold',
+            'Apply Layout to Report': 'ReportStringId.Cmd_ApplyLayoutToReport',
             'Tab Buttons': 'ReportStringId.UD_Group_TabButtonsList',
             'Make the selected controls have the same size.': 'ReportStringId.RibbonXRDesign_SizeToControl_STipContent',
             'No formatting rules are selected': 'ReportStringId.FRSForm_Msg_NoRuleSelected',
@@ -3312,6 +2951,7 @@ var DevExpress;
             'Show Details command cannot be executed when Top N is applied to one of the row/column fields.': 'PivotGridStringId.OLAPDrillDownTopNException',
             'Invert Filter': 'PivotGridStringId.FilterInvert',
             'Q{0}': 'PivotGridStringId.DateTimeQuarterFormat',
+            'Cancel': 'ASPxReportsStringId.SearchDialog_Cancel',
             'Hidden': 'PivotGridStringId.SummaryFilterLegendHidden',
             'Going Down': 'PivotGridStringId.TrendGoingDown',
             'PivotGrid Field List': 'PivotGridStringId.CustomizationFormCaption',
@@ -3319,6 +2959,7 @@ var DevExpress;
             'Show values from': 'PivotGridStringId.SummaryFilterRangeFrom',
             '(Any)': 'PivotGridStringId.PopupMenuFormatRulesAnyField',
             '(Blank)': 'PivotGridStringId.FilterBlank',
+            'The following fields have circular dependency: {0}': 'PivotGridStringId.ExpressionValidationCircularDependency',
             '[Data Area Headers]': 'PivotGridStringId.Alt_DataAreaHeaders',
             '[Resize]': 'PivotGridStringId.Alt_FilterWindowSizeGrip',
             'KPIs': 'PivotGridStringId.OLAPKPIsCaption',
@@ -3329,6 +2970,8 @@ var DevExpress;
             'Horizontal Lines': 'PivotGridStringId.PrintDesignerHorizontalLines',
             'Clear Sorting': 'PivotGridStringId.PopupMenuClearSorting',
             'Show Field List': 'PivotGridStringId.PopupMenuShowFieldList',
+            'OK': 'PivotGridStringId.FilterOk',
+            'A summary expression is expected.': 'PivotGridStringId.ExpressionValidationSummaryExpressionExpected',
             '[Layout Button]': 'PivotGridStringId.Alt_LayoutButton',
             '[Row Area Headers]': 'PivotGridStringId.Alt_RowAreaHeaders',
             '[Stacked Default Layout]': 'PivotGridStringId.Alt_StackedDefaultLayout',
@@ -3346,6 +2989,7 @@ var DevExpress;
             'This command cannot be used on multiple selections.': 'PivotGridStringId.CannotCopyMultipleSelections',
             'Clear Rules from This Intersection': 'PivotGridStringId.PopupMenuFormatRulesClearIntersectionRules',
             'Sort "{0}" by This Row': 'PivotGridStringId.PopupMenuSortFieldByRow',
+            'Criteria cannot contain aggregates.': 'PivotGridStringId.ExpressionValidationNotSummaryExpressionExpected',
             'Going Up': 'PivotGridStringId.TrendGoingUp',
             'Defer Layout Update': 'PivotGridStringId.CustomizationFormDeferLayoutUpdate',
             'Choose fields to add to report:': 'PivotGridStringId.CustomizationFormAvailableFields',
@@ -3384,6 +3028,7 @@ var DevExpress;
             '{0} Sum': 'PivotGridStringId.TotalFormatSum',
             '{0} Max': 'PivotGridStringId.TotalFormatMax',
             '{0} Min': 'PivotGridStringId.TotalFormatMin',
+            'The {0} not found.': 'PivotGridStringId.ExpressionValidationInvalidProperty',
             'The palette is default and then can\'t be modified.': 'ChartStringId.MsgModifyDefaultPaletteError',
             'Export the current document in one of the available formats, and save it to the file on a disk.': 'ChartStringId.CmdExportPlaceHolderDescription',
             'Spline': 'ChartStringId.SvnSpline',
@@ -3517,6 +3162,7 @@ var DevExpress;
             'Right-top': 'ChartStringId.WizDockCornerRightTop',
             'DashedUpwardDiagonal': 'ChartStringId.WizHatchDashedUpwardDiagonal',
             'The logarithmic base should be greater than 1.': 'ChartStringId.MsgInvalidLogarithmicBase',
+            'This chart type is incompatible with the DateTime and Qualitative arguments.': 'ChartStringId.CmdIncompatibleScaleTypeNote',
             'The fixed series distance should be greater than or equal to 0.': 'ChartStringId.MsgIncorrectSeriesDistanceFixed',
             'JustifyAroundPoint': 'ChartStringId.WizResolveOverlappingModeJustifyAroundPoint',
             'Chaikin\'s Volatility': 'ChartStringId.IndChaikinsVolatility',
@@ -3635,6 +3281,7 @@ var DevExpress;
             'The thickness of the minor tickmark should be greater than 0.': 'ChartStringId.MsgIncorrectTickmarkMinorThickness',
             'Load\r\nTemplate': 'ChartStringId.CmdLoadTemplateMenuCaption',
             'Black and White': 'ChartStringId.PltBlackAndWhite',
+            'Add': 'ChartStringId.MenuItemAdd',
             'LargeCheckerBoard': 'ChartStringId.WizHatchLargeCheckerBoard',
             'Stacked Column': 'ChartStringId.CmdCreateStackedBarChartMenuCaption',
             'It\'s impossible to swap autocreated and fixed series.': 'ChartStringId.MsgCantSwapSeries',
@@ -4047,6 +3694,7 @@ var DevExpress;
             '2-D Column': 'ChartStringId.CmdColumn2DGroupPlaceHolderMenuCaption',
             'The MeasureUnit property can\'t be modified in both the automatic and continuous date-time scale modes.': 'ChartStringId.MsgIncorrectDateTimeMeasureUnitPropertyUsing',
             'Error Bars': 'ChartStringId.IndErrorBars',
+            'Index was out of range. Must be non-negative and less than the size of the collection.': 'ChartStringId.MsgOutOfRangeIndexInSeriesPointCollection',
             'Exploded': 'ChartStringId.ExplodedPointsDialogExplodedColumn',
             'The precision should be greater than or equal to 0.': 'ChartStringId.MsgIncorrectNumericPrecision',
             'Pane ': 'ChartStringId.XYDiagramPanePrefix',
@@ -4177,6 +3825,7 @@ var DevExpress;
             'The GridAlignment property can\'t be modified in the automatic numeric scale mode.': 'ChartStringId.MsgIncorrectNumericGridAlignmentPropertyUsing',
             'DataFilters changed': 'ChartStringId.TrnDataFiltersChanged',
             'Detrended Price Oscillator': 'ChartStringId.IndDetrendedPriceOscillator',
+            'The legend marker offset should be greater than or equal to 0 and less than 1000.': 'ChartStringId.MsgIncorrectLegendMarkerOffset',
             'Use Shift with the left mouse button\r\nto zoom in the chart.\r\nUse Alt with the left mouse button \r\nto zoom out the chart.': 'ChartStringId.Msg3DZoomToolTip',
             'Violet II': 'ChartStringId.PltVioletII',
             'the value scale type': 'ChartStringId.MsgIncompatibleByValueScaleType',
@@ -4236,13 +3885,20 @@ var DevExpress;
             'Path can\'t be created.': 'GaugesCoreStringId.MsgPathCreationError',
             'It\'s impossible to create an instance of a class {0} because specified text is incorrect: ': 'GaugesCoreStringId.MsgTextParsingError',
             'The gauge control can\'t be restored correctly, because the specified layout file contians the following invalid elements: {0}.': 'GaugesCoreStringId.MsgGaugeRestoreError',
+            'Bottom Margin:': 'ASPxReportsStringId.ReportDesigner_Wizard_BottomMargin',
             'We have all the information needed to process the report.': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportComplete_Description',
-            'What summary function would you like to calculate?': 'ASPxReportsStringId.ReportDesigner_Wizard_SummaryOptions_Description',
+            'What summary functions would you like to calculate?': 'ASPxReportsStringId.ReportDesigner_Wizard_SummaryOptions_Description',
+            'Columns selected from specific tables and/or views will be automatically included into a separate query.': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_PageConfigureMultiQuery',
             'To be able to run the Document Viewer, the client web browser must support HTML5.': 'ASPxReportsStringId.WebDocumentViewer_PlatformNotSupported_Error',
             'Enter the text to find in the document.': 'ASPxReportsStringId.SearchDialog_EnterText',
             'The specified Report Service has not been found.': 'ASPxReportsStringId.DocumentViewer_RemoteSourceConnection_Error',
             'Report Wizard': 'ASPxReportsStringId.ReportDesigner_Wizard_Header',
+            'Height:': 'ASPxReportsStringId.ReportDesigner_Wizard_Height',
+            'Horizontal Pitch:': 'ASPxReportsStringId.ReportDesigner_Wizard_HorizontalPitch',
+            'Next': 'ASPxReportsStringId.ReportDesigner_Wizard_Next',
+            'Inch': 'ASPxReportsStringId.ReportDesigner_Wizard_Inch',
             'Ignore null values': 'ASPxReportsStringId.ReportDesigner_Wizard_SummaryOptions_IgnoreNullValues',
+            'Choose a data connection.': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_PageChooseConnection',
             'To log in to the Report Server, handle the RequestCredentials event.': 'ASPxReportsStringId.DocumentViewer_RemoteAuthenticatorCredentialHandled_Error',
             'Collapsed': 'ASPxReportsStringId.ReportDesigner_Accordion_Collapsed',
             'Align Left 1': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportLayout_AlignLeft1',
@@ -4252,13 +3908,20 @@ var DevExpress;
             'Last Page': 'ASPxReportsStringId.DocumentViewer_RibbonCommandText_LastPage',
             'Insert Group Header Band': 'ASPxReportsStringId.ReportDesigner_ReportActions_InsertGroupHeaderBand',
             'The value cannot be empty.': 'ASPxReportsStringId.ParametersPanel_DateTimeValueValidationError',
+            'Label Height:': 'ASPxReportsStringId.ReportDesigner_Wizard_LabelHeight',
+            'Label Report': 'ASPxReportsStringId.ReportDesigner_Wizard_SelectReportType_LabelReport',
+            'Join Type': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_JoinType',
+            'Finish': 'ASPxReportsStringId.ReportDesigner_Wizard_Finish',
             'To be able to run the Report Designer, the client web browser must support HTML5.': 'ASPxReportsStringId.ReportDesigner_PlatformNotSupported_Error',
             'Size to Control Height': 'ASPxReportsStringId.ReportDesigner_ElementsAction_SizeToControlHeight',
             'Display the specified page.': 'ASPxReportsStringId.DocumentViewer_RibbonCurrentPageToolTip',
+            'Sort Type': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_SortType',
             'of': 'ASPxReportsStringId.ToolBarItemText_OfLabel',
             'Delete Row': 'ASPxReportsStringId.ReportDesigner_TableActions_DeleteRow',
             'Remove calculated field': 'ASPxReportsStringId.ReportDesigner_FieldListActions_RemoveCalculatedField',
             'Insert Page Header Band': 'ASPxReportsStringId.ReportDesigner_ReportActions_InsertPageHeaderBand',
+            'Left Margin:': 'ASPxReportsStringId.ReportDesigner_Wizard_LeftMargin',
+            'Selection Properties': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_SelectionProperties',
             'Choose a Report Layout': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportLayout_Title',
             'Choose a Table or View': 'ASPxReportsStringId.ReportDesigner_Wizard_ChooseDataMember_Title',
             'Guid should contain 32 digits delimited with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).': 'ASPxReportsStringId.ParametersPanel_GuidValidationError',
@@ -4266,7 +3929,10 @@ var DevExpress;
             'Insert Field in the Column Area': 'ASPxReportsStringId.ReportDesigner_PivotActions_InsertFieldInTheColumnArea',
             'Loading...': 'ASPxReportsStringId.WebDocumentViewer_Loading',
             'Formal': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportStyle_Formal',
+            'Write Custom SQL': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_WriteCustomSQL',
             'Specify the print settings and print the document.': 'ASPxReportsStringId.DocumentViewer_RibbonCommandToolTip_PrintReport',
+            'Available tables and views': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_AvailableTables',
+            'Select All (*)': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_SelectAll',
             'Outline 2': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportLayout_Outline2',
             'Outline 1': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportLayout_Outline1',
             'Failed to log in with the specified user credentials.': 'ASPxReportsStringId.DocumentViewer_RemoteAuthenticatorLogin_Error',
@@ -4281,25 +3947,37 @@ var DevExpress;
             'Save To File': 'ASPxReportsStringId.DocumentViewer_RibbonCommandText_SaveToFile',
             'Error obtaining a build status': 'ASPxReportsStringId.WebDocumentViewer_GetBuildStatusError',
             'An error occurred during search': 'ASPxReportsStringId.WebDocumentViewer_SearchError',
+            'Paper Size:': 'ASPxReportsStringId.ReportDesigner_Wizard_PaperSize',
+            'Paper Type:': 'ASPxReportsStringId.ReportDesigner_Wizard_PaperType',
+            'Label Width:': 'ASPxReportsStringId.ReportDesigner_Wizard_LabelWidth',
+            'To create an item click the Add button.': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_PageConfigureParametersEmpty',
             'Insert Group Footer Band': 'ASPxReportsStringId.ReportDesigner_ReportActions_InsertGroupFooterBand',
             'Match whole word only': 'ASPxReportsStringId.SearchDialog_WholeWord',
             'Insert Sub-Band': 'ASPxReportsStringId.ReportDesigner_ReportActions_InsertSubBand',
+            'Query Properties': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_QueryProperties',
             'Select the columns you want to display within your report.': 'ASPxReportsStringId.ReportDesigner_Wizard_ChooseColumns_Description',
+            'Width:': 'ASPxReportsStringId.ReportDesigner_Wizard_Width',
             'Down': 'ASPxReportsStringId.SearchDialog_Down',
             'Match case': 'ASPxReportsStringId.SearchDialog_Case',
             '(Select All)': 'ASPxReportsStringId.WebDocumentViewer_SelectAll',
+            'Select distinct': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_SelectDistinct',
+            'Custom SQL Editor': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_CustomSqlEditor',
+            'Add SQL Data Source...': 'ASPxReportsStringId.ReportDesigner_MenuItem_AddSqlDataSource',
             'The DocumentViewerRemoteSourceSettings.CustomTokenStorage property is not assigned.': 'ASPxReportsStringId.DocumentViewer_RemoteSourceSettings_CustomTokenStorage_Error',
             'Print the report': 'ASPxReportsStringId.ToolBarItemText_PrintReport',
             'Parameters Panel': 'ASPxReportsStringId.DocumentViewer_RibbonCommandText_ParametersPanel',
             'Portrait': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportLayout_Portrait',
             'There are no parameters available yet.': 'ASPxReportsStringId.ReportDesigner_FieldList_Parameters',
+            'Create New Query...': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_CreateNewQuery',
             'Page Count:': 'ASPxReportsStringId.DocumentViewer_RibbonPageCountText',
             'Size to Control': 'ASPxReportsStringId.ReportDesigner_ElementsAction_SizeToControl',
             'Current Page': 'ASPxReportsStringId.DocumentViewer_RibbonCurrentPageText',
             'Insert Field in the Data Area': 'ASPxReportsStringId.ReportDesigner_PivotActions_InsertFieldInTheDataArea',
             'Create a New Style': 'ASPxReportsStringId.ReportDesigner_StylesEditor_CreateNew',
+            'Select the report type you wish to create.': 'ASPxReportsStringId.ReportDesigner_Wizard_SelectReportType_Message',
             'Choose a Report Style': 'ASPxReportsStringId.ReportDesigner_Wizard_Report_Style',
             'Insert Field in the Filter Area': 'ASPxReportsStringId.ReportDesigner_PivotActions_InsertFieldInTheFilterArea',
+            'Data-bound Report': 'ASPxReportsStringId.ReportDesigner_Wizard_SelectReportType_DataBoundReport',
             'Insert Page Footer Band': 'ASPxReportsStringId.ReportDesigner_ReportActions_InsertPageFooterBand',
             'Display the last document page.': 'ASPxReportsStringId.DocumentViewer_RibbonCommandToolTip_LastPage',
             'Finished searching the document.': 'ASPxReportsStringId.SearchDialog_Finished',
@@ -4307,9 +3985,12 @@ var DevExpress;
             'Findnbsp;what': 'ASPxReportsStringId.SearchDialog_FindWhat',
             'Export a report and save it to the disk': 'ASPxReportsStringId.ToolBarItemText_SaveToDisk',
             'Export a report and show it in a new window': 'ASPxReportsStringId.ToolBarItemText_SaveToWindow',
+            'Millimeter': 'ASPxReportsStringId.ReportDesigner_Wizard_Millimeter',
             'Add parameter': 'ASPxReportsStringId.ReportDesigner_FieldListActions_AddParameter',
             'Delete Column': 'ASPxReportsStringId.ReportDesigner_TableActions_DeleteColumn',
+            'Top Margin:': 'ASPxReportsStringId.ReportDesigner_Wizard_TopMargin',
             'Insert Top Margin Band': 'ASPxReportsStringId.ReportDesigner_ReportActions_InsertTopMarginBand',
+            'Empty Report': 'ASPxReportsStringId.ReportDesigner_Wizard_SelectReportType_EmptyReport',
             'Find Text': 'ASPxReportsStringId.DocumentViewer_RibbonCommandText_FindText',
             'The report preview initialization has failed': 'ASPxReportsStringId.WebDocumentViewer_InitializationError',
             'Next Page': 'ASPxReportsStringId.ToolBarItemText_NextPage',
@@ -4318,23 +3999,32 @@ var DevExpress;
             'Display the search window': 'ASPxReportsStringId.ToolBarItemText_Search',
             'The document is not found. Please try opening the document once again.': 'ASPxReportsStringId.WebDocumentViewer_DocumentNotFound_Error',
             'Preview Parameters': 'ASPxReportsStringId.ReportDesigner_Preview_ParametersTitle',
+            'Relation Properties': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_RelationProperties',
+            'Label Product:': 'ASPxReportsStringId.ReportDesigner_Wizard_LabelProduct',
             'Display the first document page.': 'ASPxReportsStringId.DocumentViewer_RibbonCommandToolTip_FirstPage',
+            'Vertical Pitch:': 'ASPxReportsStringId.ReportDesigner_Wizard_VerticalPitch',
             'Stepped': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportLayout_Stepped',
             'The report is not found. Please try opening the report once again.': 'ASPxReportsStringId.WebDocumentViewer_ReportNotFound_Error',
             'Delete Cell': 'ASPxReportsStringId.ReportDesigner_TableActions_DeleteCell',
             'Choose a Data Source to use in your report.': 'ASPxReportsStringId.ReportDesigner_Wizard_ChooseDataSource_Description',
             'Specify the report\'s title': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportComplete_SpecifyTitle',
+            'Remove query': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_RemoveQuery',
             'It is only possible to assign either the Local Report or Remote Source of ASPxDocumentViewer at a time.': 'ASPxReportsStringId.DocumentViewer_LocalAndRemoteSource_Error',
             'Save the document to a file in a specified format.': 'ASPxReportsStringId.DocumentViewer_RibbonCommandToolTip_SaveToFile',
             'Previous Page': 'ASPxReportsStringId.ToolBarItemText_PreviousPage',
             'Display the next document page.': 'ASPxReportsStringId.DocumentViewer_RibbonCommandToolTip_NextPage',
+            'Then By': 'ASPxReportsStringId.ReportDesigner_SortFields_ThenBy',
             'Find text in the document.': 'ASPxReportsStringId.DocumentViewer_RibbonCommandToolTip_FindText',
             'Print Page': 'ASPxReportsStringId.DocumentViewer_RibbonCommandText_PrintPage',
+            'Add query': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_AddQuery',
             'Save To Window': 'ASPxReportsStringId.DocumentViewer_RibbonCommandText_SaveToWindow',
             'Adjust the field width so all fields fit onto a page': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportLayout_AdjustFieldWidth',
             'The RequestCredentials event has not been subscribed to.': 'ASPxReportsStringId.DocumentViewer_RemoteRequestCredentials_Error',
             'To view the remote report, specify the ServerUri or EndpointConfigurationName property of the ASPxDocumentViewer.SettingsRemoteSource.': 'ASPxReportsStringId.DocumentViewer_RemoteSourceSettings_Error',
+            'Table Properties': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_TableProperties',
             'Insert Detail Report Band': 'ASPxReportsStringId.ReportDesigner_ReportActions_InsertDetailReportBand',
+            'Operator': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_Operator',
+            'Sort By': 'ASPxReportsStringId.ReportDesigner_SortFields_SortBy',
             'To display a report, only one of the following actions can be performed at a time:\r\n- assigning the ASPxWebDocumentViewer.ReportSourceId property;\r\n- calling the ASPxWebDocumentViewer.OpenReport method;\r\n- calling the ASPxWebDocumentViewer.OpenReportXmlLayout method.': 'ASPxReportsStringId.WebDocumentViewer_OpenReport_Error',
             'Specify the print settings and print the current page.': 'ASPxReportsStringId.DocumentViewer_RibbonCommandToolTip_PrintPage',
             'Groups': 'ASPxReportsStringId.ReportDesigner_Groups',
@@ -4344,7 +4034,7 @@ var DevExpress;
             'The report layout specifies the manner in which selected data fields are arranged on individual pages.': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportLayout_Description',
             'Run Wizard': 'ASPxReportsStringId.ReportDesigner_MenuButtons_RunWizard',
             'Compact': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportStyle_Compact',
-            'The table or view you choose determines wich columns will be available in your report.': 'ASPxReportsStringId.ReportDesigner_Wizard_ChooseDataMember_Description',
+            'The table or view you choose determines which columns will be available in your report.': 'ASPxReportsStringId.ReportDesigner_Wizard_ChooseDataMember_Description',
             'Insert Bottom Margin Band': 'ASPxReportsStringId.ReportDesigner_ReportActions_InsertBottomMarginBand',
             'To view a remote report, enable the PageByPage property of the SettingsReportViewer.': 'ASPxReportsStringId.DocumentViewer_RemotePageByPage_Error',
             'Access and modify the report parameter values.': 'ASPxReportsStringId.DocumentViewer_RibbonCommandToolTip_ParametersPanel',
@@ -4354,7 +4044,9 @@ var DevExpress;
             'Choose Columns to Display in Your Report': 'ASPxReportsStringId.ReportDesigner_Wizard_ChooseColumns_Title',
             'Insert Field in the Row Area': 'ASPxReportsStringId.ReportDesigner_PivotActions_InsertFieldInTheRowArea',
             'The user credentials cannot be empty.': 'ASPxReportsStringId.DocumentViewer_RemoteAuthenticatorCredential_Error',
+            'Configure master-detail relationships.': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_PageConfigureMasterDetailRelations',
             'This command cannot be executed because a document has not yet been generated.': 'ASPxReportsStringId.DocumentViewer_NoRemoteDocumentInformation_Error',
+            'Actions': 'ASPxReportsStringId.ReportDesigner_Actions',
             'Print the current page': 'ASPxReportsStringId.ToolBarItemText_PrintPage',
             'Export To': 'ASPxReportsStringId.WebDocumentViewer_ExportToText',
             'Display the previous document page.': 'ASPxReportsStringId.DocumentViewer_RibbonCommandToolTip_PreviousPage',
@@ -4367,18 +4059,29 @@ var DevExpress;
             'Insert Column To the Right': 'ASPxReportsStringId.ReportDesigner_TableActions_InsertColumnToRight',
             'Corporate': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportStyle_Corporate',
             'Size to Control Width': 'ASPxReportsStringId.ReportDesigner_ElementsAction_SizeToControlWidth',
+            'Choose a Report Type': 'ASPxReportsStringId.ReportDesigner_Wizard_SelectReportType_Title',
             'Access is denied. You are not granted permission to perform this operation.': 'ASPxReportsStringId.WebDocumentViewer_AccessDenied_Error',
+            'DOCX': 'ASPxReportsStringId.ExportName_docx',
             'XLSX': 'ASPxReportsStringId.ExportName_xlsx',
+            'Product Number:': 'ASPxReportsStringId.ReportDesigner_Wizard_ProductNumber',
+            'Edit query': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_EditQuery',
             'Toggle Multipage Mode': 'ASPxReportsStringId.WebDocumentViewer_ToggleMultipageMode',
+            'Right Margin:': 'ASPxReportsStringId.ReportDesigner_Wizard_RightMargin',
             'Submit': 'ASPxReportsStringId.ParametersPanel_Submit',
+            'No data to display': 'ASPxReportsStringId.ReportDesigner_DataPreview_Empty',
+            'Data Preview (First 100 Rows Displayed)': 'ASPxReportsStringId.ReportDesigner_DataPreview_Title',
+            'Configure query parameters.': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_PageConfigureParameters',
+            'Previous': 'ASPxReportsStringId.ReportDesigner_Wizard_Previous',
             'Selected fields': 'ASPxReportsStringId.ReportDesigner_Wizard_SelectedFields',
             'Save the document in a specified format and display the result in a new window.': 'ASPxReportsStringId.DocumentViewer_RibbonCommandToolTip_SaveToWindow',
             'Insert Row Below': 'ASPxReportsStringId.ReportDesigner_TableActions_InsertRowBelow',
             'Insert Row Above': 'ASPxReportsStringId.ReportDesigner_TableActions_InsertRowAbove',
             'Available fields': 'ASPxReportsStringId.ReportDesigner_Wizard_AvailableFields',
             'Add Filter Fields Here': 'ASPxReportsStringId.ReportDesigner_Pivot_AddFilterFields',
+            'SQL Data Source Wizard': 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_Title',
             'Cannot obtain additional document data for the current document': 'ASPxReportsStringId.WebDocumentViewer_GetDocumentDataError',
             'Add calculated field': 'ASPxReportsStringId.ReportDesigner_FieldListActions_AddCalculatedField',
+            'Data Source Wizard': 'ASPxReportsStringId.ReportDesigner_Wizard_DataSourceHeader',
             'Add Row Fields Here': 'ASPxReportsStringId.ReportDesigner_Pivot_AddRowFields',
             '0 pages': 'ASPxReportsStringId.WebDocumentViewer_0Pages',
             'Tabular': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportLayout_Tabular',
@@ -4388,10 +4091,1368 @@ var DevExpress;
             'Insert Report Header Band': 'ASPxReportsStringId.ReportDesigner_ReportActions_InsertReportHeaderBand',
             'The Report is Complete': 'ASPxReportsStringId.ReportDesigner_Wizard_ReportComplete_Title',
             'The value is not valid.': 'ASPxReportsStringId.ParametersPanel_GenericRegexValidationError',
+            'Page Size:': 'ASPxReportsStringId.ReportDesigner_Wizard_PageSize',
             'Choose summary options': 'ASPxReportsStringId.ReportDesigner_Wizard_SummaryOptions_Title',
             'Print Report': 'ASPxReportsStringId.DocumentViewer_RibbonCommandText_PrintReport',
+            'Column Properties': 'ASPxReportsStringId.ReportDesigner_QueryBuilder_ColumnProperties',
             'Add Column Fields Here': 'ASPxReportsStringId.ReportDesigner_Pivot_AddColumnFields',
-            'Choose a Data Source': 'ASPxReportsStringId.ReportDesigner_Wizard_ChooseDataSource_Title'
+            'Choose a Data Source': 'ASPxReportsStringId.ReportDesigner_Wizard_ChooseDataSource_Title',
+            'The selected assembly does not contain Entity Framework data contexts.': 'DataAccessStringId.WizardNoEFDataContextsMessage',
+            'The default constructor of an ITypedList implementation has thrown an exception.': 'DataAccessStringId.ODSWizardErrorExceptionInCtor',
+            'Views': 'DataAccessStringId.ConfigureMultiQueryPage_ViewCategory',
+            'A data connection with the specified name already exists. Please specify a different connection name.': 'DataAccessStringId.WizardDataConnectionNameExistsMessage',
+            'A table cannot be null.': 'DataAccessStringId.TableNullValidationException',
+            'Grouping requires at least one aggregated column.': 'DataAccessStringId.GroupByWithoutAggregateValidationException',
+            'CSV Files': 'DataAccessStringId.FileNameFilter_CSV',
+            'Constants': 'DataAccessStringId.ExpressionEditor_DocumentationCategory_Constants',
+            'Loading data source': 'DataAccessStringId.LoadingDataSourcePanelText',
+            'Functions': 'DataAccessStringId.ExpressionEditor_DocumentationCategory_Functions',
+            'Please wait': 'DataAccessStringId.ConnectingToDatabaseCaption',
+            'Table Selection': 'DataAccessStringId.QueryPropertyGridTableSelectionCategoryName',
+            'Cannot set relation between columns \'{0}\'.\'{1}\' of type {2} and \'{3}\'.\'{4}\' of type {5}.': 'DataAccessStringId.RelationException',
+            'Operators': 'DataAccessStringId.ExpressionEditor_DocumentationCategory_Operators',
+            'Column{0}': 'DataAccessStringId.EmptyColumnAliasPattern',
+            'Space': 'DataAccessStringId.ExcelWizard_ValueSeparator_Space',
+            'The collection already contains the \'{0}\' item': 'DataAccessStringId.MessageDuplicateItem',
+            'Comma': 'DataAccessStringId.ExcelWizard_ValueSeparator_Comma',
+            'One or more queries have failed to execute.': 'DataAccessStringId.QueriesFailedToExecute_ExceptionMessage',
+            '{0} of {1}...': 'DataAccessStringId.LoadingDataSourcePanelCounter',
+            ' (from the Server Explorer)': 'DataAccessStringId.ConnectionStringPostfixServerExplorer',
+            'Type: {0}': 'DataAccessStringId.ExpressionEditor_DocumentationCategory_ColumnDescriptionFormat',
+            'column': 'DataAccessStringId.ExpressionEditor_DocumentationCategory_Columns_Tooltip',
+            'The column name is not specified.': 'DataAccessStringId.UnnamedColumnValidationException',
+            'There are no tables containing column [{0}], which is used in the custom expression.': 'DataAccessStringId.CustomExpressionWithColumnOfMissingTableValidationException',
+            'Invalid column: \'{0}\'.': 'DataAccessStringId.ExpressionEditor_InvalidColumn',
+            'Connection name: {0}\r\n Error message:\r\n{1}\r\n': 'DataAccessStringId.DatabaseConnectionExceptionMessage',
+            'The following column is used as a sorting criterion more than once: "{0}"."{1}".': 'DataAccessStringId.SortingBySameColumnTwiceValidationException',
+            'Left outer join': 'DataAccessStringId.RelationEditorRelationTypeLeftOuterJoin',
+            'Semicolon': 'DataAccessStringId.ExcelWizard_ValueSeparator_Semicolon',
+            'The following database provider is not supported: {0}.': 'DataAccessStringId.ProviderNotSupportedException',
+            'Parameter name mismatch: <{0}>, <{1}> is expected.': 'DataAccessStringId.StoredProcParamNameValidationException',
+            'The specified alias already exists.': 'DataAccessStringId.QueryBuilderAliasAlreadyExists',
+            'Item name \'{0}\' contains wrong characters': 'DataAccessStringId.MessageWrongCharacterItemName',
+            'Cannot group by an aggregate column: "{0}"."{1}".': 'DataAccessStringId.GroupByAggregateColumnValidationException',
+            'Char': 'DataAccessStringId.Type_Char',
+            'Non-negative number (8 bit integer)': 'DataAccessStringId.Type_Byte',
+            'Non-negative number (32 bit integer)': 'DataAccessStringId.Type_UInt',
+            'The reference table has not been selected: "{0}".': 'DataAccessStringId.RelationTableNotSelectedValidationException',
+            'The SQL string is null or empty.': 'DataAccessStringId.SqlStringEmptyValidationException',
+            'function': 'DataAccessStringId.ExpressionEditor_DocumentationCategory_Functions_Tooltip',
+            'Non-negative number (16 bit integer)': 'DataAccessStringId.Type_UShort',
+            'A relation cannot be null.': 'DataAccessStringId.RelationNullValidationException',
+            'A column with the following name already exists: "{0}"."{1}".': 'DataAccessStringId.DuplicatingColumnNamesValidationException',
+            'Logical': 'DataAccessStringId.ExpressionEditor_FunctionCategory_Logical',
+            'The column name [{0}], which is used in the filter string, is ambiguous. Columns with this name exist in the following tables: {1}.': 'DataAccessStringId.FilterByAmbiguousColumnValidationException',
+            'Cannot find the following connection in the config file: {0}.': 'DataAccessStringId.ConnectionNotFoundInConfig_ExceptionMessage',
+            'Invalid port number. A port number should be between 0 and 65535 inclusive.': 'DataAccessStringId.InvalidPortErrorMessage',
+            'Invalid expression.': 'DataAccessStringId.ExpressionEditor_InvalidExpression',
+            'Rebuilding the Result Schema...': 'DataAccessStringId.RebuildResultSchemaWaitFormText',
+            'Common': 'DataAccessStringId.QueryPropertyGridCommonCategoryName',
+            'Not all parts of the expression are specified.': 'DataAccessStringId.QueryBuilderJoinEditorMissingData',
+            'Connection parameters were discarded because the {0} provider is not supported. \r\nSelect one of the available data providers and specify connection parameters or close the wizard \r\nusing the Close button to undo this change.': 'DataAccessStringId.ConnectionPropertiesPage_ProviderNotSupported',
+            'The protected file cannot be opened.': 'DataAccessStringId.ExcelEncryptedFileException_EncryptionTypeNotSupported',
+            'The collection of tables cannot be empty.': 'DataAccessStringId.NoTablesValidationException',
+            'Group filtering cannot be applied to data that is not grouped. Please apply data grouping first.': 'DataAccessStringId.GroupFilterStringEditorNoGroups',
+            'The SKIP setting is set while records are not sorted. Please apply sorting to be able to skip the first N records or reset the SKIP setting in the Filter Editor dialog.': 'DataAccessStringId.SkipWithoutSortingValidationException',
+            'The connection has been cancelled.': 'DataAccessStringId.ConnectionAborted_ExceptionMessage',
+            'Custom connection string': 'DataAccessStringId.WizardCustomConnectionString',
+            'Column [{0}].[{1}] is used in the custom expression, but is missing in DBSchema.': 'DataAccessStringId.CustomExpressionWithMissingInSchemaColumnValidationException',
+            'Stored Procedure': 'DataAccessStringId.QueryPropertyGridStoredProcCategoryName',
+            'Some of the query features are not supported for XML files.': 'DataAccessStringId.XmlProviderNotSupportedLabel',
+            'The column name [{0}], which is used in the custom expression, is ambiguous. Columns with this name exist in the following tables: {1}.': 'DataAccessStringId.CustomExpressionWithAmbiguousColumnValidationException',
+            'The name of a stored procedure cannot be null.': 'DataAccessStringId.StoredProcNameNullValidationException',
+            'An expression cannot be null, either column or custom expression expected.': 'DataAccessStringId.ExpressionNullValidationException',
+            'Column [{0}].[{1}] is used in the filter string, but is missing in DBSchema.': 'DataAccessStringId.FilterByMissingInSchemaColumnValidationException',
+            'Inner join': 'DataAccessStringId.RelationEditorRelationTypeInnerJoin',
+            'Schema loading...': 'DataAccessStringId.ExcelDataSource_SchemaLoadingText',
+            'The specified relation is incomplete: "{0}".': 'DataAccessStringId.IncompleteRelationValidationException',
+            'Number (8 bit integer)': 'DataAccessStringId.Type_SByte',
+            'The password is not correct. Please try again.': 'DataAccessStringId.ExcelEncryptedFileException_WrongPassword',
+            'Non-negative number (64 bit integer)': 'DataAccessStringId.Type_ULong',
+            'Master-detail relation': 'DataAccessStringId.RelationEditorRelationTypeMasterDetail',
+            'Column not found: \'{0}\'.\'{1}\'.': 'DataAccessStringId.ResultRelation_ColumnNotFoundError',
+            'A query with the specified name already exists: {0}.': 'DataAccessStringId.MessageDuplicateQueryName',
+            ' (in the config file)': 'DataAccessStringId.ConnectionStringPostfixAppConfig',
+            'The query name cannot be empty.': 'DataAccessStringId.MessageEmptyQueryName',
+            'A grouping criteria cannot be null.': 'DataAccessStringId.GroupNullValidationException',
+            'Unable to load the {0} assembly for the {1} context. Please choose an existing external assembly and/or existing context.': 'DataAccessStringId.MessageCannotLoadCustomAssembly',
+            'Unknown': 'DataAccessStringId.UnknownType',
+            'Manual editing of custom SQL is not allowed. The current query is represented by a custom SQL query string, \r\nwhich will be lost if you proceed with editing the query using the Query Builder dialog. \r\n\r\nDo you want to discard the custom SQL and proceed with the Query Builder?': 'DataAccessStringId.ConfigureQueryPage_CustomSqlWillBeLost',
+            'The specified relation does not contain key columns: "{0}".': 'DataAccessStringId.NoRelationColumnsValidationException',
+            'The following aggregate function is not supported: \'{0}\'.': 'DataAccessStringId.ExpressionEditor_NotSupportedAggregateFunction',
+            'A database does not contain tables or views and does not support SQL editing. To be able to run the Query Builder, make sure that your database contains at least one table or supports SQL editing.': 'DataAccessStringId.QueryBuilderNoTablesAndViews',
+            'Group filtering criteria are defined while data is not grouped. Please apply data grouping or remove group filtering criteria on the Group Filter tab of the Filter Editor dialog.': 'DataAccessStringId.HavingWithoutGroupByValidationException',
+            'default': 'DataAccessStringId.ParameterlessConstructor',
+            'A sorting criteria cannot be null.': 'DataAccessStringId.SortingNullValidationException',
+            'The schema does not contain the specified table: "{0}".': 'DataAccessStringId.TableNotInSchemaValidationException',
+            'There are no tables containing column [{0}], which is used in the filter string.': 'DataAccessStringId.FilterByColumnOfMissingTableValidationException',
+            'Cannot parse the following expression string: "{0}".': 'DataAccessStringId.InvalidExpressionStringValidationException',
+            'Certain columns on the select list are invalid because they are not contained in either an aggregate function or in the Group By clause. Apply aggregation/grouping either to all columns or to none of them.': 'DataAccessStringId.PartialAggregationValidationException',
+            'none': 'DataAccessStringId.ParameterListEmpty',
+            'Cannot sort by an aggregate column: {0}({1}), because the query is not aggregated.': 'DataAccessStringId.SortByAggregateColumnValidationException',
+            '(All Tables)': 'DataAccessStringId.QueryBuilder_AllTables',
+            'Invalid function: \'{0}\'.': 'DataAccessStringId.ExpressionEditor_InvalidCustomFunction',
+            '{0} on {1}': 'DataAccessStringId.QueryDesignerJoinExpressionPattern',
+            'Top and Skip properties should be non-negative integer.': 'DataAccessStringId.NegativeTopSkipValidationException',
+            '{0}\r\nFile not found.\r\nCheck the file name and try again.': 'DataAccessStringId.ExcelDataSource_FileNotFoundMessage',
+            'Parameter count mismatch: <{0}>, <{1}> is expected.': 'DataAccessStringId.StoredProcParamCountValidationException',
+            'null': 'DataAccessStringId.ParameterListNull',
+            'The following query features are not supported for XML files:\r\n\t• custom expression in columns;\r\n\t• asterisk;\r\n\t• records count;\r\n\t• distinct.\r\nTo proceed, remove these features from the query or switch to the use of another data provider.': 'DataAccessStringId.XmlProviderNotSupportedFeatureException',
+            'Excel Workbooks': 'DataAccessStringId.FileNameFilter_Excel',
+            'Cannot get item properties from IListSource without default constructor.': 'DataAccessStringId.ODSWizardErrorNoDefaultCtor',
+            'Only non-negative numeric values are allowed.': 'DataAccessStringId.PositiveIntegerError',
+            'Aggregate': 'DataAccessStringId.ExpressionEditor_FunctionCategory_Aggregate',
+            'A custom SQL query should contain only SELECT statements.': 'DataAccessStringId.CustomSqlQueryValidationException',
+            'Gathering types information...': 'DataAccessStringId.GatheringTypesPanelText',
+            'The table name is not specified.': 'DataAccessStringId.UnnamedTableValidationException',
+            'The name cannot be null, empty or contain only whitespaces.': 'DataAccessStringId.WizardEmptyConnectionNameMessage',
+            'The schema does not contain the following column: "{0}"."{1}".': 'DataAccessStringId.ColumnNotInSchemaValidationException',
+            'Parameter type mismatch: <{0}>, <{1}> is expected.': 'DataAccessStringId.StoredProcParamTypeValidationException',
+            'One or more queries have failed to validate.': 'DataAccessStringId.QueriesFailedToValidate_ExceptionMessage',
+            'Incorrect file format': 'DataAccessStringId.ExcelInvalidFileException_WrongFormat',
+            'Loading Data...': 'DataAccessStringId.LoadingDataPanelText',
+            'Can join {0}': 'DataAccessStringId.QueryBuilderCanJoin',
+            'Query \'{0}\' does not exist.': 'DataAccessStringId.MessageNonexistentQuery',
+            'Custom SQL': 'DataAccessStringId.QueryPropertyGridCustomSqlCategoryName',
+            'No column has been selected. Please select at least one column to proceed.': 'DataAccessStringId.QueryBuilderNothingSelected',
+            'Parameter name \'{0}\' contains wrong characters': 'DataAccessStringId.MessageWrongCharacterParameterName',
+            'This collection already contains an item with the \'{0}\' name': 'DataAccessStringId.MessageDuplicateItemName',
+            'Failed to connect to the database. To learn more, see the exception details. \r\n\r\nException details:\r\n {0}': 'DataAccessStringId.DatabaseConnectionExceptionStringId',
+            'Cannot add a null value to the collection': 'DataAccessStringId.MessageNullItem',
+            'One or more relations are invalid. \r\nTo learn about the error details, click Manage Relations.': 'DataAccessStringId.ConfigureMultiQueryPage_ValidateRelationError',
+            'Column \'{0}\'.\'{1}\' does not exist.': 'DataAccessStringId.MessageNonexistentColumn',
+            'Joined on {0}': 'DataAccessStringId.QueryBuilderJoinedOn',
+            'A parameter cannot be null.': 'DataAccessStringId.StoredProcParamNullValidationException',
+            'A table with the following name already exists: "{0}".': 'DataAccessStringId.DuplicatingTableNamesValidationException',
+            'Query {0} failed to execute.': 'DataAccessStringId.SqlQueryExecutionException',
+            'Connecting to the database...': 'DataAccessStringId.ConnectingToDatabaseMessage',
+            'parameter': 'DataAccessStringId.ExpressionEditor_DocumentationCategory_Parameters_Tooltip',
+            'A password is required to open this workbook.': 'DataAccessStringId.ExcelEncryptedFileException_PasswordRequired',
+            '* (All Columns)': 'DataAccessStringId.QueryBuilder_AllColumns',
+            'The expression string cannot be empty.': 'DataAccessStringId.ExpressionEditor_EmptyExpression',
+            'constant': 'DataAccessStringId.ExpressionEditor_DocumentationCategory_Constants_Tooltip',
+            'None of the tables contain any columns.': 'DataAccessStringId.NoColumnsValidationException',
+            'Cannot load this assembly for security reasons.': 'DataAccessStringId.WizardAssemblyLoadingDisallowed',
+            'No connection has been specified.': 'DataAccessStringId.ConnectionNotSpecified_ExceptionMessage',
+            'The following tables have no relations: "{0}".': 'DataAccessStringId.TablesNotRelatedValidationException',
+            'XML Files': 'DataAccessStringId.XmlFileStrategy_FileNameFilter',
+            'Error trying to execute an SQL query{0}{1}.{2}Error: {3}': 'DataAccessStringId.SqlExecutionException',
+            'The schema does not contain the following relation column: "{0}"."{1}".': 'DataAccessStringId.RelationColumnNotInSchemaValidationException',
+            'A data member \'{0}\' does not exist.': 'DataAccessStringId.ODSErrorMissingMember',
+            'Item name cannot be null or an empty string': 'DataAccessStringId.MessageInvalidItemName',
+            'Loading the data sources referenced in this file may harm your computer. Was this file obtained from a trusted source?\r\n\r\nClick \'Yes\' to load the data source content as is.\r\nClick \'No\' to load only trusted data source content.': 'DataAccessStringId.ObjectDataSourceLoadingWarningMessage',
+            ', ': 'DataAccessStringId.QueryDesignerJoinExpressionElementSeparator',
+            '[{0}] {1} join [{2}] on {3}': 'DataAccessStringId.QueryDesignerJoinTooltipPattern',
+            'The relation column cannot be null.': 'DataAccessStringId.RelationColumnNullValidationException',
+            'No table has been selected. Please select at least one table to proceed.': 'DataAccessStringId.QueryBuilderNoTablesSelected',
+            'Cannot find the specified stored procedure: "{0}".': 'DataAccessStringId.StoredProcNotInSchemaValidationException',
+            'Math': 'DataAccessStringId.ExpressionEditor_FunctionCategory_Math',
+            'The file is corrupt.': 'DataAccessStringId.ExcelInvalidFileException_CorruptedFile',
+            'All Supported Formats': 'DataAccessStringId.FileNameFilter_AllFormats',
+            ' with parameters:{0}{1}': 'DataAccessStringId.SqlExecutionException_WithParameters',
+            'operator': 'DataAccessStringId.ExpressionEditor_DocumentationCategory_Operators_Tooltip',
+            'Circular relations have been detected.': 'DataAccessStringId.CircularRelationsValidationException',
+            'BIFF5 (Excel 5.0/95) XLS file format is not supported.': 'DataAccessStringId.ExcelInvalidFileException_BIFF5Format',
+            'An expression string cannot be null': 'DataAccessStringId.ExpressionStringNullValidationException',
+            'Please click the \'Filter...\' button to correct the filter string.': 'DataAccessStringId.QueryBuilderInvalidFilter',
+            'Invalid sorting column "{0}"."{1}". Results of a TableQuery containing aggregate functions can only be sorted by columns used as grouping criteria.': 'DataAccessStringId.AggregateQueryInvalidSortingValidationException',
+            'The type is static and it does not have any members returning IEnumerable.': 'DataAccessStringId.ODSWizardErrorStaticValue',
+            'The following table is not in tables list, but its column is used: "{0}".': 'DataAccessStringId.TableNotSelectedValidationException',
+            'The GetItemProperties method of an ITypedList has thrown an exception.': 'DataAccessStringId.ODSWizardErrorExceptionInGetItemProperties',
+            'Tab': 'DataAccessStringId.ExcelWizard_ValueSeparator_Tab',
+            'A column cannot be null.': 'DataAccessStringId.ColumnNullValidationException',
+            'Invalid parameter: \'{0}\'.': 'DataAccessStringId.ExpressionEditor_InvalidParameter',
+            'An aggregate column should have an alias.': 'DataAccessStringId.AggregationWithoutAliasValidationException',
+            'The connection string contains no XpoProvider key or the specified key is invalid. \r\n\r\nException details:\r\n {0}': 'DataAccessStringId.NoXpoProviderStringId',
+            'The SKIP setting is set while records are not sorted. Please apply sorting to be able to skip the first N records.': 'DataAccessStringId.SkipWithoutSortingPropertyGridError',
+            'Data Preview': 'DataAccessUIStringId.DataPreviewForm_Title',
+            'Select the data provider and specify the connection properties.': 'DataAccessUIStringId.WizardPageConnectionProperties',
+            'Edit...': 'DataAccessUIStringId.EFDataSourceDesignerVerbEdit',
+            'Query Editor': 'DataAccessUIStringId.QueryEditorTitle',
+            'The column name cannot be empty.': 'DataAccessUIStringId.WizardPageConfigureExcelFileColumns_ColumnNameEmptyError',
+            'Retrieve the actual data': 'DataAccessUIStringId.WizardPageChooseObjectBindingMode_RetrieveData',
+            'Skip hidden columns': 'DataAccessUIStringId.WizardPageChooseFileOptions_SkipHiddenColumns',
+            'Excel File': 'DataAccessUIStringId.DSTypeExcel',
+            'Cannot resolve the specified object type. To specify the object’s assembly, return type, data member and/or constructor parameters, use the Data Source editor.': 'DataAccessUIStringId.ODSEditorsCannotResolveDataSource',
+            'Select an assembly containing the class type definition of a data source.': 'DataAccessUIStringId.WizardPageChooseObjectAssembly',
+            'Retrieve the data source schema': 'DataAccessUIStringId.WizardPageChooseObjectBindingMode_RetrieveSchema',
+            'Port:': 'DataAccessUIStringId.ConnectionProperties_Port',
+            'Rebuild Result Schema': 'DataAccessUIStringId.SqlDataSourceDesignerVerbRebuildSchema',
+            'Error message:\r\n{0}\r\n': 'DataAccessUIStringId.LoadingDataCustomError',
+            'The expression contains errors.': 'DataAccessUIStringId.ExpressionEditor_ExpressionContainsErrors',
+            'Is less than': 'DataAccessUIStringId.JoinEditorLessOperator',
+            'The FileName and SourceOptions properties should be assigned.': 'DataAccessUIStringId.UpdateSchemaDataSourceIsNotReady',
+            'Manage Stored Procedures': 'DataAccessUIStringId.EFStoredProcsEditorTitle',
+            'Trim blanks': 'DataAccessUIStringId.WizardPageChooseFileOptions_TrimBlanks',
+            'Worksheet': 'DataAccessUIStringId.ExcelDataSourceWizard_WorksheetItem',
+            'Sorting Type': 'DataAccessUIStringId.QueryBuilderColumns_SortingType',
+            'An error occurred during query validation: {0}\r\nUpdate the connection settings so that they match the database schema or discard this query.': 'DataAccessUIStringId.FilterStringEditorInvalidQuery',
+            'Skip hidden rows': 'DataAccessUIStringId.WizardPageChooseFileOptions_SkipHiddenRows',
+            'The {0} data member cannot receive parameters, because this is a method without parameters.': 'DataAccessUIStringId.ODSEditorsNoParametersMessage',
+            'Yes, let me choose from list': 'DataAccessUIStringId.WizardPageChooseEFConnectionString_ChooseConnection',
+            'No, I\'d like to specify the connection parameters myself': 'DataAccessUIStringId.WizardPageChooseConnection_SpecifyCustomConnection',
+            'Do you want to use an existing data connection?': 'DataAccessUIStringId.WizardPageChooseConnection',
+            'Request Database Schema': 'DataAccessUIStringId.UpdateDBSchemaCaption',
+            'records starting with index': 'DataAccessUIStringId.FiltersView_TopAndSkipText',
+            'Newline type:': 'DataAccessUIStringId.WizardPageChooseFileOptions_NewLineType',
+            'Unable to load data into one or several datasources. See information below for details.': 'DataAccessUIStringId.ErrorFormDatasourceInitializationText',
+            'Edit Relation': 'DataAccessUIStringId.MasterDetailEditorEditRelation',
+            'Create Query Parameter': 'DataAccessUIStringId.QueryFilter_CreateQueryParameter',
+            'Query': 'DataAccessUIStringId.ParametersColumn_QueryName',
+            '<select a parameter>': 'DataAccessUIStringId.QueryFilter_SelectParameter',
+            'Select an object to include in your data source': 'DataAccessUIStringId.WizardFinishPageText',
+            'The current security policy prohibits loading of third-party assemblies.\r\n\r\nClick OK to discard the current data source settings and configure them from scratch.\r\nClick Cancel to keep the current settings without configuring the data source': 'DataAccessUIStringId.EFConnectionEditorMessageCustomAssembliesProhibited',
+            'Show only highlighted members': 'DataAccessUIStringId.WizardPageChooseObjectMember_ShowOnlyHighlighted',
+            'The connection uses server authentication.\r\nDo you want to save the user name and password?': 'DataAccessUIStringId.WizardPageSaveConnection_SaveCredentialsQuestion',
+            'Select a data source constructor.': 'DataAccessUIStringId.WizardPageChooseObjectConstructor',
+            'Select only distinct values': 'DataAccessUIStringId.FiltersView_Distinct',
+            'Column with \'{0}\' name allready exists.': 'DataAccessUIStringId.WizardPageConfigureExcelFileColumns_ColumnExist',
+            'Password:': 'DataAccessUIStringId.ConnectionProperties_Password',
+            'Delete Relation': 'DataAccessUIStringId.QueryBuilder_DeleteRelation',
+            'Configure Data Member': 'DataAccessUIStringId.ODSDataMemberEditorTitle',
+            'Remove from Query': 'DataAccessUIStringId.QueryBuilder_RemoveFromSelect',
+            'Culture:': 'DataAccessUIStringId.WizardPageChooseFileOptions_Culture',
+            'Windows authentication': 'DataAccessUIStringId.ConnectionProperties_AuthenticationType_MSSqlWindows',
+            'Do not select a member, bind to the entire object.': 'DataAccessUIStringId.WizardPageChooseObjectMember_BindToObject',
+            'Provider:': 'DataAccessUIStringId.ConnectionProperties_Provider',
+            'Choose a data context.': 'DataAccessUIStringId.WizardPageChooseEFContext',
+            'Add a relation to the detail query': 'DataAccessUIStringId.MasterDetailEditorAddRelationMessage',
+            'Local': 'DataAccessUIStringId.ConnectionProperties_AdvantageServerTypeLocal',
+            'Preview...': 'DataAccessUIStringId.Button_Preview',
+            'Select the data source type.': 'DataAccessUIStringId.WizardPageChooseDSType',
+            'Warning': 'DataAccessUIStringId.MessageBoxWarningTitle',
+            'Specify the method parameters.': 'DataAccessUIStringId.WizardPageObjectMemberParameters',
+            'Cannot use a constructor to create an object of the {0} type that is a static or abstract class, or interface.': 'DataAccessUIStringId.ODSEditorsAbstractTypeMessage',
+            'Validating query...': 'DataAccessUIStringId.QueryEditorWaitFormValidating',
+            'Select a member to bind.': 'DataAccessUIStringId.WizardPageChooseObjectMember_BindToMember',
+            'Skip empty rows': 'DataAccessUIStringId.WizardPageChooseFileOptions_SkipEmptyRows',
+            'Select a data source type.': 'DataAccessUIStringId.WizardPageChooseObjectType',
+            'Data loading failed because the exception occurred.': 'DataAccessUIStringId.LoadingDataException',
+            'Output': 'DataAccessUIStringId.QueryBuilderColumns_Output',
+            'Connection string:': 'DataAccessUIStringId.ConnectionProperties_ConnectionString',
+            'Filter Editor': 'DataAccessUIStringId.FiltersView',
+            'Join {0}': 'DataAccessUIStringId.QueryDesignControlJoinCommandPattern',
+            'Preview Results...': 'DataAccessUIStringId.QueryBuilderButtons_PreviewResults',
+            'Connection name: {0}\r\nError message: {1}': 'DataAccessUIStringId.ConnectionErrorFormDetailPattern',
+            'Connection error': 'DataAccessUIStringId.DataConnectionParametersDialog',
+            'Sort Ascending': 'DataAccessUIStringId.QueryBuilder_SortAscending',
+            'Database:': 'DataAccessUIStringId.ConnectionProperties_Database',
+            'Bind To': 'DataAccessUIStringId.QueryFilter_BindTo',
+            'The following errors occurred during query validation:{0}': 'DataAccessUIStringId.MasterDetailEditorMultipleValidationErrorsMessage',
+            'Cannot find the specified query: "{0}". Specify an existing query name before selecting a column.': 'DataAccessUIStringId.MasterDetailEditorInvalidColumnQueryNameMessage',
+            'Add Query Parameter': 'DataAccessUIStringId.QueryFilter_AddQueryParameter',
+            'Group By': 'DataAccessUIStringId.QueryBuilderColumns_GroupBy',
+            'The data source schema has been updated successfully.': 'DataAccessUIStringId.UpdateSchemaComplete',
+            'Invalid property: \'{0}\'.': 'DataAccessUIStringId.ExpressionEditor_InvalidProperty',
+            '<b>A data source with the specified name already exists</b>': 'DataAccessUIStringId.WizardDataSourceNameExistsMessage',
+            'Yes, save the connection as:': 'DataAccessUIStringId.WizardPageSaveConnection_ConfirmSaving',
+            'Create a query or select a stored procedure.\r\nData columns selected from specific tables and/or views will be automatically included into a separate query.': 'DataAccessUIStringId.WizardPageConfigureMultiQuery',
+            '{0} invalid relation(s)': 'DataAccessUIStringId.MasterDetailEditorLabelInvalidRelationsText',
+            '<Select a column>': 'DataAccessUIStringId.JoinEditorEmptyColumnText',
+            'Specify a custom connection string': 'DataAccessUIStringId.WizardPageEFConnectionProperties_CustomConnection',
+            'Allow Edit SQL': 'DataAccessUIStringId.QueryBuilder_AllowEdit',
+            'Error has occurred during loading databases list.': 'DataAccessUIStringId.MessageCannotLoadDatabasesList',
+            'Query Builder': 'DataAccessUIStringId.QueryBuilder',
+            'Add stored procedures to the data source, configure their parameters and preview the result.': 'DataAccessUIStringId.WizardPageConfigureStoredProcedures',
+            'Cannot connect to the database using the specified connection parameters.\r\nSpecify the correct connection parameters and click OK.\r\nThese parameters will not be saved after closing this dialog window.': 'DataAccessUIStringId.DataConnectionParametersDialog_Header_UnableConnect',
+            'Alias': 'DataAccessUIStringId.QueryBuilderColumns_Alias',
+            'Join Editor': 'DataAccessUIStringId.JoinEditor',
+            'SQL execution error:\r\n{0}\r\n': 'DataAccessUIStringId.LoadingDataSqlError',
+            'Enter the data source name': 'DataAccessUIStringId.WizardPageChooseDataSourceName',
+            'Use values of the first row as field names': 'DataAccessUIStringId.WizardPageChooseFileOptions_FirstRowAsFieldNames',
+            'Save the connection string.': 'DataAccessUIStringId.WizardPageSaveConnection',
+            'Do you want to select a connection string from the list of available settings?': 'DataAccessUIStringId.WizardPageChooseEFConnectionString',
+            'Client ID:': 'DataAccessUIStringId.ConnectionProperties_ClientID',
+            'The {0} data source type does not provide any members suitable for binding.': 'DataAccessUIStringId.ODSEditorsNoMembersInType',
+            'The specified alias already exists. Do you want to correct the value?': 'DataAccessUIStringId.QueryDesignControlAliasAlreadyExists',
+            'ObjectDataSource Wizard': 'DataAccessUIStringId.WizardTitleODS',
+            'Cannot retrieve the list of available databases. See the details below.': 'DataAccessUIStringId.WizardCannotRetrieveDatabasesMessage',
+            'Select a stored procedure:': 'DataAccessUIStringId.StoredProcControl_Caption',
+            'Server type:': 'DataAccessUIStringId.ConnectionProperties_ServerType',
+            'Server name:': 'DataAccessUIStringId.ConnectionProperties_ServerName',
+            'Show only highlighted assemblies': 'DataAccessUIStringId.WizardPageChooseObjectAssembly_ShowOnlyHighlighted',
+            'Hostname:': 'DataAccessUIStringId.ConnectionProperties_Hostname',
+            'Configure Connection...': 'DataAccessUIStringId.SqlDataSourceDesignerVerbEditConnection',
+            'Remote': 'DataAccessUIStringId.ConnectionProperties_AdvantageServerTypeRemote',
+            'Manage Queries...': 'DataAccessUIStringId.SqlDataSourceDesignerVerbManageQueries',
+            'Key file': 'DataAccessUIStringId.ConnectionProperties_AuthenticationType_BigQueryKeyFile',
+            'Columns of {0}': 'DataAccessUIStringId.QueryBuilderColumnsOf',
+            'Show only highlighted types': 'DataAccessUIStringId.WizardPageChooseObjectType_ShowOnlyHighlighted',
+            'Cannot create a relation between two columns that belong to the same table {0}.': 'DataAccessUIStringId.QueryBuilderRelationBetweenTwoColumnsOfTheSameTable',
+            'Select only': 'DataAccessUIStringId.FiltersView_CheckText',
+            'The object data source automatically creates an instance of the specified type by using one of the available constructors. If only one constructor is available, this constructor will be used.': 'DataAccessUIStringId.WizardPageChooseObjectBindingMode_RetrieveDataDescription',
+            'Save the connection string to config file as:': 'DataAccessUIStringId.WizardPageEFConnectionProperties_SaveToConfig',
+            'The current operation cannot be accomplished unless the data source has been specified.': 'DataAccessUIStringId.ODSEditorsNoDataSetMessage',
+            'The new join type will be applied to all existing relations between the following two tables: {0}, {1}. Do you wish to continue?': 'DataAccessUIStringId.QueryBuilderJoinTypeUpdatingConfirmation',
+            'The {0} data member is a property. To be able to receive parameters, a data member must be a method.': 'DataAccessUIStringId.ODSEditorsIsPropertyMessage',
+            'Excel Data Source Editor': 'DataAccessUIStringId.ExcelDataSourceEditorTitle',
+            'Edit Relations for the \'{0}\' Query': 'DataAccessUIStringId.MasterDetailEditorEditQueryRelations',
+            'Cannot find the specified query: "{0}". Specify an existing query name.': 'DataAccessUIStringId.MasterDetailEditorInvalidQueryNameMessage',
+            'Show only highlighted constructors': 'DataAccessUIStringId.WizardPageChooseObjectConstructor_ShowOnlyHighlighted',
+            'Yes, let me choose an existing connection from the list': 'DataAccessUIStringId.WizardPageChooseConnection_ChooseExistingConnection',
+            'Use default connection string': 'DataAccessUIStringId.WizardPageEFConnectionProperties_DefaultConnection',
+            'Connection Editor': 'DataAccessUIStringId.ConnectionEditorTitle',
+            'Specify import settings.': 'DataAccessUIStringId.WizardPageChooseFileOptions',
+            'Server authentication': 'DataAccessUIStringId.ConnectionProperties_AuthenticationType_MSSqlServer',
+            'OAuth': 'DataAccessUIStringId.ConnectionProperties_AuthenticationType_BigQueryOAuth',
+            'Not enough memory to load data': 'DataAccessUIStringId.LoadingDatasourceOutOfMemoryError',
+            'Error loading file': 'DataAccessUIStringId.PasswordRequest',
+            'A table with the specified name already exists. Please specify a different table name.': 'DataAccessUIStringId.QueryDesignControlTableNameAlreadyExists',
+            'Delete Condition': 'DataAccessUIStringId.QueryBuilder_DeleteCondition',
+            'Do you want to execute the query on the server and obtain the resulting query schema?': 'DataAccessUIStringId.WizardConfirmExecutionMessage',
+            'Value separator:': 'DataAccessUIStringId.WizardPageChooseFileOptions_ValueSeparator',
+            'Entity Framework Data Member Editor': 'DataAccessUIStringId.EFDataMemberEditorTitle',
+            'Run Query Builder...': 'DataAccessUIStringId.Button_QueryBuilder',
+            'Join type:': 'DataAccessUIStringId.JoinEditor_JoinType',
+            '<b>The data source name cannot be empty.</b>': 'DataAccessUIStringId.WizardDataSourceEmptyNameMessage',
+            'Configure Constructor Settings': 'DataAccessUIStringId.ODSConstructorEditorTitle',
+            'Configure Parameters': 'DataAccessUIStringId.ODSParametersEditorTitle',
+            'The \'{0}\'.\'{1}\' and \'{3}\'.\'{4}\' columns have different types ({2} and {5}). Do you wish to continue?': 'DataAccessUIStringId.MasterDetailEditorColumnsHasDifferentTypesConfirmation',
+            'Select an Excel workbook or CSV file.': 'DataAccessUIStringId.WizardPageChooseFile',
+            'Remove the relation': 'DataAccessUIStringId.MasterDetailEditorRemoveRelationMessage',
+            'Only the data source schema is retrieved from the specified object, without feeding the actual data.\r\n\r\nTo manually retrieve the actual data, create a data source object’s instance in code and assign it to the ObjectDataSource.DataSource property.': 'DataAccessUIStringId.WizardPageChooseObjectBindingMode_RetrieveSchemaDescription',
+            'Is greater than': 'DataAccessUIStringId.JoinEditorGreaterOperator',
+            'Database': 'DataAccessUIStringId.DSTypeSql',
+            'This action will reset the SQL expression, and all your changes will be discarded. Do you want to continue?': 'DataAccessUIStringId.QueryDesignControlExpressionChanged',
+            'Database List Loading Error': 'DataAccessUIStringId.ConnectionProperties_DatabaseListLoadingError',
+            'Connection name: {0}\r\nError message:\r\n{1}\r\n': 'DataAccessUIStringId.LoadingDataSourceOpeningConnectionError',
+            'Select the required worksheet, table or defined name referring to the specified range.': 'DataAccessUIStringId.WizardPageChooseExcelFileDataRange',
+            'You are about to load a third-party library: \'{0}\'.\r\n\r\nBefore you proceed, please consider resulting security risks and make sure that this library is supplied from a trusted source.': 'DataAccessUIStringId.CustomAssemblyWarning',
+            'Group Filter': 'DataAccessUIStringId.FiltersView_GroupFilter',
+            'At least two queries are required to create a master-detail relation.': 'DataAccessUIStringId.MessageLessThanTwoQueries',
+            'Service account email:': 'DataAccessUIStringId.ConnectionProperties_ServiceAccountEmail',
+            'Confirmation': 'DataAccessUIStringId.MessageBoxConfirmationTitle',
+            'Sort Descending': 'DataAccessUIStringId.QueryBuilder_SortDescending',
+            'To view the errors, click the drop-down button in the editor\'s status bar.': 'DataAccessUIStringId.ExpressionEditor_NavigateToErrors',
+            'Filter': 'DataAccessUIStringId.FiltersView_Filter',
+            'Encoding:': 'DataAccessUIStringId.WizardPageChooseFileOptions_Encoding',
+            'An error occurred during query validation: {0}\r\n\r\nTo discard this query and invoke the wizard, click OK.\r\n\r\nTo keep this query, click Cancel.': 'DataAccessUIStringId.QueryEditorMessageInvalidQuery',
+            '<Select a table>': 'DataAccessUIStringId.JoinEditorEmptyTableText',
+            'Embedded': 'DataAccessUIStringId.ConnectionProperties_ServerTypeEmbedded',
+            'Expression Editor': 'DataAccessUIStringId.ExpressionEditorViewTitle',
+            'Selected': 'DataAccessUIStringId.ParametersColumn_Selected',
+            'Update schema': 'DataAccessUIStringId.UpdateSchemaCaption',
+            'Select a data connection.': 'DataAccessUIStringId.WizardPageChooseConnectionNoChoice',
+            'Configure query parameters and preview the result.': 'DataAccessUIStringId.WizardPageConfigureParameters',
+            'Entity Framework Data Source Editor': 'DataAccessUIStringId.EFDataSourceEditorTitle',
+            'Client Secret:': 'DataAccessUIStringId.ConnectionProperties_ClientSecret',
+            'Data loading has been aborted.': 'DataAccessUIStringId.LoadingDataSourceAborted',
+            'Entity Framework': 'DataAccessUIStringId.DSTypeEF',
+            'Key file name:': 'DataAccessUIStringId.ConnectionProperties_KeyFileName',
+            'Server': 'DataAccessUIStringId.ConnectionProperties_ServerTypeServer',
+            'Cannot create an empty data source. Please select an object to include.': 'DataAccessUIStringId.WizardCannotCreateDataSourceMessage',
+            'Bound to {0}': 'DataAccessUIStringId.QueryFilter_BoundTo',
+            'Detect automatically': 'DataAccessUIStringId.WizardPageChooseFileOptions_DetectAutomatically',
+            'DataSet ID:': 'DataAccessUIStringId.ConnectionProperties_DataSetID',
+            'Unsorted': 'DataAccessUIStringId.SortingTypeNone',
+            'Query Parameters': 'DataAccessUIStringId.ParametersGridForm_Title',
+            'Cannot resolve the specified data member. To specify the data member and its parameters, use the Data Member editor.': 'DataAccessUIStringId.ODSEditorsCannotResolveDataMember',
+            'A relation with the specified name already exists.': 'DataAccessUIStringId.MasterDetailEditorInvalidRelationNameMessage',
+            'The query contains parameters and cannot be executed before they are declared. \r\nPlease go to the next wizard page to declare the required query parameters and preview the results.': 'DataAccessUIStringId.QueryBuilderCustomSqlRequiresParameters',
+            'Create a new condition': 'DataAccessUIStringId.MasterDetailEditorAddConditionMessage',
+            'Cannot find the specified column: "{0}". Specify an existing column name.': 'DataAccessUIStringId.MasterDetailEditorInvalidColumnNameMessage',
+            'Result schema is rebuilt successfully.': 'DataAccessUIStringId.RebuildResultSchemaComplete',
+            'SQL string:': 'DataAccessUIStringId.QueryControl_SqlString',
+            'Specify a connection string.': 'DataAccessUIStringId.WizardPageEFConnectionProperties',
+            'Manage Relations...': 'DataAccessUIStringId.SqlDataSourceDesignerVerbManageRelations',
+            'Join Information': 'DataAccessUIStringId.JoinInformation',
+            'Database schema is updated successfully.': 'DataAccessUIStringId.UpdateDBSchemaComplete',
+            'No, specify a custom connection string': 'DataAccessUIStringId.WizardPageChooseEFConnectionString_CustomConnection',
+            'Authentication type:': 'DataAccessUIStringId.ConnectionProperties_AuthenticationType',
+            'Filter...': 'DataAccessUIStringId.QueryBuilderButtons_Filter',
+            'Yes, save all required parameters': 'DataAccessUIStringId.WizardPageSaveConnection_SaveCredentials',
+            'Data Preview (First 1000 Rows Displayed)': 'DataAccessUIStringId.QueryDesignControlDataPreviewCaption',
+            'No stored procedures are available in the data context.': 'DataAccessUIStringId.EFEditorsNoStoredProcs',
+            'Text qualifier:': 'DataAccessUIStringId.WizardPageChooseFileOptions_TextQualifier',
+            'Object Binding': 'DataAccessUIStringId.DSTypeObject',
+            'Save password': 'DataAccessUIStringId.PasswordRequest_SavePassword',
+            'User name:': 'DataAccessUIStringId.ConnectionProperties_UserName',
+            'Cannot specify parameters unless the DataMember property has been assigned a value.': 'DataAccessUIStringId.ODSEditorsNoDataMemberMessage',
+            'Create a query or select a stored procedure.': 'DataAccessUIStringId.WizardPageConfigureQuery',
+            'Is greater than or equal to': 'DataAccessUIStringId.JoinEditorGreaterOrEqualOperator',
+            'A data schema contains a duplicated column \'{0}\'. Modify the query so that all columns have unique names.': 'DataAccessUIStringId.WizardDuplicatingColumnNameMessage',
+            'There are no any stored procedures in current database.': 'DataAccessUIStringId.WizardEmptyStoredProceduresListMessage',
+            'Configure Data Source': 'DataAccessUIStringId.ODSDataSourceEditorTitle',
+            'Select a data source member (if required).': 'DataAccessUIStringId.WizardPageChooseObjectMember',
+            'Remove the condition': 'DataAccessUIStringId.MasterDetailEditorRemoveConditionMessage',
+            'Entity Framework Data Connection Editor': 'DataAccessUIStringId.EFConnectionEditorTitle',
+            'Do you want to save the connection string to the application\'s configuration file?': 'DataAccessUIStringId.WizardPageSaveConnection_SaveConnectionString',
+            'The table name cannot be empty.': 'DataAccessUIStringId.QueryDesignControlTableNameEmpty',
+            '{0} is a static member. Using a constructor to create an instance of the {1} class is not appropriate.': 'DataAccessUIStringId.ODSEditorsStaticMemberMessage',
+            'This option is only available when the result set is sorted.': 'DataAccessUIStringId.FiltersView_SkipTooltip',
+            'Do you want to execute the following queries on the server and obtain the resulting schema?': 'DataAccessUIStringId.RebuildResultSchemaConfirmationText',
+            'Specify the constructor parameters.': 'DataAccessUIStringId.WizardPageObjectConstructorParameters',
+            'Manage Queries': 'DataAccessUIStringId.SqlQueryCollectionEditorForm_Title',
+            'Data source name: {0}': 'DataAccessUIStringId.DataSourceName',
+            'Cannot find any database servers.': 'DataAccessUIStringId.MessageCannotLoadServersList',
+            'Refresh Token:': 'DataAccessUIStringId.ConnectionProperties_RefreshToken',
+            'Is less than or equal to': 'DataAccessUIStringId.JoinEditorLessOrEqualOperator',
+            'Select required columns and specify their settings.': 'DataAccessUIStringId.WizardPageConfigureExcelFileColumns',
+            'The link between {0}.{1} and {2}.{3} results in a circular relation and cannot be added.': 'DataAccessUIStringId.QueryBuilderCircularRelationWarning',
+            'Internet': 'DataAccessUIStringId.ConnectionProperties_AdvantageServerTypeInternet',
+            'Add to Query': 'DataAccessUIStringId.QueryBuilder_AddToSelect',
+            'Select a data member': 'DataAccessUIStringId.WizardPageChooseEFDataMember',
+            'Project ID:': 'DataAccessUIStringId.ConnectionProperties_ProjectID',
+            'Some fields are empty. Please fill all empty fields or remove the corresponding conditions to proceed.': 'DataAccessUIStringId.JoinEditorFillAllFieldsException',
+            'Equals to': 'DataAccessUIStringId.JoinEditorEqualOperator',
+            'Browse...': 'DataAccessUIStringId.Button_Browse',
+            'No, skip credentials for security reasons': 'DataAccessUIStringId.WizardPageSaveConnection_SkipSaveCredentials',
+            'The following tables will be removed from the query.\r\n\r\n{0}\r\nDo you want to continue?': 'DataAccessUIStringId.QueryDesignControlRemoveTables',
+            'File name:': 'DataAccessUIStringId.PasswordRequest_FileName',
+            'Cannot connect to the database. See the details below.': 'DataAccessUIStringId.WizardCannotConnectMessage',
+            'Master-Detail Relation Editor': 'DataAccessUIStringId.MasterDetailEditorForm_Title',
+            'Select the data binding mode.': 'DataAccessUIStringId.WizardPageChooseObjectBindingMode',
+            'Does not equal to': 'DataAccessUIStringId.JoinEditorNotEqualOperator',
+            'The data source has been successfully created': 'DataAccessUIStringId.WizardDataSourceCreatedMessage',
+            'Select stored procedures to add': 'DataAccessUIStringId.ChooseEFStoredProceduresDialog',
+            'Unexpected behavior: none of the style is selected.': 'ReportBoxDesignerStringId.Wizard_ReportStyle_UnexpectedBehavior',
+            'You can adjust the label\'s parameters here if required.': 'ReportBoxDesignerStringId.Wizard_LabelOptions_Description',
+            'Select the report data member and data fields that will supply data to your report.': 'ReportBoxDesignerStringId.Wizard_SelectReportData_Description',
+            'Choose summary functions to calculate in reports.': 'ReportBoxDesignerStringId.Wizard_MasterDetailChooseSummaryOptions_Description',
+            'Select one of the predefined labels by specifying the Product and its ID': 'ReportBoxDesignerStringId.Wizard_LabelInformation_Description',
+            'Select one or more data members to assign to the report and its detail reports.\r\nChoose fields to display in these reports.': 'ReportBoxDesignerStringId.Wizard_MasterDetailSelectReportData_Description',
+            'Group data in the selected reports. You can specify one or more fields for each group.': 'ReportBoxDesignerStringId.Wizard_MasterDetailAddGroupingLevel_Description',
+            'Returns the index of the current data row in a datasource. Note that this index is zero-based.': 'XtraEditorsExpressionEditor.CurrentRowIndex.Description',
+            'Log10(Value)\r\nReturns the base 10 logarithm of a specified number.': 'XtraEditorsExpressionEditor.Log10.Description',
+            'AddMinutes(DateTime, MinutesCount)\r\nReturns a date-time value that is the specified number of minutes away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddMinutes.Description',
+            'Sqr(Value)\r\nReturns the square root of a given number.': 'XtraEditorsExpressionEditor.Sqr.Description',
+            'IsNovember(DateTime)\r\nReturns True if the specified date falls within November.': 'XtraEditorsExpressionEditor.IsNovember.Description',
+            'Greater than or equal to operator. Used to compare expressions.': 'XtraEditorsExpressionEditor.GreaterOrEqual.Description',
+            'LocalDateTimeNextYear()\r\nReturns a date-time value corresponding to the first day of the following year.': 'XtraEditorsExpressionEditor.LocalDateTimeNextYear.Description',
+            'Returns the remainder (modulus) obtained by dividing one numeric expression into another.': 'XtraEditorsExpressionEditor.Modulo.Description',
+            'IsApril(DateTime)\r\nReturns True if the specified date falls within April.': 'XtraEditorsExpressionEditor.IsApril.Description',
+            'ToFloat(Value)\r\nConverts Value to an equivalent 32-bit single-precision floating-point number.': 'XtraEditorsExpressionEditor.ToFloat.Description',
+            'IsLastYear(DateTime)\r\nReturns True if the specified date falls within the previous year.': 'XtraEditorsExpressionEditor.IsLastYear.Description',
+            'Sign(Value)\r\nReturns the positive (+1), zero (0), or negative (-1) sign of the given expression.': 'XtraEditorsExpressionEditor.Sign.Description',
+            'GetHour(DateTime)\r\nExtracts an hour from the defined DateTime.': 'XtraEditorsExpressionEditor.GetHour.Description',
+            'Compares each bit of its first operand to the corresponding bit of its second operand. If either bit is 1, the corresponding result bit is set to 1. Otherwise, the corresponding result bit is set to 0.': 'XtraEditorsExpressionEditor.BitwiseOr.Description',
+            'IsJune(DateTime)\r\nReturns True if the specified date falls within June.': 'XtraEditorsExpressionEditor.IsJune.Description',
+            'DateDiffMilliSecond(startDate, endDate)\r\nReturns the number of millisecond boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffMilliSecond.Description',
+            'expressionEdit': 'XtraEditorsExpressionEditor.>>expressionEdit.Name',
+            'DevExpress.XtraEditors.MemoEdit, DevExpress.XtraEditors.v17.2, Version=17.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>expressionEdit.Type',
+            'Date-time': 'XtraEditorsExpressionEditor.functionsTypes.Properties.DateTimeItems',
+            'Concat(String1, ... , StringN)\r\nReturns a string value containing the concatenation of the current string with any additional strings.': 'XtraEditorsExpressionEditor.Concat.Description',
+            'Cos(Value)\r\nReturns the cosine of the angle defined in radians.': 'XtraEditorsExpressionEditor.Cos.Description',
+            '$this': 'XtraEditorsExpressionEditor.>>layoutItemButton12.Parent',
+            'PadLeft(String, Length, Char)\r\nLeft-aligns characters in the defined string, padding its left side with the specified Char up to a specified total length.': 'XtraEditorsExpressionEditor.PadLeft3Param.Description',
+            'IsFebruary(DateTime)\r\nReturns True if the specified date falls within February.': 'XtraEditorsExpressionEditor.IsFebruary.Description',
+            'Exists()\r\nDetermines whether the object exists in the collection.': 'XtraEditorsExpressionEditor.ExistsAggregate.Description',
+            'LocalDateTimeThisYear()\r\nReturns a date-time value corresponding to the first day of the current year.': 'XtraEditorsExpressionEditor.LocalDateTimeThisYear.Description',
+            'listOfInputParameters': 'XtraEditorsExpressionEditor.>>listOfInputParameters.Name',
+            'DevExpress.XtraEditors.ListBoxControl, DevExpress.XtraEditors.v17.2, Version=17.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>listOfInputParameters.Type',
+            '0': 'XtraEditorsExpressionEditor.>>functionsTypes.ZOrder',
+            'LocalDateTimeToday()\r\nReturns a date-time value corresponding to Today.': 'XtraEditorsExpressionEditor.LocalDateTimeToday.Description',
+            '6': 'XtraEditorsExpressionEditor.>>layoutItemButton12.ZOrder',
+            'IsSeptember(DateTime)\r\nReturns True if the specified date falls within September.': 'XtraEditorsExpressionEditor.IsSeptember.Description',
+            'IsNextYear(DateTime)\r\nReturns True if the specified date falls within the next year.': 'XtraEditorsExpressionEditor.IsNextYear.Description',
+            'IsJuly(DateTime)\r\nReturns True if the specified date falls within July.': 'XtraEditorsExpressionEditor.IsJuly.Description',
+            '3': 'XtraEditorsExpressionEditor.>>listOfInputTypes.ZOrder',
+            'Divides the first operand by the second.': 'XtraEditorsExpressionEditor.Divide.Description',
+            'Lower(String)\r\nReturns the String in lowercase.': 'XtraEditorsExpressionEditor.Lower.Description',
+            '13': 'XtraEditorsExpressionEditor.>>layoutItemButton8.ZOrder',
+            '8': 'XtraEditorsExpressionEditor.>>layoutItemButton14.ZOrder',
+            'Format rule expression editor': 'XtraEditorsExpressionEditor.FormatRule.Caption',
+            'LocalDateTimeTwoWeeksAway()\r\nReturns a date-time value corresponding to the first day of the week that is after next week.': 'XtraEditorsExpressionEditor.LocalDateTimeTwoWeeksAway.Description',
+            'IsMay(DateTime)\r\nReturns True if the specified date falls within May.': 'XtraEditorsExpressionEditor.IsMay.Description',
+            'Upper(String)\r\nReturns String in uppercase.': 'XtraEditorsExpressionEditor.Upper.Description',
+            'LocalDateTimeYesterday()\r\nReturns a date-time value corresponding to Yesterday.': 'XtraEditorsExpressionEditor.LocalDateTimeYesterday.Description',
+            'Between (,)\r\nSpecifies a range to test. Returns true if a value is greater than or equal to the first operand and less than or equal to the second operand.': 'XtraEditorsExpressionEditor.Between.Description',
+            '16': 'XtraEditorsExpressionEditor.>>labelControl1.ZOrder',
+            '9': 'XtraEditorsExpressionEditor.>>labelControl2.ZOrder',
+            'layoutItemButton9': 'XtraEditorsExpressionEditor.>>layoutItemButton9.Name',
+            'DevExpress.XtraReports.Native.LayoutItemButton, DevExpress.XtraReports.v17.2, Version=17.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>layoutItemButton9.Type',
+            'ToInt(Value)\r\nConverts Value to an equivalent 32-bit signed integer.': 'XtraEditorsExpressionEditor.ToInt.Description',
+            '19': 'XtraEditorsExpressionEditor.>>layoutItemButton3.ZOrder',
+            'layoutItemButton8': 'XtraEditorsExpressionEditor.>>layoutItemButton8.Name',
+            'Variables': 'XtraEditorsExpressionEditor.Variables.Text',
+            'UtcNow()\r\nReturns the current system date and time, expressed as Coordinated Universal Time (UTC).': 'XtraEditorsExpressionEditor.UtcNow.Description',
+            'plusItemButton': 'XtraEditorsExpressionEditor.>>plusItemButton.Name',
+            'IsYearToDate(DateTime)\r\nReturns True if the specified date falls within the year-to-date period (starting from the first day of the current year and continuing up to the current date).': 'XtraEditorsExpressionEditor.IsYearToDate.Description',
+            'Count()\r\nReturns the number of objects in a collection.': 'XtraEditorsExpressionEditor.CountAggregate.Description',
+            'layoutItemButton5': 'XtraEditorsExpressionEditor.>>layoutItemButton5.Name',
+            'Len(Value)\r\nReturns an integer containing either the number of characters in a string or the nominal number of bytes required to store a variable.': 'XtraEditorsExpressionEditor.Len.Description',
+            'Trim(String)\r\nRemoves all leading and trailing SPACE characters from String.': 'XtraEditorsExpressionEditor.Trim.Description',
+            'layoutItemButton4': 'XtraEditorsExpressionEditor.>>layoutItemButton4.Name',
+            'BigMul(Value1, Value2)\r\nReturns an Int64 containing the full product of two specified 32-bit numbers.': 'XtraEditorsExpressionEditor.BigMul.Description',
+            'GetMinute(DateTime)\r\nExtracts minutes from the defined DateTime.': 'XtraEditorsExpressionEditor.GetMinute.Description',
+            'layoutItemButton7': 'XtraEditorsExpressionEditor.>>layoutItemButton7.Name',
+            'PadRight(String, Length)\r\nRight-aligns characters in the defined string, padding its left side with white space characters up to a specified total length.': 'XtraEditorsExpressionEditor.PadRight.Description',
+            'Floor(Value)\r\nReturns the largest integer less than or equal to the given numeric expression.': 'XtraEditorsExpressionEditor.Floor.Description',
+            'Exp(Value)\r\nReturns the exponential value of the given float expression.': 'XtraEditorsExpressionEditor.Exp.Description',
+            'AddYears(DateTime, YearsCount)\r\nReturns a date-time value that is the specified number of years away from the specieid DateTime.': 'XtraEditorsExpressionEditor.AddYears.Description',
+            'IsNextMonth(DateTime)\r\nReturns True if the specified date falls within the next month.': 'XtraEditorsExpressionEditor.IsNextMonth.Description',
+            'layoutItemButton6': 'XtraEditorsExpressionEditor.>>layoutItemButton6.Name',
+            'ToStr(Value)\r\nReturns a string representation of an object.': 'XtraEditorsExpressionEditor.ToStr.Description',
+            'LocalDateTimeThisMonth()\r\nReturns a date-time value corresponding to the first day of the current month.': 'XtraEditorsExpressionEditor.LocalDateTimeThisMonth.Description',
+            '1': 'XtraEditorsExpressionEditor.>>labelControl4.ZOrder',
+            'Performs a logical conjunction on two expressions.': 'XtraEditorsExpressionEditor.And.Description',
+            '17': 'XtraEditorsExpressionEditor.>>layoutItemButton5.ZOrder',
+            '15': 'XtraEditorsExpressionEditor.>>layoutItemButton6.ZOrder',
+            'Field Information\r\nCaption: {1}\r\nThe type of this field is: {2}': 'XtraEditorsExpressionEditor.GridFields Description Prefix',
+            'DateDiffMinute(startDate, endDate)\r\nReturns the number of minute boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffMinute.Description',
+            'layoutItemButton3': 'XtraEditorsExpressionEditor.>>layoutItemButton3.Name',
+            'DateDiffMonth(startDate, endDate)\r\nReturns the number of month boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffMonth.Description',
+            'layoutItemButton2': 'XtraEditorsExpressionEditor.>>layoutItemButton2.Name',
+            '2': 'XtraEditorsExpressionEditor.>>listOfInputParameters.ZOrder',
+            'Today()\r\nReturns the current date. Regardless of the actual time, this function returns midnight of the current date.': 'XtraEditorsExpressionEditor.Today.Description',
+            'Atn2(Value1, Value2)\r\nReturns the angle whose tangent is the quotient of two specified numbers, in radians.': 'XtraEditorsExpressionEditor.Atn2.Description',
+            'Sin(Value)\r\nReturns the sine of the angle, defined in radians.': 'XtraEditorsExpressionEditor.Sin.Description',
+            'AddDays(DateTime, DaysCount)\r\nReturns a date-time value that is the specified number of days away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddDays.Description',
+            'LocalDateTimeLastWeek()\r\nReturns a date-time value corresponding to the first day of the previous week.': 'XtraEditorsExpressionEditor.LocalDateTimeLastWeek.Description',
+            'LocalDateTimeTomorrow()\r\nReturns a date-time value corresponding to Tomorrow.': 'XtraEditorsExpressionEditor.LocalDateTimeTomorrow.Description',
+            'IsNull(Value)\r\nReturns True if the specified Value is NULL.': 'XtraEditorsExpressionEditor.IsNull.Description',
+            'CharIndex(String1, String2)\r\nReturns the starting position of String1 within String2, beginning from the zero character position to the end of a string.': 'XtraEditorsExpressionEditor.CharIndex.Description',
+            'GetDay(DateTime)\r\nExtracts a day from the defined DateTime.': 'XtraEditorsExpressionEditor.GetDay.Description',
+            'IsThisMonth(DateTime)\r\nReturns True if the specified date falls within the current month.': 'XtraEditorsExpressionEditor.IsThisMonth.Description',
+            'IsThisWeek(DateTime)\r\nReturns True if the specified date falls within the current week.': 'XtraEditorsExpressionEditor.IsThisWeek.Description',
+            'Insert(String1, StartPosition, String2)\r\nInserts String2 into String1 at the position specified by StartPositon': 'XtraEditorsExpressionEditor.Insert.Description',
+            'LocalDateTimeThisWeek()\r\nReturns a date-time value corresponding to the first day of the current week.': 'XtraEditorsExpressionEditor.LocalDateTimeThisWeek.Description',
+            'IsLastMonth(DateTime)\r\nReturns True if the specified date falls within the previous month.': 'XtraEditorsExpressionEditor.IsLastMonth.Description',
+            'ToDouble(Value)\r\nConverts Value to an equivalent 64-bit double-precision floating-point number.': 'XtraEditorsExpressionEditor.ToDouble.Description',
+            'Now()\r\nReturns the current system date and time.': 'XtraEditorsExpressionEditor.Now.Description',
+            'IsNullOrEmpty(String)\r\nReturns True if the specified String object is NULL or an empty string; otherwise, False is returned.': 'XtraEditorsExpressionEditor.IsNullOrEmpty.Description',
+            'IsDecember(DateTime)\r\nReturns True if the specified date falls within December.': 'XtraEditorsExpressionEditor.IsDecember.Description',
+            'Round(Value)\r\nRounds the given value to the nearest integer.': 'XtraEditorsExpressionEditor.Round.Description',
+            'DateDiffDay(startDate, endDate)\r\nReturns the number of day boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffDay.Description',
+            '11': 'XtraEditorsExpressionEditor.>>layoutItemButton10.ZOrder',
+            '7': 'XtraEditorsExpressionEditor.>>layoutItemButton13.ZOrder',
+            '24': 'XtraEditorsExpressionEditor.>>buttonOK.ZOrder',
+            'Ascii(String)\r\nReturns the ASCII code value of the leftmost character in a character expression.': 'XtraEditorsExpressionEditor.Ascii.Description',
+            'Log(Value, Base)\r\nReturns the logarithm of a specified number in a specified Base.': 'XtraEditorsExpressionEditor.Log2Param.Description',
+            'Performs a logical disjunction on two Boolean expressions.': 'XtraEditorsExpressionEditor.Or.Description',
+            'IsThisYear(DateTime)\r\nReturns True if the specified date falls within the current year.': 'XtraEditorsExpressionEditor.IsThisYear.Description',
+            'Char(Number)\r\nConverts an integerASCIICode to a character.': 'XtraEditorsExpressionEditor.Char.Description',
+            'DateDiffSecond(startDate, endDate)\r\nReturns the number of second boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffSecond.Description',
+            'Returns true if both operands have the same value; otherwise, it returns false.': 'XtraEditorsExpressionEditor.Equal.Description',
+            'Represents the Boolean False value.': 'XtraEditorsExpressionEditor.False.Description',
+            'Atn(Value)\r\nReturns the arctangent of a number (the angle, in radians, whose tangent is the given float expression).': 'XtraEditorsExpressionEditor.Atn.Description',
+            'AddMilliSeconds(DateTime, MilliSecondsCount)\r\nReturns a date-time value that is the specified number of milliseconds away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddMilliSeconds.Description',
+            'GetTimeOfDay(DateTime)\r\nExtracts the time of the day from the defined DateTime, in ticks.': 'XtraEditorsExpressionEditor.GetTimeOfDay.Description',
+            'IsSameDay(DateTime, DateTime)\r\nReturns True if the specified date-time values fall within the same day.': 'XtraEditorsExpressionEditor.IsSameDay.Description',
+            'Rnd()\r\nReturns a random number that is less than 1, but greater than or equal to zero.': 'XtraEditorsExpressionEditor.Rnd.Description',
+            'layoutItemButton14': 'XtraEditorsExpressionEditor.>>layoutItemButton14.Name',
+            'Performs a logical exclusion on two Boolean expressions, or a bitwise exclusion on two numeric expressions.': 'XtraEditorsExpressionEditor.BitwiseXor.Description',
+            'Tan(Value)\r\nReturns the tangent of the angle defined in radians.': 'XtraEditorsExpressionEditor.Tan.Description',
+            'layoutItemButton15': 'XtraEditorsExpressionEditor.>>layoutItemButton15.Name',
+            '4': 'XtraEditorsExpressionEditor.>>descriptionControl.ZOrder',
+            'DevExpress.XtraEditors.SimpleButton, DevExpress.XtraEditors.v17.2, Version=17.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>buttonOK.Type',
+            'buttonOK': 'XtraEditorsExpressionEditor.>>buttonOK.Name',
+            'IsOctober(DateTime)\r\nReturns True if the specified date falls within October.': 'XtraEditorsExpressionEditor.IsOctober.Description',
+            'Less than or equal to operator. Used to compare expressions.': 'XtraEditorsExpressionEditor.LessOrEqual.Description',
+            'layoutItemButton10': 'XtraEditorsExpressionEditor.>>layoutItemButton10.Name',
+            'The type of this field is: ': 'XtraEditorsExpressionEditor.Fields Description Prefix',
+            'IsJanuary(DateTime)\r\nReturns True if the specified date falls within January.': 'XtraEditorsExpressionEditor.IsJanuary.Description',
+            'DateDiffTick(startDate, endDate)\r\nReturns the number of tick boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffTick.Description',
+            'layoutItemButton11': 'XtraEditorsExpressionEditor.>>layoutItemButton11.Name',
+            'Tanh(Value)\r\nReturns the hyperbolic tangent of the angle defined in radians.': 'XtraEditorsExpressionEditor.Tanh.Description',
+            'listOfInputTypes': 'XtraEditorsExpressionEditor.>>listOfInputTypes.Name',
+            'GetDayOfWeek(DateTime)\r\nExtracts a day of the week from the defined DateTime.': 'XtraEditorsExpressionEditor.GetDayOfWeek.Description',
+            'layoutItemButton12': 'XtraEditorsExpressionEditor.>>layoutItemButton12.Name',
+            'Represents the Boolean True value.': 'XtraEditorsExpressionEditor.True.Description',
+            '18': 'XtraEditorsExpressionEditor.>>layoutItemButton4.ZOrder',
+            'Min(Value)\r\nReturns the minimum expression value in a collection.': 'XtraEditorsExpressionEditor.MinAggregate.Description',
+            '20': 'XtraEditorsExpressionEditor.>>layoutItemButton2.ZOrder',
+            'layoutItemButton13': 'XtraEditorsExpressionEditor.>>layoutItemButton13.Name',
+            'PadRight(String, Length, Char)\r\nRight-aligns characters in the defined string, padding its left side with the specified Char up to a specified total length.': 'XtraEditorsExpressionEditor.PadRight3Param.Description',
+            'Expression editor': 'XtraEditorsExpressionEditor.UnboundColumn.Caption',
+            'Avg(Value)\r\nEvaluates the average of the values in the collection.': 'XtraEditorsExpressionEditor.AvgAggregate.Description',
+            'IsMarch(DateTime)\r\nReturns True if the specified date falls within March.': 'XtraEditorsExpressionEditor.IsMarch.Description',
+            'LocalDateTimeYearBeforeToday()\r\nReturns a date-time value corresponding to the day one year ago.': 'XtraEditorsExpressionEditor.LocalDateTimeYearBeforeToday.Description',
+            'Replace(String, SubString2, String3)\r\nReturns a copy of String1, in which SubString2 has been replaced with String3.': 'XtraEditorsExpressionEditor.Replace.Description',
+            'AddHours(DateTime, HoursCount)\r\nReturns a date-time value that is the specified number of hours away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddHours.Description',
+            'Reverse(String)\r\nReverses the order of elements within a string.': 'XtraEditorsExpressionEditor.Reverse.Description',
+            'Remove(String, StartPosition, Length)\r\nDeletes a specified number of characters from this instance, beginning at a specified position.': 'XtraEditorsExpressionEditor.Remove3Param.Description',
+            'Remove(String, StartPosition)\r\nDeletes all characters from this instance, beginning at a specified position.': 'XtraEditorsExpressionEditor.Remove2Param.Description',
+            'GetDate(DateTime)\r\nExtracts a date from the defined DateTime.': 'XtraEditorsExpressionEditor.GetDate.Description',
+            '22': 'XtraEditorsExpressionEditor.>>plusItemButton.ZOrder',
+            'DevExpress.XtraEditors.LabelControl, DevExpress.XtraEditors.v17.2, Version=17.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>labelControl4.Type',
+            'labelControl4': 'XtraEditorsExpressionEditor.>>labelControl4.Name',
+            'AddTimeSpan(DateTime, TimeSpan)\r\nReturns a date-time value that is away from the specified DateTime for the given TimeSpan.': 'XtraEditorsExpressionEditor.AddTimeSpan.Description',
+            'labelControl1': 'XtraEditorsExpressionEditor.>>labelControl1.Name',
+            'Performs a bitwise logical AND operation between two integer values.': 'XtraEditorsExpressionEditor.BitwiseAnd.Description',
+            'Represents a null reference, one that does not refer to any object.': 'XtraEditorsExpressionEditor.Null.Description',
+            'LocalDateTimeNextWeek()\r\nReturns a date-time value corresponding to the first day of the following week.': 'XtraEditorsExpressionEditor.LocalDateTimeNextWeek.Description',
+            'ToLong(Value)\r\nConverts Value to an equivalent 64-bit signed integer.': 'XtraEditorsExpressionEditor.ToLong.Description',
+            'labelControl3': 'XtraEditorsExpressionEditor.>>labelControl3.Name',
+            'AddSeconds(DateTime, SecondsCount)\r\nReturns a date-time value that is the specified number of seconds away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddSeconds.Description',
+            'The type of this parameter is: ': 'XtraEditorsExpressionEditor.Parameters Description Prefix',
+            '23': 'XtraEditorsExpressionEditor.>>buttonCancel.ZOrder',
+            'Ceiling(Value)\r\nReturns the smallest integer that is greater than or equal to the given numeric expression.': 'XtraEditorsExpressionEditor.Ceiling.Description',
+            'labelControl2': 'XtraEditorsExpressionEditor.>>labelControl2.Name',
+            'GetSecond(DateTime)\r\nExtracts seconds from the defined DateTime.': 'XtraEditorsExpressionEditor.GetSecond.Description',
+            'CharIndex(String1, String2, StartLocation)\r\nReturns the starting position of String1 within String2, beginning from the StartLocation character position to the end of a string.': 'XtraEditorsExpressionEditor.CharIndex3Param.Description',
+            'Asin(Value)\r\nReturns the arcsine of a number (the angle, in radians, whose sine is the given float expression).': 'XtraEditorsExpressionEditor.Asin.Description',
+            'Round(Value, Precision)\r\nRounds the given value to the nearest integer, or to a specified number of decimal places.': 'XtraEditorsExpressionEditor.Round2Param.Description',
+            'AddTicks(DateTime, TicksCount)\r\nReturns a date-time value that is the specified number of ticks away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddTicks.Description',
+            'IsAugust(DateTime)\r\nReturns True if the specified date falls within August.': 'XtraEditorsExpressionEditor.IsAugust.Description',
+            'Substring(String, StartPosition, Length)\r\nRetrieves a substring from String. The substring starts at StartPosition and has the specified Length.': 'XtraEditorsExpressionEditor.Substring3param.Description',
+            '10': 'XtraEditorsExpressionEditor.>>layoutItemButton11.ZOrder',
+            'CalculatedFieldExpressionEditorForm': 'XtraEditorsExpressionEditor.>>$this.Name',
+            'DevExpress.XtraEditors.XtraForm, DevExpress.Utils.v17.2, Version=17.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>$this.Type',
+            'Condition expression editor': 'XtraEditorsExpressionEditor.Condition.Caption',
+            'ToDecimal(Value)\r\nConverts Value to an equivalent decimal number.': 'XtraEditorsExpressionEditor.ToDecimal.Description',
+            '21': 'XtraEditorsExpressionEditor.>>expressionEdit.ZOrder',
+            'Max(Value1, Value2)\r\nReturns the maximum value from the specified values.': 'XtraEditorsExpressionEditor.Max.Description',
+            'LocalDateTimeTwoMonthsAway()\r\nReturns a date-time value corresponding to the first day of the month after next.': 'XtraEditorsExpressionEditor.LocalDateTimeTwoMonthsAway.Description',
+            'Substring(String, StartPosition)\r\nRetrieves a substring from String. The substring starts at StartPosition.': 'XtraEditorsExpressionEditor.Substring2param.Description',
+            'Acos(Value)\r\nReturns the arccosine of a number (the angle, in radians, whose cosine is the given float expression).': 'XtraEditorsExpressionEditor.Acos.Description',
+            'GetDayOfYear(DateTime)\r\nExtracts a day of the year from the defined DateTime.': 'XtraEditorsExpressionEditor.GetDayOfYear.Description',
+            'Multiplies the value of two expressions.': 'XtraEditorsExpressionEditor.Multiply.Description',
+            'Returns the total amount of data rows in a datasource.': 'XtraEditorsExpressionEditor.RowCount.Description',
+            'LocalDateTimeNow()\r\nReturns a date-time value corresponding to the current moment in time.': 'XtraEditorsExpressionEditor.LocalDateTimeNow.Description',
+            'LocalDateTimeLastYear()\r\nReturns a date-time value corresponding to the first day of the previous year.': 'XtraEditorsExpressionEditor.LocalDateTimeLastYear.Description',
+            'LocalDateTimeDayAfterTomorrow()\r\nReturns a date-time value corresponding to the day after Tomorrow.': 'XtraEditorsExpressionEditor.LocalDateTimeDayAfterTomorrow.Description',
+            'Sum(Value)\r\nReturns the sum of all the expression values in the collection.': 'XtraEditorsExpressionEditor.SumAggregate.Description',
+            'Compares a string against a pattern. If the value of the string matches the pattern, result is true. If the string does not match the pattern, result is false. If both string and pattern are empty strings, the result is true.': 'XtraEditorsExpressionEditor.Like.Description',
+            'Power(Value, Power)\r\nReturns a specified number raised to a specified power.': 'XtraEditorsExpressionEditor.Power.Description',
+            'Finds the difference between two numbers.': 'XtraEditorsExpressionEditor.Minus.Description',
+            'Log(Value)\r\nReturns the natural logarithm of a specified number.': 'XtraEditorsExpressionEditor.Log.Description',
+            'LocalDateTimeTwoYearsAway()\r\nReturns a date-time value corresponding to the first day of the year after next.': 'XtraEditorsExpressionEditor.LocalDateTimeTwoYearsAway.Description',
+            'Sinh(Value)\r\nReturns the hyperbolic sine of the angle defined in radians.': 'XtraEditorsExpressionEditor.Sinh.Description',
+            'Max(Value)\r\nReturns the maximum expression value in a collection.': 'XtraEditorsExpressionEditor.MaxAggregate.Description',
+            'Greater than operator. Used to compare expressions.': 'XtraEditorsExpressionEditor.Greater.Description',
+            '(All)': 'XtraEditorsExpressionEditor.functionsTypes.Properties.AllItems',
+            'In (,,,)\r\nTests for the existence of a property in an object.': 'XtraEditorsExpressionEditor.In.Description',
+            'DevExpress.XtraEditors.ComboBoxEdit, DevExpress.XtraEditors.v17.2, Version=17.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>functionsTypes.Type',
+            'functionsTypes': 'XtraEditorsExpressionEditor.>>functionsTypes.Name',
+            'Less than operator. Used to compare expressions.': 'XtraEditorsExpressionEditor.Less.Description',
+            'StartsWith(String, StartString)\r\nReturns True if the beginning of String matches StartString; otherwise, False is returned.': 'XtraEditorsExpressionEditor.StartsWith.Description',
+            '12': 'XtraEditorsExpressionEditor.>>layoutItemButton9.ZOrder',
+            'GetMonth(DateTime)\r\nExtracts a month from the defined DateTime.': 'XtraEditorsExpressionEditor.GetMonth.Description',
+            'EndsWith(String, EndString)\r\nReturns True if the end of String matches EndString; otherwise, False is returned.': 'XtraEditorsExpressionEditor.EndsWith.Description',
+            'Adds the value of one numeric expression to another, or concatenates two strings.': 'XtraEditorsExpressionEditor.Plus.Description',
+            'Single()\r\nReturns a single object from the collection.': 'XtraEditorsExpressionEditor.SingleAggregate.Description',
+            'Contains(String, SubString)\r\nReturns True if SubString occurs within String; otherwise, False is returned.': 'XtraEditorsExpressionEditor.Contains.Description',
+            'DateDiffHour(startDate, endDate)\r\nReturns the number of hour boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffHour.Description',
+            'Returns true if the operands do not have the same value; otherwise, it returns false.': 'XtraEditorsExpressionEditor.NotEqual.Description',
+            'Abs(Value)\r\nReturns the absolute, positive value of the given numeric expression.': 'XtraEditorsExpressionEditor.Abs.Description',
+            'LocalDateTimeNextMonth()\r\nReturns a date-time value corresponding to the first day of next month.': 'XtraEditorsExpressionEditor.LocalDateTimeNextMonth.Description',
+            'AddMonths(DateTime, MonthsCount)\r\nReturns a date-time value that is the specified number of months away from the specified DateTime.': 'XtraEditorsExpressionEditor.AddMonths.Description',
+            'Iif(Expression, TruePart, FalsePart)\r\nReturns either TruePart or FalsePart, depending on the evaluation of the Boolean Expression.': 'XtraEditorsExpressionEditor.Iif.Description',
+            'GetMilliSecond(DateTime)\r\nExtracts milliseconds from the defined DateTime.': 'XtraEditorsExpressionEditor.GetMilliSecond.Description',
+            'LocalDateTimeLastMonth()\r\nReturns a date-time value corresponding to the first day of the previous month.': 'XtraEditorsExpressionEditor.LocalDateTimeLastMonth.Description',
+            'buttonCancel': 'XtraEditorsExpressionEditor.>>buttonCancel.Name',
+            'PadLeft(String, Length)\r\nLeft-aligns characters in the defined string, padding its left side with white space characters up to a specified total length.': 'XtraEditorsExpressionEditor.PadLeft.Description',
+            'descriptionControl': 'XtraEditorsExpressionEditor.>>descriptionControl.Name',
+            'DevExpress.XtraEditors.LabelControl, DevExpress.Utils.v17.2, Version=17.2.0.0, Culture=neutral': 'XtraEditorsExpressionEditor.>>descriptionControl.Type',
+            '5': 'XtraEditorsExpressionEditor.>>labelControl3.ZOrder',
+            'Min(Value1, Value2)\r\nReturns the minimum value from the specified values.': 'XtraEditorsExpressionEditor.Min.Description',
+            '14': 'XtraEditorsExpressionEditor.>>layoutItemButton7.ZOrder',
+            'Condition Editor': 'XtraEditorsExpressionEditor.Condition.Text',
+            'Cosh(Value)\r\nReturns the hyperbolic cosine of the angle defined in radians.': 'XtraEditorsExpressionEditor.Cosh.Description',
+            'Performs logical negation on an expression.': 'XtraEditorsExpressionEditor.Not.Description',
+            'GetYear(DateTime)\r\nExtracts a year from the defined DateTime.': 'XtraEditorsExpressionEditor.GetYear.Description',
+            'DateDiffYear(startDate, endDate)\r\nReturns the number of year boundaries between two non-nullable dates.': 'XtraEditorsExpressionEditor.DateDiffYear.Description',
+            'Export mode:': 'PreviewStringId.ExportOption_DocxExportMode',
+            'Select Picture': 'PreviewStringId.WMForm_PictureDlg_Title',
+            'Export the document to Image and attach it to the e-mail.': 'PreviewStringId.RibbonPreview_SendGraphic_STipContent',
+            'Valid From: {0:d} to {1:d}': 'PreviewStringId.ExportOption_PdfSignature_ValidRange',
+            'Do you want to open this file?': 'PreviewStringId.Msg_OpenFileQuestion',
+            'CSV File': 'PreviewStringId.RibbonPreview_ExportCsv_Caption',
+            'Fit to': 'PreviewStringId.ScalePopup_FitTo',
+            'Export the document to MHT and save it to the file on a disk.': 'PreviewStringId.RibbonPreview_ExportMht_STipContent',
+            'Document': 'PreviewStringId.RibbonPreview_PageGroup_Document',
+            'Export watermarks': 'PreviewStringId.ExportOption_DocxExportWatermarks',
+            'Embed images in HTML': 'PreviewStringId.ExportOption_HtmlEmbedImagesInHTML',
+            '[Date Printed]': 'PreviewStringId.PageInfo_PageDate',
+            '[Time Printed]': 'PreviewStringId.PageInfo_PageTime',
+            'The separator cannot be an empty string.': 'PreviewStringId.Msg_SeparatorCannotBeEmptyString',
+            'URGENT': 'PreviewStringId.WMForm_Watermark_Urgent',
+            'XPS': 'PreviewStringId.RibbonPreview_SendXps_Description',
+            'Different files': 'PreviewStringId.ExportOption_XlsExportMode_DifferentFiles',
+            'Integer Positive': 'PreviewStringId.EditingFieldEditors_IntegerPositive',
+            'The output file is too big to create a JPEG file. Please choose another image format or another export mode.': 'PreviewStringId.Msg_BigFileToCreateJPEG',
+            'Subject:': 'PreviewStringId.ExportOption_PdfDocumentSubject',
+            'SAMPLE': 'PreviewStringId.WMForm_Watermark_Sample',
+            'PDF File': 'PreviewStringId.RibbonPreview_SendPdf_Caption',
+            'This font is not yet supported': 'PreviewStringId.Msg_NotSupportedFont',
+            'The document does not contain any pages.': 'PreviewStringId.Msg_EmptyDocument',
+            'Page {0} of {1}': 'PreviewStringId.SB_PageOfPages',
+            'Control\'s boundaries are too small for the barcode': 'PreviewStringId.Msg_CantFitBarcodeToControlBounds',
+            'Send via E-Mail...': 'PreviewStringId.TB_TTip_Send',
+            'Save the document': 'PreviewStringId.TB_TTip_Save',
+            'Open a document': 'PreviewStringId.TB_TTip_Open',
+            'Export the document to RTF and attach it to the e-mail.': 'PreviewStringId.RibbonPreview_SendRtf_STipContent',
+            'Don\'t embed these fonts:': 'PreviewStringId.ExportOption_PdfNeverEmbeddedFonts',
+            'Stop': 'PreviewStringId.SB_TTip_Stop',
+            'Page range:': 'PreviewStringId.ExportOption_DocxPageRange',
+            'Export the current document in one of the available formats, and attach it to the e-mail.': 'PreviewStringId.RibbonPreview_SendFile_STipContent',
+            'The output file already exists. Click OK to overwrite.': 'PreviewStringId.Msg_FileAlreadyExists',
+            '[Page #]': 'PreviewStringId.PageInfo_PageNumber',
+            'Super fast': 'PreviewStringId.ExportOption_XpsCompression_SuperFast',
+            'Native Format': 'PreviewStringId.SaveDlg_FilterNativeFormat',
+            'The printer is not available.': 'PreviewStringId.PrinterStatus_NotAvailable',
+            'DOCX File': 'PreviewStringId.MenuItem_DocxDocument',
+            'No printers installed.': 'PreviewStringId.Msg_NeedPrinter',
+            'The manual feed is enabled.': 'PreviewStringId.PrinterStatus_ManualFeed',
+            'Single file page-by-page': 'PreviewStringId.ExportOption_ImageExportMode_SingleFilePageByPage',
+            'Printing...': 'PreviewStringId.PrinterStatus_Printing',
+            'The current printer doesn\'t support the selected paper size.\r\nProceed with printing anyway?': 'PreviewStringId.Msg_WrongPageSettings',
+            'Zoom Factor: ': 'PreviewStringId.SB_ZoomFactor',
+            'Character set:': 'PreviewStringId.ExportOption_HtmlCharacterSet',
+            'The path is too long.\r\nTry a shorter name.': 'PreviewStringId.Msg_PathTooLong',
+            'Page number in document. Click to open the Go To Page dialog.': 'PreviewStringId.SB_PageOfPagesHint',
+            'Show the mouse pointer.': 'PreviewStringId.RibbonPreview_Pointer_STipContent',
+            'TOP SECRET': 'PreviewStringId.WMForm_Watermark_TopSecret',
+            'Exporting the document...': 'PreviewStringId.Msg_ExportingDocument',
+            'File "{0}" is set to read-only, try again with a different file name.': 'PreviewStringId.Msg_FileReadOnly',
+            'Quote strings with separators': 'PreviewStringId.ExportOption_TextQuoteStringsWithSeparators',
+            'Only Lowercase Letters': 'PreviewStringId.EditingFieldEditors_OnlyLowercaseLetters',
+            'Save As': 'PreviewStringId.SaveDlg_Title',
+            'Insert ghosted text or image behind the content of a page.\r\n\r\nThis is often used to indicate that a document is to be treated specially.': 'PreviewStringId.RibbonPreview_Watermark_STipContent',
+            'Choose the paper size of the document.': 'PreviewStringId.RibbonPreview_PaperSize_STipContent',
+            'Raw data mode': 'PreviewStringId.ExportOption_XlsRawDataMode',
+            'Inserting, deleting and rotating pages': 'PreviewStringId.ExportOption_PdfChangingPermissions_InsertingDeletingRotating',
+            'Single file': 'PreviewStringId.ExportOption_ImageExportMode_SingleFile',
+            'DO NOT COPY': 'PreviewStringId.WMForm_Watermark_DoNotCopy',
+            'Show print dialog on open': 'PreviewStringId.ExportOption_PdfShowPrintDialogOnOpen',
+            'Table layout': 'PreviewStringId.ExportOption_HtmlTableLayout',
+            'Page Setup...': 'PreviewStringId.MenuItem_PageSetup',
+            'The server is offline.': 'PreviewStringId.PrinterStatus_ServerOffline',
+            'TAB': 'PreviewStringId.ExportOption_TextSeparator_TabAlias',
+            'Export the document to XLS and attach it to the e-mail.': 'PreviewStringId.RibbonPreview_SendXls_STipContent',
+            'The created XLS file is too big for the XLS format, because it contains more than 65,536 rows.\r\nPlease try to use the XLSX format, instead.': 'PreviewStringId.Msg_XlsMoreThanMaxRows',
+            'Print task deletion is pending.': 'PreviewStringId.PrinterStatus_PendingDeletion',
+            'XPS File': 'PreviewStringId.RibbonPreview_SendXps_Caption',
+            '[Page # of Pages #]': 'PreviewStringId.PageInfo_PageNumberOfTotal',
+            'Send As': 'PreviewStringId.MenuItem_Send',
+            '[User Name]': 'PreviewStringId.PageInfo_PageUserName',
+            'Navigate to the last page of the document.': 'PreviewStringId.RibbonPreview_ShowLastPage_STipContent',
+            'Export the document to MHT and attach it to the e-mail.': 'PreviewStringId.RibbonPreview_SendMht_STipContent',
+            'Quick Print': 'PreviewStringId.RibbonPreview_PrintDirect_Caption',
+            'Microsoft Word 2007 Document': 'PreviewStringId.RibbonPreview_SendDocx_Description',
+            'Text Width': 'PreviewStringId.MenuItem_ZoomTextWidth',
+            'Color...': 'PreviewStringId.MenuItem_BackgrColor',
+            'pages wide': 'PreviewStringId.ScalePopup_PagesWide',
+            'Export the document to DOCX and attach it to the e-mail.': 'PreviewStringId.RibbonPreview_SendDocx_STipContent',
+            'Commenting, filling in form fields, and signing existing signature fields': 'PreviewStringId.ExportOption_PdfChangingPermissions_CommentingFillingSigning',
+            'Close Print Preview': 'PreviewStringId.RibbonPreview_ClosePreview_STipTitle',
+            'Export to DOCX': 'PreviewStringId.RibbonPreview_ExportDocx_STipTitle',
+            'Images quality:': 'PreviewStringId.ExportOption_PdfImageQuality',
+            'Page border width:': 'PreviewStringId.ExportOption_ImagePageBorderWidth',
+            'Cannot perform the specified task. The following library is missing: "{0}"': 'PreviewStringId.Msg_CannotFindFile',
+            'E-Mail As': 'PreviewStringId.RibbonPreview_SendFile_Caption',
+            'Page border color:': 'PreviewStringId.ExportOption_ImagePageBorderColor',
+            'Export the document to HTML and save it to the file on a disk.': 'PreviewStringId.RibbonPreview_ExportHtm_STipContent',
+            'Application:': 'PreviewStringId.ExportOption_PdfDocumentApplication',
+            'Open the Document Map, which allows you to navigate through a structural view of the document.': 'PreviewStringId.RibbonPreview_DocumentMap_STipContent',
+            'MHT File': 'PreviewStringId.RibbonPreview_SendMht_Caption',
+            'mm': 'PreviewStringId.Margin_Millimeter',
+            'Digital Signature:': 'PreviewStringId.ExportOption_PdfSignatureOptions',
+            'Select a folder to save the exported document to:': 'PreviewStringId.FolderBrowseDlg_ExportDirectory',
+            'Title:': 'PreviewStringId.ExportOption_PdfDocumentTitle',
+            '% of normal size': 'PreviewStringId.ScalePopup_NormalSize',
+            'Category:': 'PreviewStringId.ExportOption_XpsDocumentCategory',
+            'HTML File': 'PreviewStringId.MenuItem_HtmDocument',
+            'Version:': 'PreviewStringId.ExportOption_XpsDocumentVersion',
+            'Letters': 'PreviewStringId.EditingFieldEditorCategories_Letters',
+            'HTML Document': 'PreviewStringId.SaveDlg_FilterHtm',
+            'MHT Document': 'PreviewStringId.SaveDlg_FilterMht',
+            'CSV Document': 'PreviewStringId.SaveDlg_FilterCsv',
+            'BMP Bitmap Format': 'PreviewStringId.SaveDlg_FilterBmp',
+            'XPS Document': 'PreviewStringId.SaveDlg_FilterXps',
+            'XLS Document': 'PreviewStringId.SaveDlg_FilterXls',
+            'GIF Graphics Interchange Format': 'PreviewStringId.SaveDlg_FilterGif',
+            'EMF Enhanced Windows Metafile': 'PreviewStringId.SaveDlg_FilterEmf',
+            'PNG Portable Network Graphics Format': 'PreviewStringId.SaveDlg_FilterPng',
+            'PDF Document': 'PreviewStringId.SaveDlg_FilterPdf',
+            'Text Document': 'PreviewStringId.SaveDlg_FilterTxt',
+            'Rich Text Document': 'PreviewStringId.SaveDlg_FilterRtf',
+            'WMF Windows Metafile': 'PreviewStringId.SaveDlg_FilterWmf',
+            'XLSX File': 'PreviewStringId.RibbonPreview_SendXlsx_Caption',
+            'Image File': 'PreviewStringId.RibbonPreview_ExportGraphic_Caption',
+            'E-Mail As...': 'PreviewStringId.RibbonPreview_SendFile_STipTitle',
+            'The power save mode is on.': 'PreviewStringId.PrinterStatus_PowerSave',
+            'Permissions': 'PreviewStringId.ExportOption_PdfPasswordSecurityOptions_Permissions',
+            'The created XLSX file is too big for the XLSX format, because it contains more than 1,048,576 rows.\r\nPlease try to reduce the amount of rows in your report and export the report to XLSX again.': 'PreviewStringId.Msg_XlsxMoreThanMaxRows',
+            'Show the Page Setup dialog.': 'PreviewStringId.RibbonPreview_PageGroup_PageSetup_STipContent',
+            'Wide': 'PreviewStringId.RibbonPreview_GalleryItem_PageMarginsWide_Description',
+            'E-Mail As RTF': 'PreviewStringId.RibbonPreview_SendRtf_STipTitle',
+            'Please confirm the Document Open Password. Be sure to make a note of the password. It will be required to open the document.': 'PreviewStringId.ExportOption_ConfirmOpenPasswordForm_Note',
+            'Document Open Password:': 'PreviewStringId.ExportOption_ConfirmOpenPasswordForm_Name',
+            'Send the document directly to the default printer without making changes.': 'PreviewStringId.RibbonPreview_PrintDirect_STipContent',
+            'Password Security:': 'PreviewStringId.ExportOption_PdfPasswordSecurityOptions',
+            'E-Mail As DOCX': 'PreviewStringId.RibbonPreview_SendDocx_STipTitle',
+            'Switch the pages between portrait and landscape layouts.': 'PreviewStringId.RibbonPreview_PageOrientation_STipContent',
+            'Export the document to RTF and save it to the file on a disk.': 'PreviewStringId.RibbonPreview_ExportRtf_STipContent',
+            'The printer\'s input/output is active.': 'PreviewStringId.PrinterStatus_IOActive',
+            'Filling in form fields and signing existing signature fields': 'PreviewStringId.ExportOption_PdfChangingPermissions_FillingSigning',
+            'Text File': 'PreviewStringId.RibbonPreview_ExportTxt_Caption',
+            'E-Mail As MHT': 'PreviewStringId.RibbonPreview_SendMht_STipTitle',
+            'An error occurred during printing a document.': 'PreviewStringId.Msg_WrongPrinting',
+            'Header and Footer': 'PreviewStringId.RibbonPreview_EditPageHF_STipTitle',
+            'Microsoft Excel 2000-2003 Workbook': 'PreviewStringId.RibbonPreview_SendXls_Description',
+            'Export the document to XLSX and attach it to the e-mail.': 'PreviewStringId.RibbonPreview_SendXlsx_STipContent',
+            'Header And Footer': 'PreviewStringId.TB_TTip_EditPageHF',
+            'E-Mail As CSV': 'PreviewStringId.RibbonPreview_SendCsv_STipTitle',
+            'The specified parameters do not exist: {0}.': 'PreviewStringId.Msg_NoParameters',
+            'Open a document.': 'PreviewStringId.RibbonPreview_Open_STipContent',
+            'Navigate to the first page of the document.': 'PreviewStringId.RibbonPreview_ShowFirstPage_STipContent',
+            'Export the document to Text and save it to the file on a disk.': 'PreviewStringId.RibbonPreview_ExportTxt_STipContent',
+            'COPY': 'PreviewStringId.WMForm_Watermark_Copy',
+            'ASAP': 'PreviewStringId.WMForm_Watermark_Asap',
+            'Next Page (PageDown)': 'PreviewStringId.RibbonPreview_ShowNextPage_STipTitle',
+            'Sheet name:': 'PreviewStringId.ExportOption_XlsSheetName',
+            'Creator:': 'PreviewStringId.ExportOption_XpsDocumentCreator',
+            'Fixed-Point': 'PreviewStringId.EditingFieldEditors_FixedPoint',
+            'The specified file doesn\'t have a PRNX extension. Proceed anyway?': 'PreviewStringId.Msg_FileDoesNotHavePrnxExtension',
+            'Editing Fields': 'PreviewStringId.RibbonPreview_HighlightEditingFields_Caption',
+            'The printer is out of memory.': 'PreviewStringId.PrinterStatus_OutOfMemory',
+            'No Look-Up': 'PreviewStringId.ParameterLookUpSettingsNoLookUp',
+            'Last  Page ': 'PreviewStringId.RibbonPreview_ShowLastPage_Caption',
+            'Fast': 'PreviewStringId.ExportOption_XpsCompression_Fast',
+            'Open (Ctrl + O)': 'PreviewStringId.RibbonPreview_Open_STipTitle',
+            'E-Mail As XLS': 'PreviewStringId.RibbonPreview_SendXls_STipTitle',
+            'Navigate to the next page of the document.': 'PreviewStringId.RibbonPreview_ShowNextPage_STipContent',
+            '(Text)': 'PreviewStringId.WatermarkTypeText',
+            'Page Background': 'PreviewStringId.RibbonPreview_PageGroup_Background',
+            'Moderate': 'PreviewStringId.RibbonPreview_GalleryItem_PageMarginsModerate_Description',
+            'Keywords:': 'PreviewStringId.ExportOption_XpsDocumentKeywords',
+            'There are invalid characters in the text': 'PreviewStringId.Msg_InvalidBarcodeText',
+            'Binary data can\'t be longer than 1033 bytes.': 'PreviewStringId.Msg_InvalidBarcodeData',
+            'The number must be between {0} and {1}.': 'PreviewStringId.Msg_IncorrectZoomFactor',
+            'BMP, GIF, JPEG, PNG, TIFF, EMF, WMF': 'PreviewStringId.RibbonPreview_SendGraphic_Description',
+            'Reason': 'PreviewStringId.ExportOption_PdfSignatureOptions_Reason',
+            'Top:\t\t{0}\t\tBottom:\t\t{1}\r\nLeft:\t\t {2}\t\tRight:\t\t   {3}': 'PreviewStringId.RibbonPreview_GalleryItem_PageMargins_Description',
+            'JPEG File Interchange Format': 'PreviewStringId.SaveDlg_FilterJpeg',
+            'DOCX Document': 'PreviewStringId.SaveDlg_FilterDocx',
+            'XLSX Document': 'PreviewStringId.SaveDlg_FilterXlsx',
+            'TIFF Tag Image File Format': 'PreviewStringId.SaveDlg_FilterTiff',
+            'E-Mail As PDF': 'PreviewStringId.RibbonPreview_SendPdf_STipTitle',
+            'XLS File': 'PreviewStringId.RibbonPreview_SendXls_Caption',
+            'Narrow': 'PreviewStringId.RibbonPreview_GalleryItem_PageMarginsNarrow_Caption',
+            'Any except extracting pages': 'PreviewStringId.ExportOption_PdfChangingPermissions_AnyExceptExtractingPages',
+            'Last Page (Ctrl+End)': 'PreviewStringId.RibbonPreview_ShowLastPage_STipTitle',
+            'A page punt has occurred.': 'PreviewStringId.PrinterStatus_PagePunt',
+            'The printer door is open.': 'PreviewStringId.PrinterStatus_DoorOpen',
+            '(Picture)': 'PreviewStringId.WatermarkTypePicture',
+            'PDF/A Compatibility:': 'PreviewStringId.ExportOption_PdfACompatibility',
+            'Compression:': 'PreviewStringId.ExportOption_XpsCompression',
+            'Statusbar': 'PreviewStringId.MenuItem_ViewStatusbar',
+            'The printer is busy.': 'PreviewStringId.PrinterStatus_Busy',
+            'Waiting...': 'PreviewStringId.PrinterStatus_Waiting',
+            'The output file is too big. Please try to reduce the image resolution,\r\nor choose another export mode.': 'PreviewStringId.Msg_BigBitmapToCreate',
+            'Permissions Password:': 'PreviewStringId.ExportOption_ConfirmPermissionsPasswordForm_Name',
+            'Please confirm the Permissions Password. Be sure to make a note of the password. You will need it to change these settings in the future.': 'PreviewStringId.ExportOption_ConfirmPermissionsPasswordForm_Note',
+            'Show the Find dialog to find text in the document.': 'PreviewStringId.RibbonPreview_Find_STipContent',
+            'Export the document to XLS and save it to the file on a disk.': 'PreviewStringId.RibbonPreview_ExportXls_STipContent',
+            'Two Pages': 'PreviewStringId.MenuItem_ZoomTwoPages',
+            'Only Uppercase Letters': 'PreviewStringId.EditingFieldEditors_OnlyUppercaseLetters',
+            'Show grid lines': 'PreviewStringId.ExportOption_XlsShowGridLines',
+            'Header/Footer': 'PreviewStringId.RibbonPreview_EditPageHF_Caption',
+            'A user intervention has occurred.': 'PreviewStringId.PrinterStatus_UserIntervention',
+            'E-Mail As XLSX': 'PreviewStringId.RibbonPreview_SendXlsx_STipTitle',
+            'Export the document to PDF and save it to the file on a disk.': 'PreviewStringId.RibbonPreview_ExportPdf_STipContent',
+            'ORIGINAL': 'PreviewStringId.WMForm_Watermark_Original',
+            'Highlight all editing fields to quickly discover which of the document elements are editable.': 'PreviewStringId.RibbonPreview_HighlightEditingFields_STipContent',
+            'Edit the header and footer of the document.': 'PreviewStringId.RibbonPreview_EditPageHF_STipContent',
+            'One or more margins are set outside the printable area of the page. Continue?': 'PreviewStringId.Msg_PageMarginsWarning',
+            'Low Resolution (150 dpi)': 'PreviewStringId.ExportOption_PdfPrintingPermissions_LowResolution',
+            'Only Letters': 'PreviewStringId.EditingFieldEditors_OnlyLetters',
+            'Only Latin Letters': 'PreviewStringId.EditingFieldEditors_OnlyLatinLetters',
+            'Not compressed': 'PreviewStringId.ExportOption_XpsCompression_NotCompressed',
+            'The output file is too big. Try to reduce the number of its pages, or split it into several documents.': 'PreviewStringId.Msg_BigFileToCreate',
+            'From': 'PreviewStringId.EMail_From',
+            'Confirm Permissions Password': 'PreviewStringId.ExportOption_ConfirmPermissionsPasswordForm_Caption',
+            'Fixed-Point Positive': 'PreviewStringId.EditingFieldEditors_FixedPointPositive',
+            'Creating the document...': 'PreviewStringId.Msg_CreatingDocument',
+            'Export the document to Text and attach it to the e-mail.': 'PreviewStringId.RibbonPreview_SendTxt_STipContent',
+            'Export to Text': 'PreviewStringId.RibbonPreview_ExportTxt_STipTitle',
+            'Export the document to Image and save it to the file on a disk.': 'PreviewStringId.RibbonPreview_ExportGraphic_STipContent',
+            'Invalid text format': 'PreviewStringId.Msg_InvalidBarcodeTextFormat',
+            'Contact Info': 'PreviewStringId.ExportOption_PdfSignatureOptions_ContactInfo',
+            'The paper has jammed.': 'PreviewStringId.PrinterStatus_PaperJam',
+            'The printer is out of paper.': 'PreviewStringId.PrinterStatus_PaperOut',
+            'Page Size': 'PreviewStringId.RibbonPreview_PaperSize_STipTitle',
+            'Confirm Document Open Password': 'PreviewStringId.ExportOption_ConfirmOpenPasswordForm_Caption',
+            'DOCX Export Options': 'PreviewStringId.ExportOptionsForm_CaptionDocx',
+            'XLSX Export Options': 'PreviewStringId.ExportOptionsForm_CaptionXlsx',
+            'Export Document...': 'PreviewStringId.TB_TTip_Export',
+            'Export hyperlinks': 'PreviewStringId.ExportOption_XlsExportHyperlinks',
+            'Open the Thumbnails, which allows you to navigate through the document.': 'PreviewStringId.RibbonPreview_Thumbnails_STipContent',
+            'Initializing the Preview...': 'PreviewStringId.PrinterStatus_Initializing',
+            'RTF File': 'PreviewStringId.RibbonPreview_ExportRtf_Caption',
+            'Pages': 'PreviewStringId.MPForm_Lbl_Pages',
+            'Date-Time': 'PreviewStringId.EditingFieldEditorCategories_DateTime',
+            'The server is unknown.': 'PreviewStringId.PrinterStatus_ServerUnknown',
+            'View Many Pages': 'PreviewStringId.RibbonPreview_MultiplePages_STipTitle',
+            '{0} x {1}': 'PreviewStringId.RibbonPreview_GalleryItem_PaperSize_Description',
+            'Navigate to the previous page of the document.': 'PreviewStringId.RibbonPreview_ShowPrevPage_STipContent',
+            'Export the document to PDF and attach it to the e-mail.': 'PreviewStringId.RibbonPreview_SendPdf_STipContent',
+            'The net printer is unavailable.': 'PreviewStringId.Msg_UnavailableNetPrinter',
+            'A document can\'t be exported to a stream in the DifferentFiles mode. Use the SingleFile or SingleFilePageByPage mode instead.': 'PreviewStringId.Msg_NoDifferentFilesInStream',
+            'The created XLS file is too big for the XLS format, because it contains more than 256 columns.\r\nPlease try to use the XLSX format, instead.': 'PreviewStringId.Msg_XlsMoreThanMaxColumns',
+            'Comma-Separated Values Text': 'PreviewStringId.RibbonPreview_ExportCsv_Description',
+            'Save the document.': 'PreviewStringId.RibbonPreview_Save_STipContent',
+            'Change the zoom level of the document preview.': 'PreviewStringId.RibbonPreview_Zoom_STipContent',
+            'Open the Print Options dialog, in which you can change printing options.': 'PreviewStringId.RibbonPreview_Customize_STipContent',
+            'First Page (Ctrl+Home)': 'PreviewStringId.RibbonPreview_ShowFirstPage_STipTitle',
+            'Export the document to XLSX and save it to the file on a disk.': 'PreviewStringId.RibbonPreview_ExportXlsx_STipContent',
+            'Please Wait': 'PreviewStringId.WaitForm_Caption',
+            'The toner is low.': 'PreviewStringId.PrinterStatus_TonerLow',
+            'Print...': 'PreviewStringId.MenuItem_PrintSelection',
+            'The printer is paused.': 'PreviewStringId.PrinterStatus_Paused',
+            'Image format:': 'PreviewStringId.ExportOption_ImageFormat',
+            'Right Margin': 'PreviewStringId.Margin_RightMargin',
+            'CONFIDENTIAL': 'PreviewStringId.WMForm_Watermark_Confidential',
+            'The specified file doesn\'t contain valid XML data in the PRNX format. Loading is stopped.': 'PreviewStringId.Msg_FileDoesNotContainValidXml',
+            'Mouse Pointer': 'PreviewStringId.RibbonPreview_Pointer_STipTitle',
+            'The process cannot access the file "{0}" because it is being used by another process.': 'PreviewStringId.Msg_CannotAccessFile',
+            'Confirmation password does not match. Please start over and enter the password again.': 'PreviewStringId.ExportOption_ConfirmationDoesNotMatchForm_Msg',
+            'The printer is offline.': 'PreviewStringId.PrinterStatus_Offline',
+            'Invalid property name': 'PreviewStringId.Msg_InvPropName',
+            'Cannot find the specified path.': 'PreviewStringId.Msg_InvalidatePath',
+            'Invoke the Hand tool to manually scroll through pages.': 'PreviewStringId.RibbonPreview_HandTool_STipContent',
+            'Left Margin': 'PreviewStringId.Margin_LeftMargin',
+            'Adjust to': 'PreviewStringId.ScalePopup_AdjustTo',
+            'Export to CSV': 'PreviewStringId.RibbonPreview_ExportCsv_STipTitle',
+            '[Pages #]': 'PreviewStringId.PageInfo_PageTotal',
+            'The printer is warming up.': 'PreviewStringId.PrinterStatus_WarmingUp',
+            'Close Print Preview of the document.': 'PreviewStringId.RibbonPreview_ClosePreview_STipContent',
+            'Zoom out to see more of the page at a reduced size.': 'PreviewStringId.RibbonPreview_ZoomOut_STipContent',
+            'Invoke the Magnifier tool.\r\n\r\nClicking once on a document zooms it so that a single page becomes entirely visible, while clicking another time zooms it to 100% of the normal size.': 'PreviewStringId.RibbonPreview_Magnifier_STipContent',
+            'Bookmarks': 'PreviewStringId.RibbonPreview_DocumentMap_Caption',
+            'Help': 'PreviewStringId.Button_Help',
+            'Microsoft Excel 2007 Workbook': 'PreviewStringId.RibbonPreview_SendXlsx_Description',
+            'Issuer: ': 'PreviewStringId.ExportOption_PdfSignature_Issuer',
+            'Zoom in to get a close-up view of the document.': 'PreviewStringId.RibbonPreview_ZoomIn_STipContent',
+            'The printer driver needs to be updated.': 'PreviewStringId.PrinterStatus_DriverUpdateNeeded',
+            'A paper-related problem has occurred.': 'PreviewStringId.PrinterStatus_PaperProblem',
+            'Apply': 'PreviewStringId.Button_Apply',
+            'Choose the page layout to arrange the document pages in preview.': 'PreviewStringId.RibbonPreview_MultiplePages_STipContent',
+            'This is not a valid measurement.': 'PreviewStringId.Msg_InvalidMeasurement',
+            'Middle': 'PreviewStringId.WMForm_VertAlign_Middle',
+            'Watermark...': 'PreviewStringId.MenuItem_Watermark',
+            'Many Pages': 'PreviewStringId.RibbonPreview_MultiplePages_Caption',
+            'XPS Export Options': 'PreviewStringId.ExportOptionsForm_CaptionXps',
+            'E-Mail As Image': 'PreviewStringId.RibbonPreview_SendGraphic_STipTitle',
+            'Resolution (dpi):': 'PreviewStringId.ExportOption_ImageResolution',
+            'Save (Ctrl + S)': 'PreviewStringId.RibbonPreview_Save_STipTitle',
+            'Next  Page ': 'PreviewStringId.RibbonPreview_ShowNextPage_Caption',
+            'There is no page numbered {0} in this document.': 'PreviewStringId.Msg_GoToNonExistentPage',
+            'Facing': 'PreviewStringId.MenuItem_ViewFacing',
+            'DRAFT': 'PreviewStringId.WMForm_Watermark_Draft',
+            'Text separator:': 'PreviewStringId.ExportOption_TextSeparator',
+            'The output bin is full.': 'PreviewStringId.PrinterStatus_OutputBinFull',
+            'E-Mail As Text': 'PreviewStringId.RibbonPreview_SendTxt_STipTitle',
+            'Export the document to CSV and attach it to the e-mail.': 'PreviewStringId.RibbonPreview_SendCsv_STipContent',
+            'Select the margin sizes for the entire document.\r\n\r\nTo apply specific margin sizes to the document, click Custom Margins.': 'PreviewStringId.RibbonPreview_PageMargins_STipContent',
+            'Preview Document Files (*{0})|*{0}|All Files (*.*)|*.*': 'PreviewStringId.OpenFileDialog_Filter',
+            'Export the document to DOCX and save it to the file on a disk.': 'PreviewStringId.RibbonPreview_ExportDocx_STipContent',
+            'This is not a valid page range': 'PreviewStringId.Msg_IncorrectPageRange',
+            'The specified file cannot be loaded, because it either does not contain valid XML data or exceeds the allowed size.': 'PreviewStringId.Msg_CannotLoadDocument',
+            'The printer name is invalid. Please check the printer settings.': 'PreviewStringId.Msg_WrongPrinter',
+            'Open the Parameters pane, which allows you to enter values for report parameters.': 'PreviewStringId.RibbonPreview_Parameters_STipContent',
+            'Certificate': 'PreviewStringId.ExportOption_PdfSignatureOptions_Certificate',
+            'PERSONAL': 'PreviewStringId.WMForm_Watermark_Personal',
+            'Warning!': 'PreviewStringId.Msg_CustomDrawWarning',
+            'The created XLSX file is too big for the XLSX format, because it contains more than 16,384 columns.\r\nPlease try to reduce the amount of columns in your report and export the report to XLSX again.': 'PreviewStringId.Msg_XlsxMoreThanMaxColumns',
+            'Stretch or shrink the printed output to a percentage of its actual size.': 'PreviewStringId.RibbonPreview_Scale_STipContent',
+            'Export To...': 'PreviewStringId.RibbonPreview_ExportFile_STipTitle',
+            'Remove carriage returns': 'PreviewStringId.ExportOption_HtmlRemoveSecondarySymbols',
+            'The printer has no toner.': 'PreviewStringId.PrinterStatus_NoToner',
+            'EVALUATION': 'PreviewStringId.WMForm_Watermark_Evaluation',
+            'Print (Ctrl+P)': 'PreviewStringId.RibbonPreview_Print_STipTitle',
+            'Text export mode:': 'PreviewStringId.ExportOption_TextExportMode',
+            'Document Open Password': 'PreviewStringId.ExportOption_PdfPasswordSecurityOptions_DocumentOpenPassword',
+            'The printer is ready.': 'PreviewStringId.PrinterStatus_Ready',
+            '{0} of {1}': 'PreviewStringId.SB_PageInfo',
+            'Export the document to CSV and save it to the file on a disk.': 'PreviewStringId.RibbonPreview_ExportCsv_STipContent',
+            'Previous Page (PageUp)': 'PreviewStringId.RibbonPreview_ShowPrevPage_STipTitle',
+            'Choose a color for the background of the document pages.': 'PreviewStringId.RibbonPreview_FillBackground_STipContent',
+            'Custom Margins...': 'PreviewStringId.RibbonPreview_PageSetup_Caption',
+            'The font size cannot be set to zero or a negative number': 'PreviewStringId.Msg_FontInvalidNumber',
+            'Author:': 'PreviewStringId.ExportOption_PdfDocumentAuthor',
+            'Show data labels rotated at 225 degrees.': 'ChartDesignerStringIDs.SeriesOptions_Labels_225DegreesDescription',
+            'Add Annotation': 'ChartDesignerStringIDs.Default_Elements_AddAnnotation',
+            'Show the title on the right of an axis.': 'ChartDesignerStringIDs.AxisOptions_XTitlePosition_RightDescription',
+            'The entered value has an incorrect type. Must be DateTime': 'ChartDesignerStringIDs.CommandMessages_IncompatibleWithDateTimeStripMaxLimitMessage',
+            'Show only the label for the second value of a data point.': 'ChartDesignerStringIDs.SeriesOptions_RangeArea2DValue2LabelPositionDescription',
+            'Fade In': 'ChartDesignerStringIDs.Bar2DFadeInAnimation',
+            'Scatter Radar Line 2D': 'ChartDesignerStringIDs.RadarLineScatterSeries2D',
+            'Add Pane At Right': 'ChartDesignerStringIDs.Default_Elements_AddPaneHorizontal',
+            'Incorrect Value Format': 'ChartDesignerStringIDs.CommandMessages_IncompatibleWithNumericalStripMinLimitCaption',
+            'Additional Panes': 'ChartDesignerStringIDs.TreeAdditionalPanelCollection',
+            '0 Degrees': 'ChartDesignerStringIDs.SeriesOptions_Labels_0DegreesCaption',
+            'Show data labels outside bars.': 'ChartDesignerStringIDs.SeriesOptions_Labels_OutsideDescription',
+            'Diagram Options': 'ChartDesignerStringIDs.Default_Main_Diagram3DOptionsGroup',
+            'Open Value:': 'ChartDesignerStringIDs.SeriesOptions_OpenValueDataMember',
+            'There is no data to visualize. To see the chart, switch to the Chart ribbon tab and choose a desired series type from the Add New Series gallery.': 'ChartDesignerStringIDs.EmptyDiagramHint',
+            'Show axis labels rotated at -90 degrees.': 'ChartDesignerStringIDs.AxisOptions_XLabelOrientation_RotatedMinus90Description',
+            'Change Series View': 'ChartDesignerStringIDs.SeriesOptions_ChangeSeriesView',
+            'Add String': 'ChartDesignerStringIDs.ColorizerKeyString',
+            'The labels are organized into a straight column on the right of the funnel series points.': 'ChartDesignerStringIDs.SeriesOptions_Labels_FunnelRightColumnPointDescription',
+            '-90 Degrees': 'ChartDesignerStringIDs.AxisOptions_YLabelOrientation_RotatedMinus90Caption',
+            'Show axis labels.': 'ChartDesignerStringIDs.AxisOptions_CircularYLabelOrientation_NormalDescription',
+            '315 Degrees': 'ChartDesignerStringIDs.SeriesOptions_Labels_315DegreesCaption',
+            'Do you want to save the settings?': 'ChartDesignerStringIDs.SaveAndExitWindowText',
+            'Axis Options': 'ChartDesignerStringIDs.AxisCategoryTitle',
+            'Add a constant line to the primary X-axis.': 'ChartDesignerStringIDs.Default_Elements_AddConstantLineXDescription',
+            'Thickness:': 'ChartDesignerStringIDs.Indicator_Thickness',
+            'Slide From Top': 'ChartDesignerStringIDs.Stock2DSlideFromTopAnimation',
+            'Area Series': 'ChartDesignerStringIDs.ChartViewGallery_Area',
+            'Polar Range Area 2D': 'ChartDesignerStringIDs.PolarRangeAreaSeries2D',
+            'Order legend items from left to right.': 'ChartDesignerStringIDs.LegendOptions_Orientation_HorizontalDescription',
+            'Envelope Percent:': 'ChartDesignerStringIDs.Indicator_MovingAverageEnvelopePercent',
+            'Scatter Line 2D': 'ChartDesignerStringIDs.LineScatterSeries2D',
+            'Chart Data Source': 'ChartDesignerStringIDs.SeriesOptions_ChartDataSource',
+            'Show On Left': 'ChartDesignerStringIDs.AxisOptions_AxisKind_LeftCaption',
+            'Axes Elements': 'ChartDesignerStringIDs.Default_Elements_AxesElementsGroupTitle',
+            'Show the axis on the left of a diagram.': 'ChartDesignerStringIDs.AxisOptions_AxisKind_LeftDescription',
+            'Argument Axis:': 'ChartDesignerStringIDs.SeriesOptions_ArgumentAxis',
+            'Stacked Bar 2D': 'ChartDesignerStringIDs.BarStackedSeries2D',
+            'Argument:': 'ChartDesignerStringIDs.Indicator_Argument1',
+            'Right Below': 'ChartDesignerStringIDs.ConstantLine_TitlePositionCaption_FarBelowHorizontal',
+            'Show axis labels rotated at -45 degrees.': 'ChartDesignerStringIDs.AxisOptions_XLabelOrientation_RotatedMinus45Description',
+            'Full-Stacked Line 2D': 'ChartDesignerStringIDs.LineFullStackedSeries2D',
+            'Change Chart Type': 'ChartDesignerStringIDs.Default_Main_ChangeChartTypeGroupTitle',
+            'Name:': 'ChartDesignerStringIDs.Font_Family',
+            'Max:': 'ChartDesignerStringIDs.AxisOptions_WholeRangeMaxValue',
+            'Advanced': 'ChartDesignerStringIDs.Indicator_AdvancedGroupCaption',
+            'Only the Envelope is shown.': 'ChartDesignerStringIDs.Indicators_MovingAverageKind_EnvelopeDescription',
+            'Add a new pane below the current pane and stack them vertically.': 'ChartDesignerStringIDs.Default_Elements_AddPaneVerticalDescription',
+            'Panes Orientation': 'ChartDesignerStringIDs.Default_Main_PaneOrientationButtonCaption',
+            'Show axis labels rotated at 90 degrees.': 'ChartDesignerStringIDs.AxisOptions_YLabelOrientation_Rotated90Description',
+            'New Date Time Options': 'ChartDesignerStringIDs.NewDateTimeOptions',
+            'Simple': 'ChartDesignerStringIDs.Default_Elements_AddIndicator_SimpleIndicatorsGalleryGroup',
+            'Constant Line': 'ChartDesignerStringIDs.DefaultConstantLineTitle',
+            'Show axis labels rotated at 45 degrees.': 'ChartDesignerStringIDs.AxisOptions_XLabelOrientation_Rotated45Description',
+            'Show data labels rotated at 180 degrees.': 'ChartDesignerStringIDs.SeriesOptions_Labels_180DegreesDescription',
+            'New Line Style': 'ChartDesignerStringIDs.NewLineStyle',
+            '45 Degrees': 'ChartDesignerStringIDs.AxisOptions_XLabelOrientation_Rotated45Caption',
+            'New Regression Line': 'ChartDesignerStringIDs.NewRegressionLine',
+            'Legend Options': 'ChartDesignerStringIDs.LegendOptionsRibbonCategoryTitle',
+            'Stretch From Far': 'ChartDesignerStringIDs.Line2DStretchFromFarAnimation',
+            'Turn off axis labels.': 'ChartDesignerStringIDs.AxisOptions_AxisLabelNoneDescription',
+            'Value Level:': 'ChartDesignerStringIDs.Indicator_ValueLevel',
+            'Points Count:': 'ChartDesignerStringIDs.Indicator_MovingAveragePointsCount',
+            'Spline Area Full Stacked 2D': 'ChartDesignerStringIDs.SplineAreaFullStackedSeries2D',
+            'Do not display the axis.': 'ChartDesignerStringIDs.AxisOptions_AxisKindNoneDescription',
+            'Spline Area 2D': 'ChartDesignerStringIDs.SplineAreaSeries2D',
+            'New Navigation Options': 'ChartDesignerStringIDs.NewNavigationOptions',
+            'Bubble 2D': 'ChartDesignerStringIDs.BubbleSeries2D',
+            'Bubble 3D': 'ChartDesignerStringIDs.BubbleSeries3D',
+            'Show the title in the center of an axis.': 'ChartDesignerStringIDs.AxisOptions_XTitlePosition_CenterDescription',
+            'Text:': 'ChartDesignerStringIDs.ConstantLine_TitleText',
+            'Value:': 'ChartDesignerStringIDs.SeriesOptions_ValueDataMember',
+            'Show data labels in the center of funnel points.': 'ChartDesignerStringIDs.SeriesOptions_Labels_FunnelCenterPointDescription',
+            '3D Simple Diagram': 'ChartDesignerStringIDs.TreeDiagramSimpleDiagram3D',
+            'Slide From Right': 'ChartDesignerStringIDs.Stock2DSlideFromRightAnimation',
+            'Pattern Editor': 'ChartDesignerStringIDs.PatternEditor_WindowTitle',
+            '270 Degrees': 'ChartDesignerStringIDs.SeriesOptions_Labels_270DegreesCaption',
+            'Oscillator Indicators': 'ChartDesignerStringIDs.Default_Elements_AddIndicator_OscillatorsGalleryGroup',
+            'Perspective Angle:': 'ChartDesignerStringIDs.Default_Main_Diagram3DPerspectiveAngle',
+            'Show one label in the center of the range bar with both minimum and maximum values.': 'ChartDesignerStringIDs.SeriesOptions_RangeBarOneLabelPositionDescription',
+            'Show the title on the top of an axis.': 'ChartDesignerStringIDs.AxisOptions_YTitlePosition_TopDescription',
+            'DataSource Based Error Bars': 'ChartDesignerStringIDs.DataSourceBasedErrorBars',
+            'New Time Interval': 'ChartDesignerStringIDs.NewTimeInterval',
+            'Slide From Right Center': 'ChartDesignerStringIDs.Marker2DAnimationSlideFromRightCenter',
+            'Candle Stick 2D': 'ChartDesignerStringIDs.CandleStickSeries2D',
+            'Spline 2D': 'ChartDesignerStringIDs.SplineSeries2D',
+            'Right Above': 'ChartDesignerStringIDs.ConstantLine_TitlePositionCaption_FarAboveHorizontal',
+            'High Value:': 'ChartDesignerStringIDs.SeriesOptions_HighValueDataMember',
+            'Trend Indicators': 'ChartDesignerStringIDs.Default_Elements_AddIndicator_TrendIndicatorsGalleryGroup',
+            'Only the Moving Average is shown.': 'ChartDesignerStringIDs.Indicators_MovingAverageKind_MovingAverageDescription',
+            'Fibonacci': 'ChartDesignerStringIDs.Default_Elements_AddIndicator_FibonacciIndicatorsGalleryGroup',
+            'Full-Stacked Step Area 2D': 'ChartDesignerStringIDs.AreaStepFullStackedSeries2D',
+            'Show the axis at the bottom of a diagram.': 'ChartDesignerStringIDs.AxisOptions_AxisKind_BottomDescription',
+            'Text On Axis:': 'ChartDesignerStringIDs.Strip_AxisLabelText',
+            'Slide From Left Top Corner': 'ChartDesignerStringIDs.Marker2DAnimationSlideFromLeftTopCorner',
+            'New Tool Tip Mouse Position': 'ChartDesignerStringIDs.NewToolTipMousePosition',
+            'Template': 'ChartDesignerStringIDs.SeriesTemplate',
+            '90 Degrees': 'ChartDesignerStringIDs.AxisOptions_YLabelOrientation_Rotated90Caption',
+            'Zoom  Scroll': 'ChartDesignerStringIDs.Default_Main_NavigationHeader',
+            'Save and Exit': 'ChartDesignerStringIDs.SaveAndExitButtonCaption',
+            'Value2': 'ChartDesignerStringIDs.ValueLevel_Value2',
+            'Show Labels': 'ChartDesignerStringIDs.AxisOptions_CircularYLabelOrientation_NormalCaption',
+            'Format:': 'ChartDesignerStringIDs.AxisOptions_DateTimeFormat',
+            'New Reduction Stock Options': 'ChartDesignerStringIDs.NewReductionStockOptions',
+            'New Tool Tip Options': 'ChartDesignerStringIDs.NewToolTipOptions',
+            'Show the title below the line on the left.': 'ChartDesignerStringIDs.ConstantLine_TitlePositionDescription_NearBelowHorizontal',
+            'New Indicator Label': 'ChartDesignerStringIDs.NewIndicatorLabel',
+            'Nested Donut 2D': 'ChartDesignerStringIDs.NestedDonutSeries2D',
+            'Show Axis': 'ChartDesignerStringIDs.AxisOptions_AxisKind_CircularAxisYVisibleCaption',
+            'Show data labels rotated at 45 degrees.': 'ChartDesignerStringIDs.SeriesOptions_Labels_45DegreesDescription',
+            'Close Value:': 'ChartDesignerStringIDs.SeriesOptions_CloseValueDataMember',
+            'Moving Average nd Envelope': 'ChartDesignerStringIDs.Indicators_MovingAverageKind_MovingAverageAndEnvelope',
+            'Show only the label for the minimum value of a data point.': 'ChartDesignerStringIDs.SeriesOptions_RangeArea2DMinValueLabelPositionDescription',
+            'New Numeric Options': 'ChartDesignerStringIDs.NewNumericOptions',
+            'Show data labels rotated at 135 degrees.': 'ChartDesignerStringIDs.SeriesOptions_Labels_135DegreesDescription',
+            'Kind: ': 'ChartDesignerStringIDs.Indicator_MovingAverageKind',
+            'Show the title on the left of an axis.': 'ChartDesignerStringIDs.AxisOptions_XTitlePosition_LeftDescription',
+            'Strip Options': 'ChartDesignerStringIDs.Strip_CategoryCaption',
+            'Max Limit:': 'ChartDesignerStringIDs.Strip_MaxLimit',
+            'Add Axis Y': 'ChartDesignerStringIDs.Default_Elements_AddSecondaryAxisY',
+            'Add Axis X': 'ChartDesignerStringIDs.Default_Elements_AddSecondaryAxisX',
+            'Legend #': 'ChartDesignerStringIDs.TreeLegend',
+            '180 Degrees': 'ChartDesignerStringIDs.SeriesOptions_Labels_180DegreesCaption',
+            'Show data labels on the right of funnel points.': 'ChartDesignerStringIDs.SeriesOptions_Labels_FunnelRightPointDescription',
+            'Constant Line Options': 'ChartDesignerStringIDs.ConstantLineCategoryTitle',
+            'Financial Series': 'ChartDesignerStringIDs.ChartViewGallery_Financial',
+            'Left Below': 'ChartDesignerStringIDs.ConstantLine_TitlePositionCaption_NearBelowHorizontal',
+            'Point Distance:': 'ChartDesignerStringIDs.SeriesOptions_FunnelPointDistance',
+            'Grid Alignment:': 'ChartDesignerStringIDs.AxisOptions_DateTimeGridAlignment',
+            'Reverse Items': 'ChartDesignerStringIDs.LegendOptions_ReverseItems',
+            'Slide From Left': 'ChartDesignerStringIDs.Bar2DSlideFromLeftAnimation',
+            'New Fibonacci Retracement': 'ChartDesignerStringIDs.NewFibonacciRetracement',
+            'Show data labels outside pie slices.': 'ChartDesignerStringIDs.SeriesOptions_Labels_OutsideSlicesDescription',
+            'New Workdays Options': 'ChartDesignerStringIDs.NewWorkdaysOptions',
+            'Secondary Axis X #': 'ChartDesignerStringIDs.SecondaryAxisXPrefix',
+            'Dollar': 'ChartDesignerStringIDs.Marker2DModelDollar',
+            'Height / Width:': 'ChartDesignerStringIDs.SeriesOptions_FunnelRatio',
+            'Show the axis on the right of a diagram.': 'ChartDesignerStringIDs.AxisOptions_AxisKind_RightDescription',
+            'New Simple Moving Average': 'ChartDesignerStringIDs.NewSimpleMovingAverage',
+            'Add a constant line to the primary Y-axis.': 'ChartDesignerStringIDs.Default_Elements_AddConstantLineYDescription',
+            'Add Legend': 'ChartDesignerStringIDs.Default_Elements_AddLegend',
+            'Show the axis on the top of a diagram.': 'ChartDesignerStringIDs.AxisOptions_AxisKind_TopDescription',
+            'Shape Style': 'ChartDesignerStringIDs.Default_Main_CircularDiagramShapeStyle',
+            'Slide From Bottom': 'ChartDesignerStringIDs.Bar2DSlideFromBottomAnimation',
+            'Center ': 'ChartDesignerStringIDs.SeriesOptions_RangeBarOneLabelPositionCaption',
+            'Radar Series': 'ChartDesignerStringIDs.ChartViewGallery_Radar',
+            'Text in Legend:': 'ChartDesignerStringIDs.Indicator_LegendText',
+            'Show the title below the line on the right.': 'ChartDesignerStringIDs.ConstantLine_TitlePositionDescription_FarBelowVertical',
+            'Turn off the axis title.': 'ChartDesignerStringIDs.AxisOptions_TitlePosition_NoneDescription',
+            'Polar Series': 'ChartDesignerStringIDs.ChartViewGallery_Polar',
+            'Pane  Axis': 'ChartDesignerStringIDs.Indicator_SeparatePaneGroupCaption',
+            'Color:': 'ChartDesignerStringIDs.SeriesOptions_ColorDataMember',
+            'Funnel Series': 'ChartDesignerStringIDs.ChartViewGallery_Funnel',
+            'Radar Area 2D': 'ChartDesignerStringIDs.RadarAreaSeries2D',
+            'Title Visibility': 'ChartDesignerStringIDs.AxisOptions_TitleVisibility',
+            'Series Data Source': 'ChartDesignerStringIDs.SeriesOptions_SeriesDataSource',
+            'Dimension:': 'ChartDesignerStringIDs.Default_Main_SimpleDiagramLayoutDimensionWithColon',
+            'Pie/Doughnut': 'ChartDesignerStringIDs.SeriesOptions_PieDoughnutOptionsGroup',
+            'Stock 2D': 'ChartDesignerStringIDs.StockSeries2D',
+            'The entered value has an incorrect type. Must be Numerical': 'ChartDesignerStringIDs.CommandMessages_IncompatibleWithNumericalStripMaxLimitMessage',
+            'New Work Time Rule': 'ChartDesignerStringIDs.NewWorkTimeRule',
+            'Funnel 2D': 'ChartDesignerStringIDs.FunnelSeries2D',
+            'Slide To Center': 'ChartDesignerStringIDs.CircularMarkerSlideToCenterAnimation',
+            'Show the Axis Y.': 'ChartDesignerStringIDs.AxisOptions_AxisKind_CircularAxisYVisibleDescription',
+            'Stacked Series 2D': 'ChartDesignerStringIDs.AreaStackedSeries2D',
+            'Stacked Area 3D': 'ChartDesignerStringIDs.AreaStackedSeries3D',
+            'Full-Stacked Series 2D': 'ChartDesignerStringIDs.AreaFullStackedSeries2D',
+            'Full-Stacked Area 3D': 'ChartDesignerStringIDs.AreaFullStackedSeries3D',
+            'Add Indicator': 'ChartDesignerStringIDs.SeriesOptions_AddIndicatorsGroupTitle',
+            'Connector:': 'ChartDesignerStringIDs.SeriesOptions_ConnectorThickness',
+            'Annotation Options': 'ChartDesignerStringIDs.ChartAnnotationOptionsRibbonCategoryTitle',
+            'Side-By-Side Range Bar 2D': 'ChartDesignerStringIDs.RangeBarSideBySideSeries2D',
+            'Add a strip to the primary X-axis.': 'ChartDesignerStringIDs.Default_Elements_AddStripXDescription',
+            'DateTime Options': 'ChartDesignerStringIDs.AxisOptions_DateTimeOptionsGroup',
+            'Show data labels rotated at 270 degrees.': 'ChartDesignerStringIDs.SeriesOptions_Labels_270DegreesDescription',
+            'Range Series': 'ChartDesignerStringIDs.ChartViewGallery_RangeSeries',
+            'New Weighted Moving Average': 'ChartDesignerStringIDs.NewWeightedMovingAverage',
+            'Side-by-Side Bar 2D': 'ChartDesignerStringIDs.BarSideBySideSeries2D',
+            'Side-by-Side Bar 3D': 'ChartDesignerStringIDs.BarSideBySideSeries3D',
+            'Low Value:': 'ChartDesignerStringIDs.SeriesOptions_LowValueDataMember',
+            '-45 Degrees': 'ChartDesignerStringIDs.AxisOptions_XLabelOrientation_RotatedMinus45Caption',
+            'Slide From Top Center': 'ChartDesignerStringIDs.Marker2DAnimationSlideFromTopCenter',
+            'Show data labels on the left of funnel points.': 'ChartDesignerStringIDs.SeriesOptions_Labels_FunnelLeftPointDescription',
+            'No Data Source': 'ChartDesignerStringIDs.SeriesOptions_DataSourceNone',
+            'Overlapped Range Bar 2D': 'ChartDesignerStringIDs.RangeBarOverlappedSeries2D',
+            'Polar Area 2D': 'ChartDesignerStringIDs.PolarAreaSeries2D',
+            '225 Degrees': 'ChartDesignerStringIDs.SeriesOptions_Labels_225DegreesCaption',
+            'Series Options': 'ChartDesignerStringIDs.SeriesOptionsRibbonCategoryTitle',
+            'Clear Series Data': 'ChartDesignerStringIDs.ClearSeriesDataButtonCaption',
+            'Show data labels in the center of point markers.': 'ChartDesignerStringIDs.SeriesOptions_Labels_Marker3DCenterDescription',
+            'New Resolve Overlapping Options': 'ChartDesignerStringIDs.NewResolveOverlappingOptions',
+            'KeyColorColorizer': 'ChartDesignerStringIDs.KeyColorColorizer',
+            'Fan Zoom In': 'ChartDesignerStringIDs.Pie2DFanZoomInAnimation',
+            'New Crosshair Options': 'ChartDesignerStringIDs.NewCrosshairOptions',
+            'RangeColorizer': 'ChartDesignerStringIDs.RangeColorizer',
+            'Point and Bubble Series': 'ChartDesignerStringIDs.ChartViewGallery_PointBubble',
+            'Triple Exponential Moving Average (TriX)': 'ChartDesignerStringIDs.TripleExponentialMovingAverageTrix',
+            'Spline Area Stacked 2D': 'ChartDesignerStringIDs.SplineAreaStackedSeries2D',
+            'Visible Range': 'ChartDesignerStringIDs.AxisOptions_VisibleRangeHeader',
+            'Chart Area Elements': 'ChartDesignerStringIDs.Default_Elements_ChartAreaElementsGroupTitle',
+            'Step Line 2D': 'ChartDesignerStringIDs.LineStepSeries2D',
+            'Turn off the title.': 'ChartDesignerStringIDs.ConstantLine_TitlePositionDescription_None',
+            'Weight:': 'ChartDesignerStringIDs.SeriesOptions_WeightDataMember',
+            'Add Pane Below': 'ChartDesignerStringIDs.Default_Elements_AddPaneVertical',
+            'Stretch From Near': 'ChartDesignerStringIDs.Area2DStretchFromNearAnimation',
+            'Price Indicators': 'ChartDesignerStringIDs.Default_Elements_AddIndicator_PriceIndicatorsGalleryGroup',
+            'Bar Series': 'ChartDesignerStringIDs.ChartViewGallery_BarSeries',
+            'Axis Title': 'ChartDesignerStringIDs.AxisOptions_TitleGroup',
+            'Show At Bottom': 'ChartDesignerStringIDs.AxisOptions_AxisKind_BottomCaption',
+            'Series:': 'ChartDesignerStringIDs.SeriesOptions_SeriesDataMember',
+            'Radar Line 2D': 'ChartDesignerStringIDs.RadarLineSeries2D',
+            'SeriesPoint Anchor Point': 'ChartDesignerStringIDs.AnnotationSeriesPointAnchorPoint',
+            'New Fibonacci Arcs': 'ChartDesignerStringIDs.NewFibonacciArcs',
+            'New Fibonacci Fans': 'ChartDesignerStringIDs.NewFibonacciFans',
+            'Slide From Left Center': 'ChartDesignerStringIDs.CircularMarkerSlideFromLeftCenterAnimation',
+            '135 Degrees': 'ChartDesignerStringIDs.SeriesOptions_Labels_135DegreesCaption',
+            'The labels are organized into a straight column on the left of the funnel series points.': 'ChartDesignerStringIDs.SeriesOptions_Labels_FunnelLeftColumnPointDescription',
+            'Drop From Far': 'ChartDesignerStringIDs.Area2DDropFromFarAnimation',
+            'Show only the label for the maximum value of a data point.': 'ChartDesignerStringIDs.SeriesOptions_RangeArea2DMaxValueLabelPositionDescription',
+            'Show data labels in the center of bars.': 'ChartDesignerStringIDs.SeriesOptions_Labels_StackedBarCenteredInBarDescription',
+            'Point 3D': 'ChartDesignerStringIDs.PointSeries3D',
+            'Point 2D': 'ChartDesignerStringIDs.PointSeries2D',
+            'Unwrap Horizontally': 'ChartDesignerStringIDs.Line2DUnwrapHorizontallyAnimation',
+            'New Pane': 'ChartDesignerStringIDs.NewPane',
+            'New Axis': 'ChartDesignerStringIDs.NewAxis',
+            'Show the title above the line on the right.': 'ChartDesignerStringIDs.ConstantLine_TitlePositionDescription_FarAboveVertical',
+            'ColorObjectColorizer': 'ChartDesignerStringIDs.ColorObjectColorizer',
+            'New Legend': 'ChartDesignerStringIDs.NewLegend',
+            ' Polar Line 2D': 'ChartDesignerStringIDs.PolarLineSeries2D',
+            'Title Options': 'ChartDesignerStringIDs.ChartTitleOptionsRibbonCategoryTitle',
+            'Height / Width Auto': 'ChartDesignerStringIDs.SeriesOptions_FunnelRatioAuto',
+            'Turn on data labels.': 'ChartDesignerStringIDs.SeriesOptions_Labels_Area3DEnabledDescription',
+            'Add Constant Line To Axis X': 'ChartDesignerStringIDs.Default_Elements_AddConstantLineX',
+            'Add Constant Line To Axis Y': 'ChartDesignerStringIDs.Default_Elements_AddConstantLineY',
+            'Step Area 2D': 'ChartDesignerStringIDs.AreaStepSeries2D',
+            'Measure Unit:': 'ChartDesignerStringIDs.AxisOptions_DateTimeMeasureUnit',
+            'Complex Content': 'ChartDesignerStringIDs.ComplexAnnotationContent',
+            'New Exponential Moving Average': 'ChartDesignerStringIDs.NewExponentialMovingAverage',
+            'Add Strip To Axis X': 'ChartDesignerStringIDs.Default_Elements_AddStripX',
+            'Add Strip To Axis Y': 'ChartDesignerStringIDs.Default_Elements_AddStripY',
+            'New Tool Tip Free Position': 'ChartDesignerStringIDs.NewToolTipFreePosition',
+            'Turn off data labels.': 'ChartDesignerStringIDs.SeriesOptions_Labels_NoneDescription',
+            'Min Limit:': 'ChartDesignerStringIDs.Strip_MinLimit',
+            'Show both labels with minimum and maximum values of a data point.': 'ChartDesignerStringIDs.SeriesOptions_RangeArea2DTwoLabelsPositionDescription',
+            'Show data labels in two columns.': 'ChartDesignerStringIDs.SeriesOptions_Labels_TwoColumnsDescription',
+            'Bar 3D (Manhattan Bar)': 'ChartDesignerStringIDs.BarSeries3D',
+            'Pie Series': 'ChartDesignerStringIDs.ChartViewGallery_Pie',
+            'Show On Right': 'ChartDesignerStringIDs.AxisOptions_AxisKind_RightCaption',
+            'Left Above': 'ChartDesignerStringIDs.ConstantLine_TitlePositionCaption_NearAboveHorizontal',
+            'Show axis labels in staggered order.': 'ChartDesignerStringIDs.AxisOptions_XLabelOrientation_StaggeredDescription',
+            'Data Members': 'ChartDesignerStringIDs.SeriesOptions_DataMembersPageGroup',
+            'Stretch Out': 'ChartDesignerStringIDs.Area2DStretchOutAnimation',
+            'Show data labels inside pie slices.': 'ChartDesignerStringIDs.SeriesOptions_Labels_InsideSlicesDescription',
+            'New Axis Range': 'ChartDesignerStringIDs.NewAxisRange',
+            'New Crosshair Axis Label Options': 'ChartDesignerStringIDs.NewCrosshairAxisLabelOptions',
+            'Show both labels with minimum and maximum values.': 'ChartDesignerStringIDs.SeriesOptions_RangeBarTwoLabelsLabelPositionDescription',
+            'Slide From Right Top Corner': 'ChartDesignerStringIDs.Marker2DAnimationSlideFromRightTopCorner',
+            'New Tool Tip Controller': 'ChartDesignerStringIDs.NewChartToolTipController',
+            'New Axis Label': 'ChartDesignerStringIDs.NewAxisLabel',
+            'New Triangular Moving Average': 'ChartDesignerStringIDs.NewTriangularMovingAverage',
+            'Min:': 'ChartDesignerStringIDs.AxisOptions_WholeRangeMinValue',
+            'Stacked Line 2D': 'ChartDesignerStringIDs.LineStackedSeries2D',
+            'Area 2D': 'ChartDesignerStringIDs.AreaSeries2D',
+            'Both ': 'ChartDesignerStringIDs.SeriesOptions_RangeArea2DTwoLabelsPositionCaption',
+            'Zoom Percent:': 'ChartDesignerStringIDs.Default_Main_Diagram3DZoomPercent',
+            'Slide From Bottom Center': 'ChartDesignerStringIDs.CircularMarkerSlideFromBottomCenterAnimation',
+            'Radar Point 2D': 'ChartDesignerStringIDs.RadarPointSeries2D',
+            'Ring': 'ChartDesignerStringIDs.Marker2DModelRing',
+            'Pie 2D': 'ChartDesignerStringIDs.PieSeries2D',
+            'Minor': 'ChartDesignerStringIDs.AxisOptions_MinorVisible',
+            'End Style:': 'ChartDesignerStringIDs.Indicator_ErrorBarsEndStyle',
+            'Add Constant Line': 'ChartDesignerStringIDs.Default_Elements_AddConstantLine',
+            'Strip': 'ChartDesignerStringIDs.TreeStripModel',
+            'Add Integer': 'ChartDesignerStringIDs.ColorizerKeyInt',
+            'Order legend items from top to bottom.': 'ChartDesignerStringIDs.LegendOptions_Orientation_VerticalDescription',
+            'Nested Donut': 'ChartDesignerStringIDs.SeriesOptions_NestedDonut2DOptionsGroup',
+            'Show one label in the center of the range area with both minimum and maximum values.': 'ChartDesignerStringIDs.SeriesOptions_RangeArea2DOneLabelPositionDescription',
+            'Show the title above the line on the left.': 'ChartDesignerStringIDs.ConstantLine_TitlePositionDescription_NearAboveVertical',
+            'Pane #': 'ChartDesignerStringIDs.PanePrefix',
+            'New Tool Tip Relative Position': 'ChartDesignerStringIDs.NewToolTipRelativePosition',
+            'Polar Point 2D': 'ChartDesignerStringIDs.PolarPointSeries2D',
+            'Show data labels in the center of bubbles.': 'ChartDesignerStringIDs.SeriesOptions_Labels_Bubble2DCenterDescription',
+            'Slide From Center': 'ChartDesignerStringIDs.CircularMarkerSlideFromCenterAnimation',
+            'Text In Legend:': 'ChartDesignerStringIDs.ConstantLine_LegendText',
+            'New Title': 'ChartDesignerStringIDs.NewTitle',
+            'Series Data': 'ChartDesignerStringIDs.SeriesDataPanelTitle',
+            'Secondary Axis Y #': 'ChartDesignerStringIDs.SecondaryAxisYPrefix',
+            'Add a strip to the primary Y-axis.': 'ChartDesignerStringIDs.Default_Elements_AddStripYDescription',
+            'Range Area 2D': 'ChartDesignerStringIDs.RangeAreaSeries2D',
+            'Drop From Near': 'ChartDesignerStringIDs.Area2DDropFromNearAnimation',
+            'Add a new pane to the right of the current pane and stack them horizontally.': 'ChartDesignerStringIDs.Default_Elements_AddPaneHorizontalDescription',
+            'Pane:': 'ChartDesignerStringIDs.SeriesOptions_SeriesPane',
+            'Both the Moving Average and Envelope are shown.': 'ChartDesignerStringIDs.Indicators_MovingAverageKind_MovingAverageAndEnvelopeDescription',
+            'Show only the label for the maximum range bar value.': 'ChartDesignerStringIDs.SeriesOptions_RangeBarMaxValueLabelPositionDescription',
+            'Scatter Polar Line 2D': 'ChartDesignerStringIDs.PolarLineScatterSeries2D',
+            'Side-by-Side Stacked Bar 2D': 'ChartDesignerStringIDs.BarSideBySideStackedSeries2D',
+            'New Series Border': 'ChartDesignerStringIDs.NewSeriesBorder',
+            'Indicator Options': 'ChartDesignerStringIDs.IndicatorCategoryTitle',
+            'Hole percent:': 'ChartDesignerStringIDs.SeriesOptions_HoleRadiusPercent',
+            'New Custom Legend Item': 'ChartDesignerStringIDs.NewCustomLegendItem',
+            'Value 2:': 'ChartDesignerStringIDs.SeriesOptions_Value2DataMember',
+            'Show On Top': 'ChartDesignerStringIDs.AxisOptions_AxisKind_TopCaption',
+            'Side-By-Side Full Stacked Bar 2D': 'ChartDesignerStringIDs.BarSideBySideFullStackedSeries2D',
+            'New Scroll Bar Options': 'ChartDesignerStringIDs.NewScrollBarOptions',
+            'Add Double': 'ChartDesignerStringIDs.ColorizerKeyDouble',
+            'Placeholders': 'ChartDesignerStringIDs.PatternEditor_PlaceholdersLabelText',
+            'Show the title at the bottom of an axis.': 'ChartDesignerStringIDs.AxisOptions_XTitlePosition_BottomDescription',
+            'Show only the label for the first value of a data point.': 'ChartDesignerStringIDs.SeriesOptions_RangeArea2DValue1LabelPositionDescription',
+            'Line 2D': 'ChartDesignerStringIDs.LineSeries2D',
+            'Radar Range Area 2D': 'ChartDesignerStringIDs.RadarRangeAreaSeries2D',
+            'New Trend Line': 'ChartDesignerStringIDs.NewTrendLine',
+            'Show data labels rotated at 90 degrees.': 'ChartDesignerStringIDs.SeriesOptions_Labels_90DegreesDescription',
+            'Chart Designer': 'ChartDesignerStringIDs.ChartDesignerWindowTitle',
+            'Special': 'ChartDesignerStringIDs.PatternEditor_FormatComboBox_Special',
+            'Direction:': 'ChartDesignerStringIDs.Indicator_ErrorBarsDirection',
+            'Brush': 'ChartDesignerStringIDs.DataEditor_BrushColumnHeader',
+            'Slide From Right Bottom Corner': 'ChartDesignerStringIDs.Marker2DAnimationSlideFromRightBottomCorner',
+            'Show data labels without rotation.': 'ChartDesignerStringIDs.SeriesOptions_Labels_0DegreesDescription',
+            'Indicator': 'ChartDesignerStringIDs.Indicator_IndicatorPageTitle',
+            'Stacked Step Area 2D': 'ChartDesignerStringIDs.AreaStepStackedSeries2D',
+            'Add Chart Title': 'ChartDesignerStringIDs.Default_Elements_AddChartTitle',
+            'Value level': 'ChartDesignerStringIDs.Indicator_ValueLevelForRegressionLine',
+            'Line Series': 'ChartDesignerStringIDs.ChartViewGallery_LineSeries',
+            'Show data labels on the top of point markers.': 'ChartDesignerStringIDs.SeriesOptions_Labels_3DTopDescription',
+            'New Series Label': 'ChartDesignerStringIDs.NewSeriesLabel',
+            'New SeriesPoint': 'ChartDesignerStringIDs.NewSeriesPoint',
+            'Chart Structure': 'ChartDesignerStringIDs.ChartStructureDockPanelTitle',
+            'Slide From Left Bottom Corner': 'ChartDesignerStringIDs.Marker2DAnimationSlideFromLeftBottomCorner',
+            'Add New Series': 'ChartDesignerStringIDs.Default_Main_AddSeriesManuallyGroupTitle',
+            'Major': 'ChartDesignerStringIDs.AxisOptions_MajorVisible',
+            'Value Axis:': 'ChartDesignerStringIDs.SeriesOptions_ValueAxis',
+            'Size:': 'ChartDesignerStringIDs.Font_Size',
+            'Full-Stacked Bar 2D': 'ChartDesignerStringIDs.BarFullStackedSeries2D',
+            'Cartesian Diagram': 'ChartDesignerStringIDs.TreeDiagramXYDiagram2D',
+            '3D Cartesian Diagram': 'ChartDesignerStringIDs.TreeDiagramXYDiagram3D',
+            'New Crosshair Mouse Position': 'ChartDesignerStringIDs.NewCrosshairMousePosition',
+            'Show data labels rotated at 315 degrees.': 'ChartDesignerStringIDs.SeriesOptions_Labels_315DegreesDescription',
+            'New Crosshair Free Position': 'ChartDesignerStringIDs.NewCrosshairFreePosition',
+            'Indent:': 'ChartDesignerStringIDs.SeriesOptions_Indent',
+            'Show only the label for the minimum range bar value.': 'ChartDesignerStringIDs.SeriesOptions_RangeBarMinValueLabelPositionDescription',
+            'Unwrap Vertically': 'ChartDesignerStringIDs.Line2DUnwrapVerticallyAnimation',
+            'Title Collection': 'ChartDesignerStringIDs.TreeTitleCollection',
+            'Africa Sunset': 'GaugesPresetsStringId.ThemeAfricaSunset',
+            'Classic': 'GaugesPresetsStringId.ThemeClassic',
+            'Silver Blur': 'GaugesPresetsStringId.ThemeSilverBlur',
+            'Future': 'GaugesPresetsStringId.ThemeFuture',
+            'Cosmic': 'GaugesPresetsStringId.ThemeCosmic',
+            'Clever': 'GaugesPresetsStringId.ThemeClever',
+            'Shining Dark': 'GaugesPresetsStringId.ThemeShiningDark',
+            'QuarterLeft': 'GaugesPresetsStringId.ShapeQuarterLeft',
+            'Theme': 'GaugesPresetsStringId.StyleChooserFilterTheme',
+            'Eco': 'GaugesPresetsStringId.ThemeEco',
+            'White': 'GaugesPresetsStringId.ThemeWhite',
+            'Retro': 'GaugesPresetsStringId.ThemeRetro',
+            'Disco': 'GaugesPresetsStringId.ThemeDisco',
+            'Ignis': 'GaugesPresetsStringId.ThemeIgnis',
+            'Ice-Cold Zone': 'GaugesPresetsStringId.ThemeIceColdZone',
+            'Dark Night': 'GaugesPresetsStringId.ThemeDarkNight',
+            'iStyle': 'GaugesPresetsStringId.ThemeiStyle',
+            'Deep Fire': 'GaugesPresetsStringId.ThemeDeepFire',
+            'Gothic Mat': 'GaugesPresetsStringId.ThemeGothicMat',
+            'QuarterRight': 'GaugesPresetsStringId.ShapeQuarterRight',
+            'Clean White': 'GaugesPresetsStringId.ThemeCleanWhite',
+            'Magic Light': 'GaugesPresetsStringId.ThemeMagicLight',
+            'Military': 'GaugesPresetsStringId.ThemeMilitary',
+            'Pure Dark': 'GaugesPresetsStringId.ThemePureDark',
+            'ThreeFourth': 'GaugesPresetsStringId.ShapeThreeFourth',
+            'Haze': 'GaugesPresetsStringId.ThemeHaze',
+            'Sport Car': 'GaugesPresetsStringId.ThemeSportCar',
+            'Mechanical': 'GaugesPresetsStringId.ThemeMechanical',
+            'Yellow Submarine': 'GaugesPresetsStringId.ThemeYellowSubmarine',
+            'Progressive': 'GaugesPresetsStringId.ThemeProgressive',
+            'Number (32 bit integer)': 'UtilsUIStringId.Parameter_Type_Int32',
+            'Number (64 bit integer)': 'UtilsUIStringId.Parameter_Type_Int64',
+            'Number (16 bit integer)': 'UtilsUIStringId.Parameter_Type_Int16',
+            'Number (floating-point)': 'UtilsUIStringId.Parameter_Type_Float',
+            'Input format string contains illegal symbol(s).': 'UtilsUIStringId.Msg_ContainsIllegalSymbols',
+            'Error: Illegal symbol(s)': 'UtilsUIStringId.FSForm_Msg_BadSymbol',
+            'Remove All Calculated Fields': 'UtilsUIStringId.Cmd_ClearCalculatedFields',
+            'Add or remove {0} objects': 'UtilsUIStringId.CollectionEditor_Cancel',
+            'Edit Calculated Fields...': 'UtilsUIStringId.Cmd_EditCalculatedFields',
+            'Remove All Parameters': 'UtilsUIStringId.Cmd_ClearParameters',
+            'Number (decimal)': 'UtilsUIStringId.Parameter_Type_Decimal',
+            'Categorized': 'UtilsUIStringId.PropGrid_TTip_Categorized',
+            'Edit Parameters...': 'UtilsUIStringId.Cmd_EditParameters',
+            'Add Calculated Field': 'UtilsUIStringId.Cmd_AddCalculatedField',
+            'Number (double-precision floating-point)': 'UtilsUIStringId.Parameter_Type_Double',
+            'Add Parameter': 'UtilsUIStringId.Cmd_AddParameter',
+            'The format string is not contained in any of the standard categories.': 'UtilsUIStringId.Msg_FormatStringNotFound',
+            'Edit Expression...': 'UtilsUIStringId.Cmd_EditExpression'
         };
     })(Designer = DevExpress.Designer || (DevExpress.Designer = {}));
 })(DevExpress || (DevExpress = {}));
@@ -4428,6 +5489,12 @@ var DevExpress;
                 function CollectionEditorViewModel(options, disabled) {
                     var _this = this;
                     if (disabled === void 0) { disabled = ko.observable(false); }
+                    this.buttonMap = {
+                        "delete": { text: 'Delete', localizationId: 'ReportStringId.Cmd_Delete' },
+                        "add": { text: 'Add', localizationId: 'ChartStringId.MenuItemAdd' },
+                        "down": { text: 'Move Down', localizationId: 'ReportStringId.Cmd_BandMoveDown' },
+                        "up": { text: 'Move Up', localizationId: 'ReportStringId.Cmd_BandMoveUp' }
+                    };
                     this.selectedIndex = ko.observable(null);
                     this.alwaysShow = ko.observable(false);
                     this.collapsed = ko.observable(options.collapsed !== false);
@@ -4465,7 +5532,7 @@ var DevExpress;
                             return options.isVisibleButton ? options.isVisibleButton(_this.selectedIndex(), name) : true;
                     };
                     this.padding = options.level !== void 0 ? options.level * Widgets.propertiesGridEditorsPaddingLeft : 0;
-                    this.displayName = options.displayName;
+                    this.displayName = (options.info && options.info()) ? DevExpress.Designer.getLocalization(options.info().displayName, options.info().localizationId) : options.displayName;
                     this.options = options;
                     if (!options.displayName) {
                         this.collapsed(false);
@@ -4509,6 +5576,15 @@ var DevExpress;
                         array.splice(new_index, 0, array.splice(old_index, 1)[0]);
                         this.selectedIndex(new_index);
                     }
+                };
+                CollectionEditorViewModel.prototype.getDisplayTextButton = function (key) {
+                    return DevExpress.Designer.getLocalization(this.buttonMap[key].text, this.buttonMap[key].localizationId);
+                };
+                CollectionEditorViewModel.prototype.getDisplayTextEmptyArray = function () {
+                    return DevExpress.Designer.getLocalization('To create an item click the Add button.', 'ASPxReportsStringId.ReportDesigner_SqlDSWizard_PageConfigureParametersEmpty');
+                };
+                CollectionEditorViewModel.prototype.createCollectionItemWrapper = function (grandfather, index) {
+                    return new DevExpress.JS.Widgets.CollectionItemWrapper(grandfather, this.values, index, this.displayPropertyName);
                 };
                 return CollectionEditorViewModel;
             })();
@@ -4605,7 +5681,7 @@ var DevExpress;
             var dxFileImagePicker = (function (_super) {
                 __extends(dxFileImagePicker, _super);
                 function dxFileImagePicker(element, options) {
-                    options.placeholder = options.placeholder || DevExpress.JS.Utils.getLocalization("(none)");
+                    options.placeholder = options.placeholder || DevExpress.Designer.getLocalization("(none)", "ChartStringId.WizNoBackImage");
                     _super.call(this, element, options);
                 }
                 dxFileImagePicker.prototype._handleFiles = function (filesHolder) {
@@ -4707,14 +5783,14 @@ var DevExpress;
                 "Webdings": "Webdings",
                 "Wingdings": "Wingdings"
             };
-            Widgets.availableUnits = {
-                "pt": "Point",
-                "world": "World",
-                "px": "Pixel",
-                "in": "Inch",
-                "doc": "Document",
-                "mm": "Millimetr"
-            };
+            Widgets.availableUnits = [
+                { value: "pt", displayValue: "Point", localizationId: "DevExpress.ReportDesigner_FontOptions_Unit_Point" },
+                { value: "world", displayValue: "World", localizationId: "ASPxReportsStringId.ReportDesigner_FontOptions_Unit_World" },
+                { value: "px", displayValue: "Pixel", localizationId: "ASPxReportsStringId.ReportDesigner_FontOptions_Unit_Pixel" },
+                { value: "in", displayValue: "Inch", localizationId: "ASPxReportsStringId.ReportDesigner_Wizard_Inch" },
+                { value: "doc", displayValue: "Document", localizationId: "PreviewStringId.ReportDesigner_FontOptions_Unit_Document" },
+                { value: "mm", displayValue: "Millimetr", localizationId: "ASPxReportsStringId.ReportDesigner_Wizard_Millimeter" }
+            ];
             var FontModel = (function () {
                 function FontModel(value) {
                     var _this = this;
@@ -4747,10 +5823,10 @@ var DevExpress;
                         var components = value.split(',');
                         this.family(components[0]);
                         var self = this;
-                        Object.keys(Widgets.availableUnits).forEach(function (element) {
-                            if (components[1].indexOf(element) != -1) {
-                                self.size(parseFloat(components[1].split(element)[0]));
-                                self.unit(element);
+                        Widgets.availableUnits.forEach(function (element) {
+                            if (components[1].indexOf(element.value) != -1) {
+                                self.size(parseFloat(components[1].split(element.value)[0]));
+                                self.unit(element.value);
                             }
                         });
                         this.modificators.bold(value.indexOf("Bold") !== -1);
@@ -4791,6 +5867,34 @@ var DevExpress;
                 return DevExpress.JS.Localization && DevExpress.JS.Localization.localize(value) || value;
             }
             Utils.getLocalization = getLocalization;
+            function findMatchesInString(textToTest, searchPattern) {
+                var searchExpr = escapeToRegExp(searchPattern);
+                return !!textToTest && textToTest.match(new RegExp(searchExpr, "gi"));
+            }
+            Utils.findMatchesInString = findMatchesInString;
+            function escapeToRegExp(string) {
+                return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            }
+            Utils.escapeToRegExp = escapeToRegExp;
+            function formatUnicorn(text) {
+                var args = [];
+                for (var _i = 1; _i < arguments.length; _i++) {
+                    args[_i - 1] = arguments[_i];
+                }
+                var str = text.toString();
+                if (args.length) {
+                    var t = typeof args[0];
+                    var key;
+                    var argsFinal = ("string" === t || "number" === t) ?
+                        Array.prototype.slice.call(args)
+                        : args[0];
+                    for (key in argsFinal) {
+                        str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), argsFinal[key]);
+                    }
+                }
+                return str;
+            }
+            Utils.formatUnicorn = formatUnicorn;
             var PopupService = (function () {
                 function PopupService() {
                     this.data = ko.observable();
@@ -4809,27 +5913,78 @@ var DevExpress;
 (function (DevExpress) {
     var JS;
     (function (JS) {
+        var CodeResolver = (function () {
+            function CodeResolver() {
+                this._queue = [];
+                this._done = [];
+            }
+            CodeResolver.prototype.done = function (callback) {
+                this._done.push(callback);
+            };
+            CodeResolver.prototype.execute = function (func, time) {
+                if (time === void 0) { time = 0; }
+                var deferred = $.Deferred();
+                if (time) {
+                    var self = this;
+                    this._queue.push(function () {
+                        setTimeout(function () {
+                            deferred.resolve(func());
+                            self._queue.splice(0, 1);
+                            if (self._queue.length !== 0) {
+                                self._queue[0]();
+                            }
+                            else {
+                                for (var i = 0; i < self._done.length; i++) {
+                                    self._done[i]();
+                                }
+                            }
+                        }, time);
+                    });
+                    if (this._queue.length === 1) {
+                        this._queue[0]();
+                    }
+                }
+                else {
+                    deferred.resolve(func());
+                }
+                return deferred.promise();
+            };
+            return CodeResolver;
+        })();
+        JS.CodeResolver = CodeResolver;
+        var globalResolver = new CodeResolver();
         ko.virtualElements.allowedBindings["lazy"] = true;
         ko.bindingHandlers['lazy'] = {
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+                var resolver = globalResolver;
                 var parsedBindings = valueAccessor();
+                if (parsedBindings.innerBindings) {
+                    resolver = parsedBindings.resolver;
+                    parsedBindings = parsedBindings.innerBindings;
+                }
+                var isDisposed = false;
                 $.each(parsedBindings, function (innerBindingKey, innerBindingParameters) {
                     var innerBinding = ko.bindingHandlers[innerBindingKey];
-                    setTimeout(function () {
-                        var isInitialized = false;
-                        ko.computed({
-                            read: function () {
-                                if (!isInitialized && innerBinding.init) {
-                                    innerBinding.init(element, function () { return innerBindingParameters; }, allBindings, viewModel, bindingContext);
-                                    isInitialized = true;
-                                }
-                                if (innerBinding.update) {
-                                    innerBinding.update(element, function () { return innerBindingParameters; }, allBindings, viewModel, bindingContext);
-                                }
-                            },
-                            disposeWhenNodeIsRemoved: element
-                        });
+                    resolver.execute(function () {
+                        if (!isDisposed) {
+                            var isInitialized = false;
+                            ko.computed({
+                                read: function () {
+                                    if (!isInitialized && innerBinding.init) {
+                                        innerBinding.init(element, function () { return innerBindingParameters; }, allBindings, viewModel, bindingContext);
+                                        isInitialized = true;
+                                    }
+                                    if (innerBinding.update) {
+                                        innerBinding.update(element, function () { return innerBindingParameters; }, allBindings, viewModel, bindingContext);
+                                    }
+                                },
+                                disposeWhenNodeIsRemoved: element
+                            });
+                        }
                     }, 1);
+                });
+                ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                    isDisposed = true;
                 });
                 return { controlsDescendantBindings: true };
             }
@@ -4844,21 +5999,13 @@ var DevExpress;
                     .find(".dx-accordion-header,.dx-accordion-button").first()
                     .off("dxclick")
                     .on("dxclick", function () {
-                    var newCollapsed = options.alwaysShow && options.alwaysShow() ? false : !options.collapsed();
-                    if (newCollapsed) {
-                        options.collapsed(true);
-                        $accordionContent.slideUp(options.timeout, function () {
-                            scrollUpdateCallback();
-                        });
-                    }
-                    else {
-                        options.collapsed(false);
-                        $accordionContent.slideDown(options.timeout, function () {
-                            scrollUpdateCallback();
-                        });
-                    }
+                    options.collapsed(options.alwaysShow && options.alwaysShow() ? false : !options.collapsed());
                 });
                 options.collapsed() ? $accordionContent.hide() : $accordionContent.show();
+                var subscription = options.collapsed.subscribe(function (newVal) {
+                    $accordionContent.slideToggle(options.timeout, function () { return scrollUpdateCallback(); });
+                });
+                ko.utils.domNodeDisposal.addDisposeCallback(element, function () { return subscription.dispose(); });
             }
         };
         ko.bindingHandlers["dxdAccordionExt"] = {
@@ -4895,12 +6042,14 @@ var DevExpress;
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 var options = valueAccessor();
                 var prevDisplayExpr = options.displayExpr;
+                options["placeholder"] = options["placeholder"] || JS.Localization.selectPlaceholder();
+                options["noDataText"] = options["noDataText"] || JS.Localization.noDataText();
                 options.displayExpr = function (value) {
                     if (!value)
                         return value;
                     if (!prevDisplayExpr)
-                        return JS.Utils.getLocalization(value);
-                    return JS.Utils.getLocalization($.isFunction(prevDisplayExpr) ? prevDisplayExpr(value) : value[prevDisplayExpr]);
+                        return DevExpress.Designer.getLocalization(value, value.localizationId);
+                    return DevExpress.Designer.getLocalization($.isFunction(prevDisplayExpr) ? prevDisplayExpr(value) : value[prevDisplayExpr], value.localizationId);
                 };
                 var extendedOptions = viewModel.getOptions ? viewModel.getOptions(options) : options;
                 ko.bindingHandlers["dxSelectBox"].init(element, function () { return extendedOptions; }, allBindings, viewModel, bindingContext);
@@ -4986,6 +6135,14 @@ var DevExpress;
             })();
             Widgets.EditorAddOn = EditorAddOn;
             Widgets.propertiesGridEditorsPaddingLeft = 19;
+            function validateGuid(guid) {
+                return guid && (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(guid)
+                    || /^\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}$/.test(guid)
+                    || /^\([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)$/.test(guid)
+                    || /^[0-9a-fA-F]{32}$/.test(guid));
+            }
+            Widgets.validateGuid = validateGuid;
+            Widgets.guidValidationRules = [{ type: "custom", validationCallback: function (options) { return validateGuid(options.value); }, message: DevExpress.Designer.getLocalization('Guid is required and should have a valid format.', 'ASPxReportsStringId.ReportDesigner_GuidIsRequired_Error') }];
             function compareEditorInfo(editor1, editor2) {
                 return !!editor1 && !!editor2 &&
                     editor1.header === editor2.header
@@ -4993,21 +6150,29 @@ var DevExpress;
                     && editor1.editorType === editor2.editorType;
             }
             var ObjectProperties = (function () {
-                function ObjectProperties(target, editorsInfo, level, parentDisabled) {
+                function ObjectProperties(target, editorsInfo, level, parentDisabled, recreateEditors, textToSearch) {
                     var _this = this;
                     if (level === void 0) { level = 0; }
                     if (parentDisabled === void 0) { parentDisabled = ko.observable(false); }
+                    if (recreateEditors === void 0) { recreateEditors = false; }
+                    this._targetSubscription = null;
+                    this._infoSubscription = null;
+                    this._getInfoComputed = null;
                     this.level = 0;
                     this.rtl = DevExpress['config']()['rtlEnabled'];
                     this._editors = ko.observableArray([]);
                     this.level = level;
                     this._parentDisabled = parentDisabled;
-                    ko.computed(function () {
-                        var viewModel = target();
-                        var serializationInfo = editorsInfo && editorsInfo.editors || viewModel && viewModel["getInfo"] && viewModel["getInfo"]();
-                        _this._createEditors(viewModel, serializationInfo);
-                        _this.update(viewModel);
+                    this._textToSearch = textToSearch;
+                    this.visible = ko.computed(function () {
+                        return _this._editors().some(function (editor) { return editor.visible(); });
                     });
+                    this._targetSubscription = target.subscribe(function (newVal) {
+                        _this._infoSubscription && _this._infoSubscription.dispose();
+                        _this._getInfoComputed && _this._getInfoComputed.dispose();
+                        _this._update(newVal, editorsInfo, recreateEditors);
+                    });
+                    this._update(target(), editorsInfo, recreateEditors);
                 }
                 ObjectProperties.prototype.update = function (viewModel) {
                     if (viewModel) {
@@ -5016,26 +6181,66 @@ var DevExpress;
                         });
                     }
                 };
+                ObjectProperties.prototype._cleanEditorsSubscriptions = function () {
+                    this._editors().forEach(function (editor) {
+                        for (var name in editor) {
+                            if (ko.isComputed(editor[name])) {
+                                editor[name].dispose();
+                            }
+                        }
+                    });
+                };
+                ObjectProperties.prototype.cleanSubscriptions = function () {
+                    this._infoSubscription && this._infoSubscription.dispose();
+                    this._getInfoComputed && this._getInfoComputed.dispose();
+                    this._targetSubscription && this._targetSubscription.dispose();
+                    this._cleanEditorsSubscriptions();
+                };
+                ObjectProperties.prototype.cleanEditors = function () {
+                    this._cleanEditorsSubscriptions();
+                    this._editors([]);
+                };
+                ObjectProperties.prototype.findEditorByInfo = function (serializationInfo) {
+                    return this._editors().filter(function (editor) { return editor.name === serializationInfo.propertyName && compareEditorInfo(editor.info().editor, serializationInfo.editor); })[0];
+                };
                 ObjectProperties.prototype.createEditor = function (modelPropertyInfo) {
                     var editorType = modelPropertyInfo.editor && modelPropertyInfo.editor.editorType || Editor;
-                    return new editorType(modelPropertyInfo, this.level, this._parentDisabled);
+                    return new editorType(modelPropertyInfo, this.level, this._parentDisabled, this._textToSearch);
                 };
                 ObjectProperties.prototype.createEditors = function (serializationInfo) {
                     var _this = this;
                     var self = this;
                     return (serializationInfo || [])
-                        .filter(function (info) { return !!info.editor && self._editors().filter(function (editor) { return editor.name === info.propertyName && compareEditorInfo(editor.info().editor, info.editor); }).length === 0; })
+                        .filter(function (info) { return !!info.editor && !_this.findEditorByInfo(info); })
                         .map(function (info) { return _this.createEditor(info); });
                 };
-                ObjectProperties.prototype._createEditors = function (target, serializationInfo) {
+                ObjectProperties.prototype._createEditors = function (serializationInfo) {
                     var _this = this;
-                    if (!serializationInfo)
+                    if (!serializationInfo || serializationInfo.length === 0)
                         return false;
                     this.createEditors(serializationInfo).forEach(function (editor) { return _this._editors.push(editor); });
                     var propertyNames = serializationInfo.map(function (info) { return info.propertyName; });
                     this._editors.sort(function (a, b) {
                         return propertyNames.indexOf(a.name) - propertyNames.indexOf(b.name);
                     });
+                };
+                ObjectProperties.prototype._update = function (target, editorsInfo, recreateEditors) {
+                    var _this = this;
+                    if (recreateEditors)
+                        this._editors([]);
+                    var infoSubscription = null;
+                    this._getInfoComputed = ko.computed(function () {
+                        return (editorsInfo && editorsInfo.editors && ko.unwrap(editorsInfo.editors))
+                            || (target && target["getInfo"] && target["getInfo"]());
+                    });
+                    this._infoSubscription = this._getInfoComputed.subscribe(function (newInfo) {
+                        if (recreateEditors)
+                            _this._editors([]);
+                        _this._createEditors(newInfo);
+                        _this.update(target);
+                    });
+                    this._createEditors(this._getInfoComputed());
+                    this.update(target);
                 };
                 ObjectProperties.prototype.getEditors = function () {
                     return this._editors();
@@ -5044,11 +6249,14 @@ var DevExpress;
             })();
             Widgets.ObjectProperties = ObjectProperties;
             var Editor = (function () {
-                function Editor(modelPropertyInfo, level, parentDisabled) {
+                function Editor(modelPropertyInfo, level, parentDisabled, textToSearch) {
                     var _this = this;
                     if (parentDisabled === void 0) { parentDisabled = ko.observable(false); }
+                    if (textToSearch === void 0) { textToSearch = undefined; }
                     this._model = ko.observable();
                     this.isVisibleByContent = ko.observable(true);
+                    this.isSearchedProperty = ko.observable(true);
+                    this.isParentSearched = ko.observable(false);
                     this.rtl = DevExpress["config"]()["rtlEnabled"];
                     this.isEditorSelected = ko.observable(false);
                     this.isPropertyModified = ko.computed(function () {
@@ -5056,10 +6264,18 @@ var DevExpress;
                     });
                     this.collapsed = ko.observable(true);
                     this.info = ko.observable(modelPropertyInfo);
-                    this.displayName = ko.computed(function () { return _this.info() && _this.info().displayName; });
+                    this.displayName = ko.computed(function () {
+                        var info = _this.info();
+                        return info && DevExpress.Designer.getLocalization(info.displayName, info["localizationId"]);
+                    });
+                    if (textToSearch) {
+                        this.textToSearch = textToSearch;
+                        this.isSearchedProperty = ko.computed(function () {
+                            return _this.isParentSearched() || !!DevExpress.JS.Utils.findMatchesInString(_this.displayName(), textToSearch());
+                        });
+                    }
                     this.padding = this._setPadding(this.rtl ? "right" : "left", level * Widgets.propertiesGridEditorsPaddingLeft);
                     var defaultValue = ko.observable(null), propertyName = modelPropertyInfo.propertyName;
-                    this["localizationId"] = modelPropertyInfo.localizationId;
                     this.editorOptions = modelPropertyInfo.editorOptions;
                     if (modelPropertyInfo.defaultVal !== undefined) {
                         defaultValue = ko.observable(modelPropertyInfo.defaultVal);
@@ -5071,7 +6287,7 @@ var DevExpress;
                         defaultValue = ko.observableArray();
                     }
                     this.values = ko.computed(function () {
-                        var _values = _this.info().valueStore;
+                        var _values = _this.info().valueStore || _this.info().valuesArray;
                         if (_values) {
                             return _values;
                         }
@@ -5079,12 +6295,6 @@ var DevExpress;
                         if (_values) {
                             return $.map(_values, function (displayValue, value) {
                                 return { value: value, displayValue: displayValue };
-                            });
-                        }
-                        _values = _this.info().valuesArray;
-                        if (_values) {
-                            return $.map(_values, function (value) {
-                                return { value: value.value, displayValue: value.displayValue };
                             });
                         }
                     });
@@ -5111,7 +6321,7 @@ var DevExpress;
                         return result;
                     });
                     this.visible = ko.computed(function () {
-                        var model = _this._model(), result = (model && model.isPropertyVisible) ? model.isPropertyVisible(_this.name) : _this.isVisibleByContent();
+                        var model = _this._model(), result = _this.isSearchedProperty() && ((model && model.isPropertyVisible) ? model.isPropertyVisible(_this.name) : _this.isVisibleByContent());
                         if (result) {
                             result = calculateAccessibleByPropertyInfo(model, _this.info().visible, true);
                         }
@@ -5147,6 +6357,9 @@ var DevExpress;
                                 return;
                             }
                             var modelValue = model[name];
+                            if (!DevExpress["validationEngine"].validate(val, _this.validationRules, _this.displayName()).isValid) {
+                                return;
+                            }
                             if (ko.isObservable(modelValue)) {
                                 modelValue(val);
                             }
@@ -5160,6 +6373,8 @@ var DevExpress;
                 };
                 Editor.prototype.findInfo = function (viewModel) {
                     var _this = this;
+                    if (!viewModel)
+                        return null;
                     var modelInfo = viewModel["getInfo"] && viewModel["getInfo"]();
                     if (modelInfo) {
                         return modelInfo.filter(function (property) { return property.propertyName === _this.name; })[0];
@@ -5174,20 +6389,26 @@ var DevExpress;
                     return !propertyInfo;
                 };
                 Editor.prototype.update = function (viewModel) {
-                    var propertyInfo = this.findInfo(viewModel);
-                    this.isVisibleByContent(viewModel[this.name] !== undefined && this.updateInfo(propertyInfo));
-                    this._model(this.isVisibleByContent() ? viewModel : null);
-                };
-                Editor.prototype.localizingDisplayName = function () {
-                    return DevExpress.Designer.getLocalization(this.displayName(), this["localizationId"]);
+                    if (!!viewModel) {
+                        var propertyInfo = this.findInfo(viewModel);
+                        this.isVisibleByContent(viewModel[this.name] !== undefined && this.updateInfo(propertyInfo));
+                        this._model(this.isVisibleByContent() ? viewModel : null);
+                    }
+                    else {
+                        this.isVisibleByContent(false);
+                        this._model(null);
+                    }
                 };
                 Editor.prototype.getOptions = function (templateOptions) {
                     var extendedOptions = this.info.peek().editor.extendedOptions;
                     return $.extend({}, templateOptions, this.editorOptions, extendedOptions);
                 };
+                Editor.prototype.getValidationRules = function () {
+                    return !!this.info && !!this.info() && this.info().validationRules || [];
+                };
                 Object.defineProperty(Editor.prototype, "validationRules", {
                     get: function () {
-                        return !!this.info && !!this.info() && this.info().validationRules || [];
+                        return this.getValidationRules();
                     },
                     enumerable: true,
                     configurable: true
@@ -5200,33 +6421,66 @@ var DevExpress;
                 return Editor;
             })();
             Widgets.Editor = Editor;
+            var GuidEditor = (function (_super) {
+                __extends(GuidEditor, _super);
+                function GuidEditor() {
+                    _super.apply(this, arguments);
+                }
+                GuidEditor.prototype.getValidationRules = function () {
+                    return (_super.prototype.getValidationRules.call(this) || []).concat(Widgets.guidValidationRules);
+                };
+                return GuidEditor;
+            })(Editor);
+            Widgets.GuidEditor = GuidEditor;
             var PropertyGridEditor = (function (_super) {
                 __extends(PropertyGridEditor, _super);
-                function PropertyGridEditor(info, level, parentDisabled) {
+                function PropertyGridEditor(info, level, parentDisabled, textToSearch) {
                     var _this = this;
-                    _super.call(this, info, level, parentDisabled);
+                    _super.call(this, info, level, parentDisabled, textToSearch);
                     this.editorCreated = ko.observable(false);
-                    this.collapsed.subscribe(function () {
-                        if (!_this.editorCreated()) {
-                            _this.viewmodel = new ObjectProperties(_this.value, { editors: info.info }, level + 1, _this.disabled);
+                    this.viewmodel = this.createObjectProperties();
+                    var subscription = this.collapsed.subscribe(function (newVal) {
+                        if (!newVal) {
+                            subscription.dispose();
                             _this.editorCreated(true);
                         }
                     });
-                    this.viewmodel = {};
+                    if (textToSearch) {
+                        this.visibleByName = ko.computed(function () {
+                            var visible = !!DevExpress.JS.Utils.findMatchesInString(_this.displayName(), textToSearch());
+                            if (!$.isEmptyObject(_this.viewmodel)) {
+                                _this.viewmodel._editors().forEach(function (editor) { return editor.isParentSearched(visible); });
+                            }
+                            return visible;
+                        });
+                        this.isSearchedProperty["dispose"] && this.isSearchedProperty["dispose"]();
+                        this.isSearchedProperty = ko.computed(function () {
+                            if (_this.visibleByName())
+                                return true;
+                            var visibleByEditors = _this.viewmodel.visible();
+                            visibleByEditors && _this.collapsed(false);
+                            return visibleByEditors;
+                        });
+                    }
                 }
+                PropertyGridEditor.prototype.createObjectProperties = function () {
+                    var _this = this;
+                    return new ObjectProperties(this.value, { editors: ko.computed(function () { return _this.info().info; }) }, this.level + 1, this.disabled, undefined, this.textToSearch);
+                };
                 return PropertyGridEditor;
             })(Editor);
             Widgets.PropertyGridEditor = PropertyGridEditor;
             var FontEditor = (function (_super) {
                 __extends(FontEditor, _super);
-                function FontEditor(info, level, parentDisabled) {
-                    _super.call(this, info, level, parentDisabled);
-                    var model = new Widgets.FontModel(this.value);
-                    var grid = new ObjectProperties(ko.observable(model), { editors: Widgets.fontInfo }, level + 1, this.disabled);
-                    this.viewmodel = grid;
+                function FontEditor(info, level, parentDisabled, textToSearch) {
+                    _super.call(this, info, level, parentDisabled, textToSearch);
                 }
+                FontEditor.prototype.createObjectProperties = function () {
+                    var model = new Widgets.FontModel(this.value);
+                    return new ObjectProperties(ko.observable(model), { editors: Widgets.fontInfo }, this.level + 1, this.disabled, undefined, this.textToSearch);
+                };
                 return FontEditor;
-            })(Editor);
+            })(PropertyGridEditor);
             Widgets.FontEditor = FontEditor;
             Widgets.editorTemplates = {
                 color: { header: "dx-color" },
@@ -5247,16 +6501,29 @@ var DevExpress;
             };
             Widgets.fontInfo = [
                 {
-                    propertyName: "family", displayName: "Font Name",
+                    propertyName: "family", displayName: "Font Name", localizationId: "ReportStringId.UD_TTip_FormatFontName",
                     editor: Widgets.editorTemplates.combobox, values: Widgets.availableFonts
                 },
-                { propertyName: "size", displayName: "Size", editor: Widgets.editorTemplates.numeric },
+                { propertyName: "size", displayName: "Size", localizationId: "System.Drawing.Font.Size", editor: Widgets.editorTemplates.numeric },
                 {
-                    propertyName: "unit", displayName: "Unit", editor: Widgets.editorTemplates.combobox,
-                    values: Widgets.availableUnits
+                    propertyName: "unit", displayName: "Unit", localizationId: "System.Drawing.Font.Unit", editor: Widgets.editorTemplates.combobox,
+                    valuesArray: Widgets.availableUnits
                 },
                 { propertyName: "modificators", editor: Widgets.editorTemplates.modificators },
             ];
+            ko.bindingHandlers['dxPropertyGrid'] = {
+                init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+                    $(element).children().remove();
+                    var templateHtml = $('#dx-propertieseditor').text(), $element = $(element).append(templateHtml);
+                    var value = valueAccessor();
+                    var model = new DevExpress.JS.Widgets.ObjectProperties(value.target, value.editorsInfo, value.level, value.parentDisabled, value.recreateEditors, value.textToSearch);
+                    ko.applyBindings(bindingContext.createChildContext(model), $element.children()[0]);
+                    ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                        model.cleanSubscriptions();
+                    });
+                    return { controlsDescendantBindings: true };
+                }
+            };
         })(Widgets = JS.Widgets || (JS.Widgets = {}));
     })(JS = DevExpress.JS || (DevExpress.JS = {}));
 })(DevExpress || (DevExpress = {}));
@@ -5526,6 +6793,9 @@ var DevExpress;
                         return {};
                     serializationsInfo.forEach(function (modelPropertyInfo) {
                         var propertyName = modelPropertyInfo.propertyName, value = ko.unwrap(viewModel["_" + propertyName] || viewModel[propertyName]), defaultVal = modelPropertyInfo.defaultVal;
+                        if (!!modelPropertyInfo.from) {
+                            defaultVal = ko.unwrap(modelPropertyInfo.from(defaultVal, _this));
+                        }
                         var resultValue = {};
                         if (!modelPropertyInfo.modelName) {
                             return;
@@ -5745,7 +7015,7 @@ var DevExpress;
                                     }
                                     if (!ko.isComputed(target[realPropertyName])) {
                                         if (!ko.isObservable(target[realPropertyName])) {
-                                            this._createDisposeFunction(target[realPropertyName], info[i].info);
+                                            subscribtions.push.apply([], this._createDisposeFunction(target[realPropertyName], info[i].info));
                                         }
                                         else {
                                             subscribtions.push(this.subscribeProperty(target[realPropertyName], !info[i].link));
@@ -5844,7 +7114,16 @@ var DevExpress;
                     return subscriptions;
                 };
                 UndoEngine.prototype._callDisposeFunction = function (val) {
-                    val && val[this._disposeUndoEngineSubscriptionsName] && val[this._disposeUndoEngineSubscriptionsName].func();
+                    if (val) {
+                        if (Array.isArray(val)) {
+                            for (var i = 0; i < val.length; i++) {
+                                val[i][this._disposeUndoEngineSubscriptionsName] && val[i][this._disposeUndoEngineSubscriptionsName].func();
+                            }
+                        }
+                        else {
+                            val[this._disposeUndoEngineSubscriptionsName] && val[this._disposeUndoEngineSubscriptionsName].func();
+                        }
+                    }
                 };
                 UndoEngine.prototype._cleanSubscribtions = function (subscribtionArray) {
                     if (subscribtionArray) {
@@ -6045,6 +7324,11 @@ var DevExpress;
     })(JS = DevExpress.JS || (DevExpress.JS = {}));
 })(DevExpress || (DevExpress = {}));
 //# sourceMappingURL=dx-ko-undoengine.js.map
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var DevExpress;
 (function (DevExpress) {
     var JS;
@@ -6057,27 +7341,95 @@ var DevExpress;
                     this.isDisposing = false;
                 }
                 Disposable.prototype.dispose = function () {
-                    this.isDisposing = true;
-                    ko.utils.arrayForEach(this._disposables, this.disposeOne);
-                    this._disposables = [];
-                };
-                Disposable.prototype.disposeOne = function (propOrValue, value) {
-                    var disposable = value || propOrValue;
-                    if (disposable && !disposable.isDisposing && typeof disposable.dispose === "function") {
-                        disposable.dispose();
+                    if (!this.isDisposing) {
+                        this.isDisposing = true;
+                        this._disposables.forEach(function (x) { return x && x.dispose(); });
+                        this._disposables = [];
                     }
                 };
                 return Disposable;
             })();
             Utils.Disposable = Disposable;
+            var HighlightEngine = (function (_super) {
+                __extends(HighlightEngine, _super);
+                function HighlightEngine(options) {
+                    var _this = this;
+                    _super.call(this);
+                    this._$spanProtect = $("<span>");
+                    this._$spanSearch = $("<span>").addClass('dx-datagrid-search-text');
+                    this.content = ko.observable("");
+                    if (ko.isSubscribable(options.text)) {
+                        this._disposables.push(options.text.subscribe(function (newText) {
+                            _this.content(_this._getHighlightContent(newText, ko.unwrap(options.textToSearch)));
+                        }));
+                    }
+                    this._disposables.push(options.textToSearch.subscribe(function (newFind) {
+                        _this.content(_this._getHighlightContent(ko.unwrap(options.text), newFind));
+                    }));
+                    this.content(this._getHighlightContent(ko.unwrap(options.text), ko.unwrap(options.textToSearch)));
+                }
+                HighlightEngine.prototype._getHighlightContent = function (text, textToSearch) {
+                    var _this = this;
+                    var searchPattern = textToSearch;
+                    var result = text;
+                    if (searchPattern) {
+                        var match = DevExpress.JS.Utils.findMatchesInString(result, searchPattern);
+                        if (match) {
+                            var newResult = "", curIndex = 0, subString = result;
+                            match.forEach(function (item, index) {
+                                var itemIndex = subString.indexOf(item);
+                                var textBeforeMath = result.substr(curIndex, itemIndex);
+                                subString = subString.substr(itemIndex + item.length);
+                                if (textBeforeMath) {
+                                    _this._$spanProtect.text(textBeforeMath);
+                                    newResult += _this._$spanProtect[0].outerHTML;
+                                }
+                                _this._$spanSearch.text(item);
+                                newResult += _this._$spanSearch[0].outerHTML;
+                                curIndex = result.length - subString.length;
+                                if (index === match.length - 1) {
+                                    if (subString) {
+                                        _this._$spanProtect.text(subString);
+                                        newResult += _this._$spanProtect[0].outerHTML;
+                                    }
+                                }
+                            });
+                            return newResult;
+                        }
+                    }
+                    this._$spanProtect.text(result);
+                    result = this._$spanProtect[0].outerHTML;
+                    return result;
+                };
+                return HighlightEngine;
+            })(Disposable);
+            Utils.HighlightEngine = HighlightEngine;
+            ko.bindingHandlers["searchHighlighting"] = {
+                init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+                    var highlight = new HighlightEngine(valueAccessor());
+                    ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                        highlight.dispose();
+                    });
+                    setTimeout(function () {
+                        var isInitialized = false;
+                        ko.computed({
+                            read: function () {
+                                if (!isInitialized && ko.bindingHandlers["html"].init) {
+                                    ko.bindingHandlers["html"].init(element, function () { return highlight.content; }, allBindings, viewModel, bindingContext);
+                                    isInitialized = true;
+                                }
+                                if (ko.bindingHandlers["html"].update) {
+                                    ko.bindingHandlers["html"].update(element, function () { return highlight.content; }, allBindings, viewModel, bindingContext);
+                                }
+                            },
+                            disposeWhenNodeIsRemoved: element
+                        });
+                    }, 1);
+                }
+            };
         })(Utils = JS.Utils || (JS.Utils = {}));
     })(JS = DevExpress.JS || (DevExpress.JS = {}));
 })(DevExpress || (DevExpress = {}));
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var DevExpress;
 (function (DevExpress) {
     var JS;
@@ -6231,7 +7583,7 @@ var DevExpress;
                 };
                 CriteriaOperator.parse = function (stringCriteria) {
                     if (stringCriteria && stringCriteria !== "") {
-                        return window["criteriaparser"].parse(stringCriteria);
+                        return DevExpress.JS.Data["criteriaparser"].parse(stringCriteria);
                     }
                     return null;
                 };
@@ -7112,6 +8464,281 @@ var DevExpress;
     (function (JS) {
         var Widgets;
         (function (Widgets) {
+            var CodeCompletor = (function () {
+                function CodeCompletor(editor, bindingContext, fieldListProvider, path, functions, rootItems) {
+                    var _this = this;
+                    this._contextPath = null;
+                    this._isInContext = function () { return _this._contextPath !== null; };
+                    this._getPath = function () { return _this._contextPath ? _this._path() + "." + _this._contextPath : _this._path(); };
+                    this.identifierRegexps = [/\./, /\[/];
+                    this._fieldListProvider = fieldListProvider;
+                    this._path = path;
+                    this._editor = editor;
+                    this._functions = functions || Widgets.functionDisplay;
+                    this._rootItems = rootItems || [{ name: "Parameters", needPrefix: true }];
+                }
+                CodeCompletor.prototype._previousSymbol = function () {
+                    var cursorPosition = this._editor.getCursorPosition();
+                    return this._editor.session.getLine(cursorPosition.row)[cursorPosition.column - 1];
+                };
+                CodeCompletor.prototype.beforeInsertMatch = function (editor, token, parentPrefix) {
+                    var cursorPosition = editor.getCursorPosition();
+                    token = token || editor.session.getTokenAt(cursorPosition.row, cursorPosition.column);
+                    if (token && (token.type === "support.variable" || token.type === "support.function")) {
+                        editor.session.remove({
+                            start: { column: token.start || 0, row: cursorPosition.row },
+                            end: { column: Math.max(token.start + token.value.length, cursorPosition.column), row: cursorPosition.row }
+                        });
+                    }
+                };
+                CodeCompletor.prototype.insertMatch = function (editor, parentPrefix, fieldName) {
+                    editor.insert("[" + (parentPrefix || "") + fieldName + "]");
+                };
+                CodeCompletor.prototype.generateFieldDisplayName = function (parentPrefix, displayName) {
+                    return "[" + displayName + "]";
+                };
+                CodeCompletor.prototype._convertDataMemberInfoToCompletions = function (fields, token, parentPrefix) {
+                    var _this = this;
+                    if (parentPrefix === void 0) { parentPrefix = ""; }
+                    return (fields || []).map(function (field) {
+                        var displayName = _this.generateFieldDisplayName(parentPrefix, field.displayName);
+                        return {
+                            caption: field.name,
+                            snippet: displayName,
+                            meta: JS.Utils.isList(field) && "list" || "field",
+                            score: JS.Utils.isList(field) && 200 || 100,
+                            completer: {
+                                insertMatch: function (editor, data) {
+                                    _this.beforeInsertMatch(editor, token, parentPrefix);
+                                    _this.insertMatch(editor, parentPrefix, field.name);
+                                }
+                            }
+                        };
+                    });
+                };
+                CodeCompletor.prototype._getFields = function (token, completions) {
+                    var _this = this;
+                    if (token === void 0) { token = null; }
+                    if (completions === void 0) { completions = []; }
+                    var $deferred = $.Deferred();
+                    if (token && (token.type === "support.variable" || token.type === "support.function") && token.value.indexOf(".") > -1) {
+                        var dotIndex = token.value.lastIndexOf(".", this._editor.getCursorPosition().column - token.start);
+                        var startIndex = token.type === "support.variable" ? 1 : 0;
+                        var parentPrefix = token.value.substring(startIndex, dotIndex);
+                        if (parentPrefix[0] === "[" && parentPrefix[parentPrefix.length - 1] === "]") {
+                            parentPrefix = parentPrefix.substring(1, parentPrefix.length - 1);
+                        }
+                        var rootItem = this._rootItems.filter(function (item) { return parentPrefix.indexOf(item.name) === 0; })[0];
+                        var path = (rootItem ? "" : (this._getPath() + ".")) + parentPrefix;
+                        if (rootItem && rootItem.rootPath) {
+                            path = [rootItem.rootPath, parentPrefix].join('.');
+                        }
+                        this._fieldListProvider.getItems(new Widgets.PathRequest(path))
+                            .done(function (fields) {
+                            completions.push.apply(completions, _this._convertDataMemberInfoToCompletions(fields, token, parentPrefix + "."));
+                        })
+                            .always(function () { $deferred.resolve(completions); });
+                    }
+                    else {
+                        var $fields = this._fieldListProvider.getItems(new Widgets.PathRequest(this._getPath()))
+                            .done(function (fields) {
+                            completions.push.apply(completions, _this._convertDataMemberInfoToCompletions(fields, token));
+                        });
+                        if (!this._isInContext()) {
+                            var $deferreds = [$fields];
+                            this._rootItems.forEach(function (item) {
+                                $deferreds.push(_this._fieldListProvider.getItems(new Widgets.PathRequest(item.rootPath || item.name))
+                                    .done(function (fields) {
+                                    completions.push.apply(completions, _this._convertDataMemberInfoToCompletions(fields, token, item.needPrefix ? item.name + "." : ""));
+                                }));
+                            });
+                            $.when($deferreds).always(function () { $deferred.resolve(completions); });
+                        }
+                        else {
+                            $.when($fields).always(function () { $deferred.resolve(completions); });
+                        }
+                    }
+                    return $deferred.promise();
+                };
+                CodeCompletor.prototype.getFunctionsCompletions = function () {
+                    var functions = [];
+                    ko.unwrap(this._functions).forEach(function (fnDisplay) {
+                        Object.keys(fnDisplay.items).forEach(function (fnKey) {
+                            if (fnDisplay.items[fnKey]) {
+                                functions.push(createFunctionCompletion(fnDisplay.items[fnKey][0], fnKey));
+                            }
+                        });
+                    });
+                    return functions;
+                };
+                CodeCompletor.prototype.getAggregateCompletions = function () {
+                    var functions = [];
+                    var aggregates = ko.unwrap(this._functions).filter(function (fnDisplay) { return fnDisplay.category === "Aggregate"; })[0];
+                    Object.keys(aggregates.items).forEach(function (fnKey) {
+                        if (aggregates.items[fnKey]) {
+                            functions.push(createFunctionCompletion(aggregates.items[fnKey][0], fnKey, fnKey + "()"));
+                        }
+                    });
+                    return functions;
+                };
+                CodeCompletor.prototype.getOperatorCompletions = function (prefix) {
+                    return Widgets.operatorNames.map(function (operator) {
+                        return { caption: operator.text, snippet: prefix + operator.text, meta: "operator" };
+                    });
+                };
+                CodeCompletor.prototype._addFunctions = function (completions) {
+                    completions.push.apply(completions, this.getFunctionsCompletions());
+                };
+                CodeCompletor.prototype._addAggregates = function (completions) {
+                    completions.push.apply(completions, this.getAggregateCompletions());
+                };
+                CodeCompletor.prototype._addOperators = function (completions, text) {
+                    var prefix = /\s/.test(text[text.length - 1]) ? "" : " ";
+                    completions.push.apply(completions, this.getOperatorCompletions(prefix));
+                };
+                CodeCompletor.prototype._getOperands = function (token) {
+                    if (token === void 0) { token = null; }
+                    var result = [];
+                    this._addFunctions(result);
+                    return this._getFields(token, result);
+                };
+                CodeCompletor.prototype._getOperandsOrOperators = function (text, completions) {
+                    var exceptionInfo;
+                    try {
+                        JS.Data.CriteriaOperator.parse(text);
+                    }
+                    catch (exception) {
+                        exceptionInfo = exception.hash;
+                    }
+                    var trimmedText = text.trim();
+                    var lastNonSpaceSymbol = trimmedText[trimmedText.length - 1];
+                    if (!exceptionInfo && trimmedText || (lastNonSpaceSymbol === "]" || lastNonSpaceSymbol === ")")) {
+                        this._addOperators(completions, text);
+                    }
+                    else {
+                        return this._getOperands();
+                    }
+                };
+                CodeCompletor.prototype._getCompletions = function (editor, session, pos, prefix) {
+                    var $deferred;
+                    var completions = [];
+                    var currentToken = session.getTokenAt(pos.row, pos.column);
+                    var text = editor.session.getLine(pos.row).substring(0, pos.column);
+                    var tokens = session.getTokens(pos.row);
+                    this._contextPath = null;
+                    var currentTokenIndex = currentToken ? currentToken.index : -1;
+                    for (var i = currentTokenIndex; i > -1; i--) {
+                        var t = tokens[i];
+                        if (t.type === "support.context.start") {
+                            var cursorPositionInToken = pos.column - (t.start || 0);
+                            if (t.value.length <= cursorPositionInToken) {
+                                text = text.substring(t.start + t.value.length);
+                                if (!text.trim()) {
+                                    currentToken = null;
+                                }
+                            }
+                            else {
+                                currentToken = {
+                                    type: "support.variable",
+                                    value: t.value.substring(0, t.value.length - 1),
+                                    start: currentToken.start
+                                };
+                            }
+                            this._contextPath = trimBrackets(t.value.match(/^\[(?:[^\]\)])*\]/)[0]);
+                            break;
+                        }
+                        else if (t.type === "support.context.end") {
+                            break;
+                        }
+                    }
+                    if (!currentToken) {
+                        $deferred = this._getOperands();
+                    }
+                    else if (currentToken.type === "string.quoted.single") {
+                    }
+                    else if (currentToken.type === "support.variable") {
+                        $deferred = this._getFields(currentToken);
+                    }
+                    else if (currentToken.type === "support.function") {
+                        $deferred = this.defaultProcess(currentToken, text.substring(0, currentToken.start), completions);
+                    }
+                    else if (currentToken.type === "support.other.aggregate") {
+                        var previousToken = tokens[currentToken.index - 1];
+                        if (previousToken && ["support.function", "support.variable"].indexOf(previousToken.type) > -1) {
+                            this._addAggregates(completions);
+                            if (trimBrackets(previousToken.value).trim()) {
+                                $deferred = this._getFields({
+                                    start: (currentToken.start - (previousToken.value || "").length) || 0,
+                                    value: previousToken.value + currentToken.value,
+                                    type: "support.function"
+                                }, completions);
+                            }
+                        }
+                    }
+                    else {
+                        $deferred = this.defaultProcess(currentToken, text, completions);
+                    }
+                    return $deferred ? $deferred.promise() : $.Deferred().resolve(completions).promise();
+                };
+                CodeCompletor.prototype.defaultProcess = function (token, text, completions) {
+                    return this._getOperandsOrOperators(text, completions);
+                };
+                CodeCompletor.prototype.getCompletions = function (aceEditor, session, pos, prefix, callback) {
+                    this._getCompletions(aceEditor, session, pos, prefix).done(function (completions) {
+                        callback(null, completions);
+                    });
+                };
+                return CodeCompletor;
+            })();
+            Widgets.CodeCompletor = CodeCompletor;
+            function createFunctionCompletion(fnInfo, name, insertValue) {
+                if (insertValue === void 0) { insertValue = null; }
+                var insertValue = insertValue || fnInfo.text;
+                return {
+                    caption: name,
+                    snippet: insertValue,
+                    meta: "function",
+                    score: 10,
+                    completer: {
+                        insertMatch: function (editor, data) {
+                            var completions = editor.completer.completions;
+                            if (completions.filterText) {
+                                var ranges = editor.selection.getAllRanges();
+                                for (var i = 0, range; range = ranges[i]; i++) {
+                                    range.start.column -= completions.filterText.length;
+                                    editor.session.remove(range);
+                                }
+                            }
+                            if (insertValue.substr(0, 3) === "[].") {
+                                var ranges = editor.selection.getAllRanges();
+                                for (var i = 0, range; range = ranges[i]; i++) {
+                                    range.start.column -= 2;
+                                    if (editor.session.getTextRange(range) === "].")
+                                        insertValue = insertValue.substr(3);
+                                }
+                            }
+                            editor.insert(insertValue);
+                            if (fnInfo.paramCount > 0) {
+                                var cursorPosition = editor.getCursorPosition();
+                                editor.gotoLine(cursorPosition.row + 1, cursorPosition.column - (insertValue.length - 1 - insertValue.lastIndexOf("(")));
+                            }
+                        }
+                    }
+                };
+            }
+            Widgets.createFunctionCompletion = createFunctionCompletion;
+            function trimBrackets(value) {
+                return value.substring(value[0] === "[" ? 1 : 0, value[value.length - 1] === "]" ? value.length - 1 : value.length);
+            }
+        })(Widgets = JS.Widgets || (JS.Widgets = {}));
+    })(JS = DevExpress.JS || (DevExpress.JS = {}));
+})(DevExpress || (DevExpress = {}));
+var DevExpress;
+(function (DevExpress) {
+    var JS;
+    (function (JS) {
+        var Widgets;
+        (function (Widgets) {
             var PathRequest = (function () {
                 function PathRequest(fullPath, pathParts) {
                     if (pathParts === void 0) { pathParts = []; }
@@ -7134,24 +8761,23 @@ var DevExpress;
             })();
             Widgets.PathRequest = PathRequest;
             var TreeListItemViewModel = (function () {
-                function TreeListItemViewModel(options, path, hasItems, onItemsVisibilityChanged, rtl) {
+                function TreeListItemViewModel(options, path, onItemsVisibilityChanged, rtl, resolver) {
                     var _this = this;
                     if (path === void 0) { path = []; }
-                    if (hasItems === void 0) { hasItems = true; }
                     if (onItemsVisibilityChanged === void 0) { onItemsVisibilityChanged = $.noop; }
                     if (rtl === void 0) { rtl = false; }
+                    if (resolver === void 0) { resolver = new JS.CodeResolver(); }
+                    this.resolver = resolver;
                     this._rtl = false;
+                    this._data = ko.observable(null);
                     this.level = -1;
-                    this.hasItems = true;
                     this.items = ko.observableArray();
                     this.collapsed = ko.observable(true);
-                    this.data = null;
                     this.isSelected = ko.observable(false);
                     this.isHovered = ko.observable(false);
                     this.isMultiSelected = ko.observable(false);
                     this._path = path;
                     this._rtl = rtl;
-                    this.hasItems = hasItems;
                     this._treeListController = options.treeListController;
                     this._templateName = options.templateName;
                     this._onItemsVisibilityChanged = onItemsVisibilityChanged;
@@ -7187,10 +8813,19 @@ var DevExpress;
                     };
                     this.nodeImageClass = this._getNodeImageClassName();
                 }
-                TreeListItemViewModel.prototype._getImageClassName = function (field, showIcon) {
+                TreeListItemViewModel.prototype._equal = function (obj1, obj2) {
+                    var ignore = ["innerActions", "noDragable", "dragData"];
+                    if (obj2 === obj1)
+                        return true;
+                    return Object.keys(obj2).filter(function (key) { return ignore.indexOf(key) === -1; }).every(function (key) {
+                        return obj2[key] === obj1[key];
+                    });
+                };
+                TreeListItemViewModel.prototype._getImageClassName = function (showIcon) {
+                    var _this = this;
                     return ko.computed(function () {
                         return "dx-image-fieldlist-"
-                            + (ko.unwrap(field.icon || field.specifics) || "default").toLowerCase()
+                            + (ko.unwrap((_this.data && _this.data.icon) || (_this.data && _this.data.specifics)) || "default").toLowerCase()
                             + (!showIcon ? " dx-treelist-image-empty" : "");
                     });
                 };
@@ -7209,6 +8844,13 @@ var DevExpress;
                         }
                     });
                 };
+                TreeListItemViewModel.prototype._createItemsObj = function (items) {
+                    var obj = {};
+                    for (var i = 0; i < items.length; i++) {
+                        obj[items[i].name] = { item: items[i], index: i };
+                    }
+                    return obj;
+                };
                 TreeListItemViewModel.prototype._loadItems = function (options) {
                     var _this = this;
                     var deferred = $.Deferred();
@@ -7221,18 +8863,62 @@ var DevExpress;
                             return;
                         value.done(function (data) {
                             var _data = data;
-                            _this.items.peek().forEach(function (item) { return item.dispose(); });
+                            var items = _this.items.peek();
+                            var dataObj = _this._createItemsObj(_data);
+                            var isMutated = false;
+                            var splicedItems = 0;
+                            var tempItems = [].concat.apply([], items);
+                            for (var i = 0; i < tempItems.length; i++) {
+                                if (!dataObj[tempItems[i].data.name]) {
+                                    tempItems[i].dispose();
+                                    items.splice(i - splicedItems, 1);
+                                    splicedItems++;
+                                    isMutated = true;
+                                }
+                            }
+                            var itemsObj = _this._createItemsObj(items);
+                            var resorted = false;
                             var showIconsForChildItems = !_this._treeListController.showIconsForChildItems || _this._treeListController.showIconsForChildItems(_this);
-                            _this.items($.map(_data, function (item) {
-                                var newItem = new TreeListItemViewModel(options, _this.pathParts, options.treeListController.hasItems(item), _this._onItemsVisibilityChanged, _this._rtl);
-                                newItem.data = item;
-                                newItem.level = _this.level + 1;
-                                newItem.parent = _this;
-                                newItem.padding = _this._applyPadding(_this._rtl ? "right" : "left", 20 * newItem.level + 12);
-                                newItem.imageClassName = _this._getImageClassName(item, showIconsForChildItems);
-                                return newItem;
-                            }));
-                            _this.nodeImageClass(_this.items.peek().filter(function (x) { return x.visible; }).length > 0 ? "dx-collapsing-image dx-image-expanded" : "dx-image-leaf-node");
+                            _data.forEach(function (d, index) {
+                                var currentItem = itemsObj[d.name];
+                                if (!currentItem) {
+                                    isMutated = true;
+                                    var newItem = new TreeListItemViewModel(options, _this.pathParts, _this._onItemsVisibilityChanged, _this._rtl, _this.resolver);
+                                    newItem.data = d;
+                                    newItem.level = _this.level + 1;
+                                    newItem.parent = _this;
+                                    newItem.padding = _this._applyPadding(_this._rtl ? "right" : "left", 20 * newItem.level + 12);
+                                    newItem.imageClassName = newItem._getImageClassName(showIconsForChildItems);
+                                    items.splice(index, 0, newItem);
+                                    itemsObj[d.name] = { item: newItem, index: index };
+                                }
+                                else {
+                                    if (!_this._equal(d, currentItem.item.data))
+                                        currentItem.item.data = d;
+                                    if (!resorted)
+                                        resorted = currentItem.index !== index;
+                                }
+                            });
+                            if (resorted) {
+                                var index = items.reduce(function (acc, x, index) {
+                                    var max = Math.abs(index - (dataObj[x.data.name] ? dataObj[x.data.name].index : -1));
+                                    if (!acc || acc.max < max) {
+                                        return { max: max, index: index };
+                                    }
+                                    return acc;
+                                }, null).index;
+                                var curItem = items[index];
+                                items.splice(index, 1);
+                                items.splice(dataObj[curItem.data.name] ? dataObj[curItem.data.name].index : -1, 0, curItem);
+                                isMutated = true;
+                            }
+                            isMutated && _this.items.valueHasMutated();
+                            _this.items().forEach(function (item) {
+                                if (!item.collapsed() && item.hasItems) {
+                                    item._loadItems(options);
+                                }
+                            });
+                            _this.nodeImageClass(_this.items.peek().some(function (x) { return x.visible; }) ? "dx-collapsing-image dx-image-expanded" : "dx-image-leaf-node");
                             deferred.resolve(_this.items.peek());
                             var selectedPath = options.selectedPath.peek();
                             if (selectedPath) {
@@ -7287,6 +8973,26 @@ var DevExpress;
                     padding["padding-" + position] = value;
                     return padding;
                 };
+                Object.defineProperty(TreeListItemViewModel.prototype, "hasItems", {
+                    get: function () {
+                        if (!this.data) {
+                            return true;
+                        }
+                        return this._treeListController.hasItems(this.data);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(TreeListItemViewModel.prototype, "data", {
+                    get: function () {
+                        return this._data();
+                    },
+                    set: function (newVal) {
+                        this._data(newVal);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 Object.defineProperty(TreeListItemViewModel.prototype, "name", {
                     get: function () {
                         return ko.unwrap(this.data && this.data.name);
@@ -7330,6 +9036,9 @@ var DevExpress;
                 TreeListItemViewModel.prototype.actionsTemplate = function () {
                     return this.data && ko.unwrap(this.data["actionsTemplate"]) || "dx-treelist-item-actions-with-edit";
                 };
+                TreeListItemViewModel.prototype.treeListEditAction = function () {
+                    return Widgets.treeListEditAction;
+                };
                 Object.defineProperty(TreeListItemViewModel.prototype, "hasContent", {
                     get: function () {
                         return this.data && this.data["contenttemplate"];
@@ -7353,6 +9062,13 @@ var DevExpress;
                             return this._treeListController.isDraggable(this);
                         }
                         return false;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(TreeListItemViewModel.prototype, "treeListController", {
+                    get: function () {
+                        return this._treeListController;
                     },
                     enumerable: true,
                     configurable: true
@@ -7384,13 +9100,12 @@ var DevExpress;
             Widgets.TreeListItemViewModel = TreeListItemViewModel;
             var TreeListRootItemViewModel = (function (_super) {
                 __extends(TreeListRootItemViewModel, _super);
-                function TreeListRootItemViewModel(options, path, hasItems, onItemsVisibilityChanged, rtl) {
+                function TreeListRootItemViewModel(options, path, onItemsVisibilityChanged, rtl) {
                     var _this = this;
                     if (path === void 0) { path = []; }
-                    if (hasItems === void 0) { hasItems = true; }
                     if (onItemsVisibilityChanged === void 0) { onItemsVisibilityChanged = $.noop; }
                     if (rtl === void 0) { rtl = false; }
-                    _super.call(this, options, path, hasItems, onItemsVisibilityChanged, rtl);
+                    _super.call(this, options, path, onItemsVisibilityChanged, rtl);
                     var selectedPathSubscriptions = options.selectedPath.subscribe(function (newPath) {
                         _this._selectItem(!!_this.path ? newPath.substr(_this.path.length + 1) : newPath);
                     });
@@ -7454,9 +9169,12 @@ var DevExpress;
                             }
                             return result;
                         });
-                        treeListViewModel = new TreeListRootItemViewModel(options, pathArray, true, updateScrollBar, options.rtl);
+                        treeListViewModel = new TreeListRootItemViewModel(options, pathArray, updateScrollBar, options.rtl);
+                        if (options.expandRootItems) {
+                            treeListViewModel.items().forEach(function (item) { return item.toggleCollapsed(); });
+                        }
                         var templateHtml = $('#dx-treelist').text() || options.templateHtml, $element = $(element).html(templateHtml);
-                        var childContext = bindingContext.createChildContext(treeListViewModel.items);
+                        var childContext = bindingContext.createChildContext(treeListViewModel);
                         ko.applyBindings(childContext, $element.children()[0]);
                     };
                     updateTreeList($.extend({}, options));
@@ -7477,8 +9195,9 @@ var DevExpress;
             Widgets.treeListEditAction = {
                 templateName: "dx-treelist-edit-action",
                 imageClassName: "",
-                text: "",
-                clickAction: $.noop
+                text: "Edit",
+                clickAction: $.noop,
+                displayText: function () { return DevExpress.Designer.getLocalization("Edit", "ReportStringId.UD_Group_Edit"); }
             };
         })(Widgets = JS.Widgets || (JS.Widgets = {}));
     })(JS = DevExpress.JS || (DevExpress.JS = {}));
@@ -7489,6 +9208,9 @@ var DevExpress;
     (function (JS) {
         var Widgets;
         (function (Widgets) {
+            function initDisplayText(object) {
+                object.displayText = DevExpress.Designer.getLocalization(object.name, object.localizationId);
+            }
             var FilterEditorHelper = (function () {
                 function FilterEditorHelper(serializer) {
                     this.rtl = false;
@@ -7498,16 +9220,15 @@ var DevExpress;
                     this.canChoiceParameters = true;
                     this.canChoiceProperty = true;
                     this.filterEditorOperators = {
-                        _common: [{
-                                name: "Equals", value: JS.Data.BinaryOperatorType.Equal, type: JS.Data.BinaryOperatorType
-                            },
-                            { name: "Does not equal", value: JS.Data.BinaryOperatorType.NotEqual, type: JS.Data.BinaryOperatorType },
-                            { name: "Is greater than", value: JS.Data.BinaryOperatorType.Greater, type: JS.Data.BinaryOperatorType },
-                            { name: "Is greater than or equal to", value: JS.Data.BinaryOperatorType.GreaterOrEqual, type: JS.Data.BinaryOperatorType },
-                            { name: "Is less than", value: JS.Data.BinaryOperatorType.Less, type: JS.Data.BinaryOperatorType },
-                            { name: "Is less than or equal to", value: JS.Data.BinaryOperatorType.LessOrEqual, type: JS.Data.BinaryOperatorType },
-                            { name: "Is between", value: "Between", type: JS.Data.BetweenOperator },
-                            { name: "Is not between", value: "Between", type: JS.Data.BetweenOperator, reverse: true }],
+                        _common: [
+                            { name: "Equals", insertVal: "==", value: JS.Data.BinaryOperatorType.Equal, type: JS.Data.BinaryOperatorType, localizationId: "StringId.FilterClauseEquals" },
+                            { name: "Does not equal", insertVal: "!=", value: JS.Data.BinaryOperatorType.NotEqual, type: JS.Data.BinaryOperatorType, localizationId: "StringId.FilterClauseDoesNotEqual" },
+                            { name: "Is greater than", insertVal: ">", value: JS.Data.BinaryOperatorType.Greater, type: JS.Data.BinaryOperatorType, localizationId: "StringId.FilterClauseGreater" },
+                            { name: "Is greater than or equal to", insertVal: ">=", value: JS.Data.BinaryOperatorType.GreaterOrEqual, type: JS.Data.BinaryOperatorType, localizationId: "StringId.FilterClauseGreaterOrEqual" },
+                            { name: "Is less than", insertVal: "<", value: JS.Data.BinaryOperatorType.Less, type: JS.Data.BinaryOperatorType, localizationId: "StringId.FilterClauseLess" },
+                            { name: "Is less than or equal to", insertVal: "<=", value: JS.Data.BinaryOperatorType.LessOrEqual, type: JS.Data.BinaryOperatorType, localizationId: "StringId.FilterClauseLessOrEqual" },
+                            { name: "Is between", value: "Between", insertVal: "Between(, )", paramCount: 1, type: JS.Data.BetweenOperator, localizationId: "StringId.FilterClauseBetween" },
+                            { name: "Is not between", value: "Between", insertVal: "Between(, )", paramCount: 1, type: JS.Data.BetweenOperator, reverse: true, localizationId: "StringId.FilterClauseNotBetween" }],
                         string: [],
                         guid: [],
                         integer: [],
@@ -7516,6 +9237,7 @@ var DevExpress;
                         list: [],
                         group: [],
                     };
+                    this.onChange = function () { };
                     this.handlers = {
                         create: function (criteria, popupService) {
                             return {
@@ -7563,60 +9285,67 @@ var DevExpress;
                     };
                     this.serializer = serializer || new FilterEditorSerializer();
                     this.filterEditorOperators.string = [].concat(this.filterEditorOperators._common, [
-                        { name: "Contains", value: JS.Data.FunctionOperatorType.Contains, type: JS.Data.FunctionOperatorType },
-                        { name: "Does not contain", value: JS.Data.FunctionOperatorType.Contains, type: JS.Data.FunctionOperatorType, reverse: true },
-                        { name: "Begins with", value: JS.Data.FunctionOperatorType.StartsWith, type: JS.Data.FunctionOperatorType },
-                        { name: "Ends with", value: JS.Data.FunctionOperatorType.EndsWith, type: JS.Data.FunctionOperatorType },
-                        { name: "Is like", value: JS.Data.BinaryOperatorType.Like, type: JS.Data.BinaryOperatorType },
-                        { name: "Is not like", value: JS.Data.BinaryOperatorType.Like, type: JS.Data.BinaryOperatorType, reverse: true },
-                        { name: "Is any of", value: "In", type: JS.Data.InOperator },
-                        { name: "Is none of", value: "In", type: JS.Data.InOperator, reverse: true },
-                        { name: "Is blank", value: JS.Data.FunctionOperatorType.IsNullOrEmpty, type: JS.Data.FunctionOperatorType },
-                        { name: "Is not blank", value: JS.Data.FunctionOperatorType.IsNullOrEmpty, type: JS.Data.FunctionOperatorType, reverse: true }
+                        { name: "Contains", insertVal: "Contains(, )", value: JS.Data.FunctionOperatorType.Contains, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterClauseContains" },
+                        { name: "Does not contain", value: JS.Data.FunctionOperatorType.Contains, type: JS.Data.FunctionOperatorType, reverse: true, localizationId: "StringId.FilterClauseDoesNotContain" },
+                        { name: "Begins with", insertVal: "StartsWith(, )", value: JS.Data.FunctionOperatorType.StartsWith, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterClauseBeginsWith" },
+                        { name: "Ends with", insertVal: "StartsWith(, )", value: JS.Data.FunctionOperatorType.EndsWith, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterClauseEndsWith" },
+                        { name: "Is like", insertVal: "Like", value: JS.Data.BinaryOperatorType.Like, type: JS.Data.BinaryOperatorType, localizationId: "StringId.FilterClauseLike" },
+                        { name: "Is not like", insertVal: "Not Like", value: JS.Data.BinaryOperatorType.Like, type: JS.Data.BinaryOperatorType, reverse: true, localizationId: "StringId.FilterClauseNotLike" },
+                        { name: "Is any of", value: "In", insertVal: "In()", paramCount: 1, type: JS.Data.InOperator, localizationId: "StringId.FilterClauseAnyOf" },
+                        { name: "Is none of", value: "In", type: JS.Data.InOperator, reverse: true, localizationId: "StringId.FilterClauseNoneOf" },
+                        { name: "Is blank", insertVal: "IsNullOrEmpty()", value: JS.Data.FunctionOperatorType.IsNullOrEmpty, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterClauseIsNullOrEmpty" },
+                        { name: "Is not blank", insertVal: "Not IsNullOrEmpty()", value: JS.Data.FunctionOperatorType.IsNullOrEmpty, type: JS.Data.FunctionOperatorType, reverse: true, localizationId: "StringId.FilterClauseIsNotNullOrEmpty" }
                     ]);
                     this.filterEditorOperators.guid = this.filterEditorOperators.string;
                     this.filterEditorOperators.integer = [].concat(this.filterEditorOperators._common, [
-                        { name: "Is null", value: JS.Data.UnaryOperatorType.IsNull, type: JS.Data.UnaryOperatorType },
-                        { name: "Is not null", value: JS.Data.UnaryOperatorType.IsNull, type: JS.Data.UnaryOperatorType, reverse: true },
-                        { name: "Is any of", value: "In", type: JS.Data.InOperator },
-                        { name: "Is none of", value: "In", type: JS.Data.InOperator, reverse: true },
+                        { name: "Is null", insertVal: "Is Null", value: JS.Data.UnaryOperatorType.IsNull, type: JS.Data.UnaryOperatorType, localizationId: "StringId.FilterClauseIsNull" },
+                        { name: "Is not null", insertVal: "Is Not Null", value: JS.Data.UnaryOperatorType.IsNull, type: JS.Data.UnaryOperatorType, reverse: true, localizationId: "StringId.FilterClauseIsNotNull" },
+                        { name: "Is any of", value: "In", insertVal: "In()", paramCount: 1, type: JS.Data.InOperator, localizationId: "StringId.FilterClauseAnyOf" },
+                        { name: "Is none of", value: "In", type: JS.Data.InOperator, reverse: true, localizationId: "StringId.FilterClauseNoneOf" },
                     ]);
                     this.filterEditorOperators.float = this.filterEditorOperators.integer;
                     this.filterEditorOperators.date = [].concat(this.filterEditorOperators._common, [
-                        { name: "Is null", value: JS.Data.UnaryOperatorType.IsNull, type: JS.Data.UnaryOperatorType },
-                        { name: "Is not null", value: JS.Data.UnaryOperatorType.IsNull, type: JS.Data.UnaryOperatorType, reverse: true },
-                        { name: "Is any of", value: "In", type: JS.Data.InOperator },
-                        { name: "Is none of", value: "In", type: JS.Data.InOperator, reverse: true },
-                        { name: "Is beyond this year", value: JS.Data.FunctionOperatorType.IsOutlookIntervalBeyondThisYear, type: JS.Data.FunctionOperatorType },
-                        { name: "Is later this year", value: JS.Data.FunctionOperatorType.IsOutlookIntervalLaterThisYear, type: JS.Data.FunctionOperatorType },
-                        { name: "Is later this month", value: JS.Data.FunctionOperatorType.IsOutlookIntervalLaterThisMonth, type: JS.Data.FunctionOperatorType },
-                        { name: "Is next week", value: JS.Data.FunctionOperatorType.IsOutlookIntervalNextWeek, type: JS.Data.FunctionOperatorType },
-                        { name: "Is later this week", value: JS.Data.FunctionOperatorType.IsOutlookIntervalLaterThisWeek, type: JS.Data.FunctionOperatorType },
-                        { name: "Is tomorrow", value: JS.Data.FunctionOperatorType.IsOutlookIntervalTomorrow, type: JS.Data.FunctionOperatorType },
-                        { name: "Is today", value: JS.Data.FunctionOperatorType.IsOutlookIntervalToday, type: JS.Data.FunctionOperatorType },
-                        { name: "Is yesterday", value: JS.Data.FunctionOperatorType.IsOutlookIntervalYesterday, type: JS.Data.FunctionOperatorType },
-                        { name: "Is earlier this week", value: JS.Data.FunctionOperatorType.IsOutlookIntervalEarlierThisWeek, type: JS.Data.FunctionOperatorType },
-                        { name: "Is last week", value: JS.Data.FunctionOperatorType.IsOutlookIntervalLastWeek, type: JS.Data.FunctionOperatorType },
-                        { name: "Is earlier this month", value: JS.Data.FunctionOperatorType.IsOutlookIntervalEarlierThisMonth, type: JS.Data.FunctionOperatorType },
-                        { name: "Is earlier this year", value: JS.Data.FunctionOperatorType.IsOutlookIntervalEarlierThisYear, type: JS.Data.FunctionOperatorType },
-                        { name: "Is prior this year", value: JS.Data.FunctionOperatorType.IsOutlookIntervalPriorThisYear, type: JS.Data.FunctionOperatorType },
+                        { name: "Is null", insertVal: "Is Null", value: JS.Data.UnaryOperatorType.IsNull, type: JS.Data.UnaryOperatorType, localizationId: "StringId.FilterClauseIsNull" },
+                        { name: "Is not null", insertVal: "Is Not Null", value: JS.Data.UnaryOperatorType.IsNull, type: JS.Data.UnaryOperatorType, reverse: true, localizationId: "StringId.FilterClauseIsNotNull" },
+                        { name: "Is any of", value: "In", insertVal: "In()", type: JS.Data.InOperator, localizationId: "StringId.FilterClauseAnyOf" },
+                        { name: "Is none of", value: "In", type: JS.Data.InOperator, reverse: true, localizationId: "StringId.FilterClauseNoneOf" },
+                        { name: "Is beyond this year", insertVal: "IsOutlookIntervalBeyondThisYear()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalBeyondThisYear, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalBeyondThisYear" },
+                        { name: "Is later this year", insertVal: "IsOutlookIntervalLaterThisYear()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalLaterThisYear, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalLaterThisYear" },
+                        { name: "Is later this month", insertVal: "IsOutlookIntervalLaterThisMonth()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalLaterThisMonth, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalLaterThisMonth" },
+                        { name: "Is next week", insertVal: "IsOutlookIntervalNextWeek()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalNextWeek, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalNextWeek" },
+                        { name: "Is later this week", insertVal: "IsOutlookIntervalLaterThisWeek()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalLaterThisWeek, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalLaterThisWeek" },
+                        { name: "Is tomorrow", insertVal: "IsOutlookIntervalTomorrow()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalTomorrow, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalTomorrow" },
+                        { name: "Is today", insertVal: "IsOutlookIntervalToday()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalToday, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalToday" },
+                        { name: "Is yesterday", insertVal: "IsOutlookIntervalYesterday()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalYesterday, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalYesterday" },
+                        { name: "Is earlier this week", insertVal: "IsOutlookIntervalEarlierThisWeek()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalEarlierThisWeek, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalEarlierThisWeek" },
+                        { name: "Is last week", insertVal: "IsOutlookIntervalLastWeek()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalLastWeek, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalLastWeek" },
+                        { name: "Is earlier this month", insertVal: "IsOutlookIntervalEarlierThisMonth()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalEarlierThisMonth, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalEarlierThisMonth" },
+                        { name: "Is earlier this year", insertVal: "IsOutlookIntervalEarlierThisYear()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalEarlierThisYear, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalEarlierThisYear" },
+                        { name: "Is prior this year", insertVal: "IsOutlookIntervalPriorThisYear()", value: JS.Data.FunctionOperatorType.IsOutlookIntervalPriorThisYear, type: JS.Data.FunctionOperatorType, localizationId: "StringId.FilterCriteriaToStringFunctionIsOutlookIntervalPriorThisYear" },
                     ]);
                     this.filterEditorOperators.list = [
-                        { name: "Exists", value: JS.Data.Aggregate.Exists, type: JS.Data.Aggregate },
-                        { name: "Count", value: JS.Data.Aggregate.Count, type: JS.Data.Aggregate },
-                        { name: "Max", value: JS.Data.Aggregate.Max, type: JS.Data.Aggregate },
-                        { name: "Min", value: JS.Data.Aggregate.Min, type: JS.Data.Aggregate },
-                        { name: "Sum", value: JS.Data.Aggregate.Sum, type: JS.Data.Aggregate },
-                        { name: "Avg", value: JS.Data.Aggregate.Avg, type: JS.Data.Aggregate }
+                        { name: "Exists", value: JS.Data.Aggregate.Exists, insertVal: "Exists()", type: JS.Data.Aggregate, localizationId: "StringId.FilterAggregateExists" },
+                        { name: "Count", value: JS.Data.Aggregate.Count, insertVal: "Count()", type: JS.Data.Aggregate, localizationId: "StringId.FilterAggregateCount" },
+                        { name: "Max", value: JS.Data.Aggregate.Max, insertVal: "Max()", type: JS.Data.Aggregate, localizationId: "StringId.FilterAggregateMax" },
+                        { name: "Min", value: JS.Data.Aggregate.Min, insertVal: "Min()", type: JS.Data.Aggregate, localizationId: "StringId.FilterAggregateMin" },
+                        { name: "Sum", value: JS.Data.Aggregate.Sum, insertVal: "Sum()", type: JS.Data.Aggregate, localizationId: "StringId.FilterAggregateSum" },
+                        { name: "Avg", value: JS.Data.Aggregate.Avg, insertVal: "Avg()", type: JS.Data.Aggregate, localizationId: "StringId.FilterAggregateAvg" }
                     ];
                     this.filterEditorOperators.group = [
-                        { name: "And", value: JS.Data.GroupOperatorType.And, type: JS.Data.GroupOperatorType },
-                        { name: "Or", value: JS.Data.GroupOperatorType.Or, type: JS.Data.GroupOperatorType },
-                        { name: "Not And", value: JS.Data.GroupOperatorType.And, reverse: true, type: JS.Data.GroupOperatorType },
-                        { name: "Not Or", value: JS.Data.GroupOperatorType.Or, reverse: true, type: JS.Data.GroupOperatorType },
+                        { name: "And", insertVal: "And", value: JS.Data.GroupOperatorType.And, type: JS.Data.GroupOperatorType, localizationId: "StringId.FilterGroupAnd" },
+                        { name: "Or", insertVal: "Or", value: JS.Data.GroupOperatorType.Or, type: JS.Data.GroupOperatorType, localizationId: "StringId.FilterGroupOr" },
+                        { name: "Not And", value: JS.Data.GroupOperatorType.And, reverse: true, type: JS.Data.GroupOperatorType, localizationId: "StringId.FilterGroupNotAnd" },
+                        { name: "Not Or", value: JS.Data.GroupOperatorType.Or, reverse: true, type: JS.Data.GroupOperatorType, localizationId: "StringId.FilterGroupNotOr" },
                     ];
+                    this._initDisplayText();
                 }
-                FilterEditorHelper.prototype.registrateOperator = function (specific, targetEnum, value, name, reverse) {
+                FilterEditorHelper.prototype._initDisplayText = function () {
+                    var _this = this;
+                    Object.keys(this.filterEditorOperators).forEach(function (specific) {
+                        _this.filterEditorOperators[specific].forEach(initDisplayText);
+                    });
+                };
+                FilterEditorHelper.prototype.registrateOperator = function (specific, targetEnum, value, name, reverse, localizationId) {
                     if (reverse === void 0) { reverse = false; }
                     if (this.filterEditorOperators[specific]) {
                         if (!targetEnum[value]) {
@@ -7632,41 +9361,54 @@ var DevExpress;
                             targetEnum[maxNumber] = value;
                             targetEnum[value] = maxNumber;
                         }
-                        this.filterEditorOperators[specific].push({ name: name, value: targetEnum[value], type: targetEnum, reverse: reverse });
+                        var newOperator = { name: name, value: targetEnum[value], type: targetEnum, reverse: reverse, displayText: DevExpress.Designer.getLocalization(name, localizationId) };
+                        this.filterEditorOperators[specific].push(newOperator);
                     }
                 };
                 FilterEditorHelper.prototype.generateTreelistOptions = function (fieldListProvider, path) {
                     var _this = this;
                     var treeListOptions = ko.observable(null);
                     var selected = ko.observable(null);
-                    ko.computed(function () {
-                        treeListOptions({
-                            itemsProvider: ko.unwrap(fieldListProvider),
-                            selectedPath: ko.observable(""),
-                            selected: selected,
-                            path: ko.unwrap(path),
-                            treeListController: new FilterEditorTreeListController(selected),
-                            rtl: _this.rtl
-                        });
-                    });
-                    return treeListOptions;
+                    return {
+                        subscription: ko.computed(function () {
+                            treeListOptions({
+                                itemsProvider: ko.unwrap(fieldListProvider),
+                                selectedPath: ko.observable(""),
+                                selected: selected,
+                                path: ko.unwrap(path),
+                                treeListController: new FilterEditorTreeListController(selected),
+                                rtl: _this.rtl
+                            });
+                        }),
+                        options: treeListOptions
+                    };
                 };
                 return FilterEditorHelper;
             })();
             Widgets.FilterEditorHelper = FilterEditorHelper;
             Widgets.DefaultFilterEditorHelper = FilterEditorHelper;
             var FilterStringOptions = (function () {
-                function FilterStringOptions(filterString, dataMember, disabled) {
+                function FilterStringOptions(filterString, dataMember, disabled, title) {
                     var _this = this;
                     this.popupContainer = ".dx-viewport";
                     this.itemsProvider = null;
                     this.resetValue = function () {
                         _this.value("");
                     };
+                    this.title = ko.pureComputed({
+                        read: function () {
+                            var title = _this._title();
+                            return DevExpress.Designer.getLocalization(title.text, title.localizationId);
+                        },
+                        write: function (value) {
+                            _this._title({ text: value });
+                        }
+                    });
                     this.value = filterString;
                     this.path = dataMember || ko.observable("");
                     this.disabled = disabled || ko.observable(false);
                     this.helper = new Widgets.DefaultFilterEditorHelper();
+                    this._title = ko.observable(title || { text: DevExpress.Designer.getLocalization("Filter Editor", "DataAccessUIStringId.FiltersView") });
                 }
                 return FilterStringOptions;
             })();
@@ -7704,7 +9446,10 @@ var DevExpress;
                         this._popupService.data({
                             data: ko.unwrap(viewModel[this.propertyName]),
                             template: this.popupContentTemplate,
-                            click: function (data) { viewModel[_this._action](data); _this._popupService.visible(false); },
+                            click: function (data) {
+                                viewModel[_this._action](data);
+                                _this._popupService.visible(false);
+                            },
                         });
                     }
                 };
@@ -7872,11 +9617,57 @@ var DevExpress;
                 return FilterEditorTreeListController;
             })(Widgets.TreeListController);
             Widgets.FilterEditorTreeListController = FilterEditorTreeListController;
-            var FilterEditor = (function () {
+            var FilterEditor = (function (_super) {
+                __extends(FilterEditor, _super);
                 function FilterEditor(options, fieldListProvider, rtl) {
                     var _this = this;
                     if (rtl === void 0) { rtl = false; }
-                    this.isValid = ko.observable(true);
+                    _super.call(this);
+                    this._advancedMode = ko.observable(false);
+                    this.textFocused = ko.observable(false);
+                    this.aceAvailable = Widgets.aceAvailable;
+                    this.languageHelper = {
+                        getLanguageMode: function () { return "ace/mode/criteria"; },
+                        createCompleters: function (editor, bindingContext, viewModel) { return [new Widgets.FilterEditorCodeCompletor(editor, bindingContext, viewModel.fieldListProvider(), viewModel.options().path)]; }
+                    };
+                    this.aceOptions = {
+                        showLineNumbers: false,
+                        showPrintMargin: false,
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true,
+                        showGutter: false
+                    };
+                    this.additionalOptions = {
+                        onChange: function (session) { return _this.onValueChange(session.getValue()); },
+                        validationTimeout: 200,
+                        onFocus: function (_) { return _this.onFocus(); },
+                        onBlur: function (_) { return _this.onBlur(); }
+                    };
+                    this.editorContainer = ko.observable();
+                    this.textVisible = ko.observable(false);
+                    this.timeout = null;
+                    this.advancedMode = ko.computed({
+                        read: function () {
+                            return _this._advancedMode();
+                        },
+                        write: function (newVal) {
+                            _this.timeout && clearTimeout(_this.timeout);
+                            if (newVal) {
+                                _this.textVisible(true);
+                                _this.timeout = setTimeout(function () {
+                                    _this._advancedMode(true);
+                                    _this.focusText();
+                                }, 1);
+                            }
+                            else {
+                                _this._advancedMode(false);
+                                _this.timeout = setTimeout(function () {
+                                    _this.textVisible(false);
+                                }, 200);
+                            }
+                        },
+                    });
+                    this.invalidMessage = function () { return DevExpress.Designer.getLocalization("Cannot create a tree for this expression", "ASPxReportsStringId.FilterEditor_TreeCreationError"); };
                     this.operandSurface = ko.observable(null);
                     this.operand = null;
                     this.popupVisible = ko.observable(false);
@@ -7885,54 +9676,101 @@ var DevExpress;
                     this.rtl = rtl;
                     options() && options().helper && (options().helper.rtl = rtl);
                     this.options = options;
+                    this.value = ko.observable("");
                     this.save = function () {
-                        _this.options().value(options().helper.serializer.serialize(_this.operandSurface().model, false));
+                        if (_this.operandSurface() && _this.isSurfaceValid()) {
+                            _this.options().value(options().helper.serializer.serialize(_this.operand, false));
+                        }
+                        else {
+                            _this.options().value(_this.value());
+                        }
                         _this.popupVisible(false);
                     };
                     this.fieldListProvider = fieldListProvider;
+                    this.modelValueIsValid = ko.computed(function () {
+                        return options() && _this._validateValue(options().value());
+                    });
                     this.isValid = ko.computed(function () {
+                        return _this._validateValue(_this.value());
+                    });
+                    this.isSurfaceValid = ko.computed(function () {
                         try {
-                            _this.operand = _this.options().helper.serializer.deserialize(_this.options().value());
-                            return true;
+                            return _this.options() && _this.isValid() && CriteriaSurfaceValidator.validateModel(_this.options().helper.serializer.deserialize(_this.value()));
                         }
                         catch (e) {
                             return false;
                         }
                     });
-                    this.popupVisible.subscribe(function (newVal) {
-                        _this.operand = _this.options().helper.serializer.deserialize(_this.options().value());
+                    this._disposables.push(this.modelValueIsValid);
+                    this._disposables.push(this.isValid);
+                    this._disposables.push(this.isSurfaceValid);
+                    this._disposables.push(this.popupVisible.subscribe(function (newVal) {
                         if (newVal) {
-                            var type = null;
-                            if (_this.operand instanceof JS.Data.UnaryOperator) {
-                                type = _this.options().helper.mapper.Unary;
+                            _this.value(_this.options().value());
+                            if (_this.isSurfaceValid()) {
+                                _this.operand = _this._generateOperand(_this.value());
+                                _this.operandSurface(_this._generateSurface(_this.operand));
                             }
                             else {
-                                type = _this.options().helper.mapper.Group;
+                                _this.textVisible(true);
+                                _this._advancedMode(true);
+                                _this.editorContainer() && _this.focusText();
                             }
-                            var surface = new type(_this.operand, _this, _this.fieldListProvider, _this.path);
-                            surface.canRemove = false;
-                            if (surface instanceof UnaryOperandSurface) {
-                                surface.operand().canRemove = false;
-                            }
-                            _this.operandSurface(surface);
+                            options().helper.onChange = function () {
+                                _this.value(options().helper.serializer.serialize(_this.operand, false));
+                            };
                         }
                         else {
+                            _this.value(null);
+                            _this.operandSurface() && _this.operandSurface().dispose();
                             _this.operandSurface(null);
+                            _this.operand = null;
                         }
-                    });
+                    }));
                     this.createAddButton = function (criteria) { return options().helper.handlers.create(criteria, _this.popupService); };
                     this.createChangeType = function (criteria) { return options().helper.handlers.change(criteria, _this.popupService); };
                     this.createChangeProperty = function (criteria) { return options().helper.handlers.changeProperty(criteria, _this.popupService); };
                     this.createChangeParameter = function (criteria) { return options().helper.handlers.changeParameter(criteria, _this.popupService); };
                     this.createChangeValueType = function (criteria) { return options().helper.handlers.changeValueType(criteria, _this.popupService); };
-                    this._createMainPopupButtons();
+                    var saveDisabled = ko.computed(function () { return !_this.isValid(); });
+                    this._disposables.push(saveDisabled);
+                    this._disposables.push(this.advancedMode);
+                    this._createMainPopupButtons(saveDisabled);
                 }
-                FilterEditor.prototype._createMainPopupButtons = function () {
+                FilterEditor.prototype._createMainPopupButtons = function (saveDisabled) {
                     var self = this;
                     this.buttonItems = [
-                        { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: JS.Utils.getLocalization('Save'), onClick: function () { self.save(); } } },
-                        { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: JS.Utils.getLocalization('Cancel'), onClick: function () { self.popupVisible(false); } } }
+                        { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: DevExpress.Designer.getLocalization("Save", "StringId.OK"), disabled: saveDisabled, onClick: function () { self.save(); } } },
+                        { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: DevExpress.Designer.getLocalization("Cancel", "StringId.Cancel"), onClick: function () { self.popupVisible(false); } } },
+                        { toolbar: 'bottom', location: 'before', widget: 'dxCheckBox', options: { value: self.advancedMode, text: DevExpress.Designer.getLocalization("Advanced Mode", "TODO") } }
                     ];
+                };
+                FilterEditor.prototype._generateOperand = function (value) {
+                    return this.options().helper.serializer.deserialize(value);
+                };
+                FilterEditor.prototype._generateSurface = function (operand) {
+                    var type = null;
+                    if (operand instanceof JS.Data.UnaryOperator) {
+                        type = this.options().helper.mapper.Unary;
+                    }
+                    else {
+                        type = this.options().helper.mapper.Group;
+                    }
+                    var surface = new type(operand, this, this.fieldListProvider, this.path);
+                    surface.canRemove = false;
+                    if (surface instanceof UnaryOperandSurface) {
+                        surface.operand().canRemove = false;
+                    }
+                    return surface;
+                };
+                FilterEditor.prototype._validateValue = function (value) {
+                    try {
+                        this.options().helper.serializer.deserialize(value);
+                        return true;
+                    }
+                    catch (e) {
+                        return false;
+                    }
                 };
                 FilterEditor.prototype.change = function (type, surface) {
                     this.operand = JS.Data.CriteriaOperator.create(type);
@@ -7965,12 +9803,133 @@ var DevExpress;
                     enumerable: true,
                     configurable: true
                 });
+                FilterEditor.prototype.dispose = function () {
+                    _super.prototype.dispose.call(this);
+                    this.operandSurface() && this.operandSurface().dispose();
+                };
+                FilterEditor.prototype.onInput = function (s, e) {
+                    var self = this;
+                    this.timeout && clearTimeout(this.timeout);
+                    this.timeout = setTimeout(function () {
+                        self.onValueChange(s.component.option("text"));
+                    }, 200);
+                };
+                FilterEditor.prototype.onFocus = function () {
+                    this.textFocused(true);
+                };
+                FilterEditor.prototype.onBlur = function () {
+                    this.textFocused(false);
+                };
+                FilterEditor.prototype.cacheElement = function ($element) {
+                    this.editorContainer($element.dxTextArea("instance"));
+                };
+                FilterEditor.prototype.onValueChange = function (value) {
+                    if (this.value() === value)
+                        return;
+                    this.value(value);
+                    if (this.isSurfaceValid()) {
+                        this.operand = this._generateOperand(this.value());
+                        this.operandSurface() && this.operandSurface().dispose();
+                        this.operandSurface(this._generateSurface(this.operand));
+                    }
+                };
+                FilterEditor.prototype.focusText = function () {
+                    var _this = this;
+                    setTimeout(function (_) {
+                        var editor = _this.editorContainer();
+                        if (editor.renderer)
+                            editor.renderer.updateText();
+                        editor.focus();
+                    }, 1);
+                };
+                FilterEditor.prototype.getPopupContainer = function (el) {
+                    return $(el).closest(this.options()["popupContainer"] || ".dx-viewport");
+                };
                 return FilterEditor;
-            })();
+            })(JS.Utils.Disposable);
             Widgets.FilterEditor = FilterEditor;
-            var CriteriaOperatorSurface = (function () {
+            (function (CriteriaSurfaceValidatorState) {
+                CriteriaSurfaceValidatorState[CriteriaSurfaceValidatorState["Left"] = 0] = "Left";
+                CriteriaSurfaceValidatorState[CriteriaSurfaceValidatorState["Right"] = 1] = "Right";
+                CriteriaSurfaceValidatorState[CriteriaSurfaceValidatorState["Unary"] = 2] = "Unary";
+            })(Widgets.CriteriaSurfaceValidatorState || (Widgets.CriteriaSurfaceValidatorState = {}));
+            var CriteriaSurfaceValidatorState = Widgets.CriteriaSurfaceValidatorState;
+            var CriteriaSurfaceValidator = (function () {
+                function CriteriaSurfaceValidator() {
+                }
+                CriteriaSurfaceValidator.customValidate = function (operator, from) {
+                    return false;
+                };
+                CriteriaSurfaceValidator.checkLeftPart = function (leftPart) {
+                    return leftPart instanceof JS.Data.OperandProperty || CriteriaSurfaceValidator.customValidate(leftPart, CriteriaSurfaceValidatorState.Left);
+                };
+                CriteriaSurfaceValidator._checkRightPart = function (criteriaOperator) {
+                    return criteriaOperator instanceof JS.Data.OperandProperty
+                        || criteriaOperator instanceof JS.Data.OperandParameter
+                        || criteriaOperator instanceof JS.Data.OperandValue
+                        || criteriaOperator instanceof JS.Data.ConstantValue
+                        || (criteriaOperator instanceof JS.Data.UnaryOperator && this._checkRightPart(criteriaOperator.operand))
+                        || CriteriaSurfaceValidator.customValidate(criteriaOperator, CriteriaSurfaceValidatorState.Right);
+                };
+                CriteriaSurfaceValidator.checkRightPart = function (rigthPart) {
+                    if (Array.isArray(rigthPart)) {
+                        for (var i = 0; i < rigthPart.length; i++) {
+                            if (!this._checkRightPart(rigthPart[i])) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    else {
+                        return this._checkRightPart(rigthPart);
+                    }
+                };
+                CriteriaSurfaceValidator.aggregateIsValid = function (criteriaOperator) {
+                    return this.checkLeftPart(criteriaOperator.leftPart)
+                        && this.validateModel(criteriaOperator.condition)
+                        && (!!criteriaOperator.aggregatedExpression ?
+                            (criteriaOperator.aggregatedExpression instanceof JS.Data.OperandProperty ||
+                                CriteriaSurfaceValidator.validateModel(criteriaOperator.aggregatedExpression))
+                            : true);
+                };
+                CriteriaSurfaceValidator.commonOperandValid = function (criteriaOperator) {
+                    return criteriaOperator.leftPart instanceof JS.Data.AggregateOperand ?
+                        this.validateModel(criteriaOperator.leftPart) : this.checkLeftPart(criteriaOperator.leftPart)
+                        && this.checkRightPart(criteriaOperator.rightPart);
+                };
+                CriteriaSurfaceValidator.groupIsValid = function (criteriaOperator) {
+                    for (var i = 0; i < criteriaOperator.operands.length; i++) {
+                        if (!this.validateModel(criteriaOperator.operands[i])) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+                CriteriaSurfaceValidator.unaryIsValid = function (criteriaOperator) {
+                    return criteriaOperator.operand instanceof JS.Data.OperandProperty || this.validateModel(criteriaOperator.operand) || CriteriaSurfaceValidator.customValidate(criteriaOperator.operand, CriteriaSurfaceValidatorState.Unary);
+                };
+                CriteriaSurfaceValidator.validateModel = function (criteriaOperator) {
+                    if (criteriaOperator instanceof JS.Data.AggregateOperand) {
+                        return this.aggregateIsValid(criteriaOperator);
+                    }
+                    else if (criteriaOperator instanceof JS.Data.GroupOperator) {
+                        return this.groupIsValid(criteriaOperator);
+                    }
+                    else if (criteriaOperator instanceof JS.Data.UnaryOperator) {
+                        return this.unaryIsValid(criteriaOperator);
+                    }
+                    else {
+                        return this.commonOperandValid(criteriaOperator);
+                    }
+                };
+                return CriteriaSurfaceValidator;
+            })();
+            Widgets.CriteriaSurfaceValidator = CriteriaSurfaceValidator;
+            var CriteriaOperatorSurface = (function (_super) {
+                __extends(CriteriaOperatorSurface, _super);
                 function CriteriaOperatorSurface(operator, parent, fieldListProvider, path) {
                     var _this = this;
+                    _super.call(this);
                     this.canRemove = true;
                     this.operatorType = ko.observable(null);
                     this.templateName = "dx-filtereditor-common";
@@ -7983,16 +9942,25 @@ var DevExpress;
                     this.path = path;
                     this.parent = parent;
                     this.operatorType(operator.operatorType);
-                    this.operatorType.subscribe(function (newVal) {
+                    this._disposables.push(this.operatorType.subscribe(function (newVal) {
                         _this.model.assignType(newVal);
-                    });
+                    }));
                 }
                 CriteriaOperatorSurface.prototype._createLeftPartProperty = function (value) {
+                    var _this = this;
                     if (value instanceof JS.Data.OperandProperty) {
                         var surface = this.createChildSurface(value);
                     }
                     else {
                         var surface = this.createChildSurface(value);
+                        var specifics = Object.keys(this.helper.filterEditorOperators).reduce(function (key, value) {
+                            if (value !== "_common" && key === "integer"
+                                && _this.helper.filterEditorOperators[value].filter(function (item) { return _this.operatorType() === item.value && _this.reverse === item.reverse && _this.model.enumType === item.type; }).length > 0) {
+                                key = value;
+                            }
+                            return key;
+                        }, "integer");
+                        surface.specifics = surface.specifics || ko.observable(specifics);
                     }
                     surface["canChange"] = false;
                     surface.canRemove = false;
@@ -8003,6 +9971,8 @@ var DevExpress;
                         this.dataType = ko.computed(function () {
                             return surface["aggregatedExpression"]() && surface["aggregatedExpression"]().dataType() || "integer";
                         });
+                        this._disposables.push(this.specifics);
+                        this._disposables.push(this.dataType);
                     }
                     else {
                         this.specifics = surface.specifics;
@@ -8024,7 +9994,7 @@ var DevExpress;
                     get: function () {
                         var _this = this;
                         var item = this.items.filter(function (item) { return _this.operatorType() === item.value && _this.reverse === item.reverse && _this.model.enumType === item.type; })[0];
-                        return item && item.name || this.operatorType && this.operatorType() || "";
+                        return item && item.name && (item.displayText || DevExpress.Designer.getLocalization(item.name, item.localizationId)) || this.operatorType && this.operatorType() || "";
                     },
                     enumerable: true,
                     configurable: true
@@ -8057,12 +10027,14 @@ var DevExpress;
                     else {
                         this.parent.change(type, this);
                     }
+                    this.helper.onChange();
                 };
                 CriteriaOperatorSurface.prototype.remove = function (surface) {
                     this.parent.remove(this);
+                    this.helper.onChange();
                 };
                 return CriteriaOperatorSurface;
-            })();
+            })(JS.Utils.Disposable);
             Widgets.CriteriaOperatorSurface = CriteriaOperatorSurface;
             var BinaryOperandSurface = (function (_super) {
                 __extends(BinaryOperandSurface, _super);
@@ -8088,6 +10060,11 @@ var DevExpress;
                     enumerable: true,
                     configurable: true
                 });
+                BinaryOperandSurface.prototype.dispose = function () {
+                    this.leftOperand().dispose();
+                    this.rightOperand().dispose();
+                    _super.prototype.dispose.call(this);
+                };
                 return BinaryOperandSurface;
             })(CriteriaOperatorSurface);
             Widgets.BinaryOperandSurface = BinaryOperandSurface;
@@ -8104,11 +10081,14 @@ var DevExpress;
                         var propertyLocation = _this.getPropertyName(parent, property);
                         var model = parent.model.changeValueType(type.instance, propertyLocation);
                         if (propertyLocation.index !== null) {
+                            parent[propertyLocation.name]()[propertyLocation.index].dispose();
                             parent[propertyLocation.name].splice(propertyLocation.index, 1, parent.createChildSurface(model));
                         }
                         else {
+                            parent[propertyLocation.name]().dispose();
                             parent[propertyLocation.name](parent.createChildSurface(model));
                         }
+                        _this.helper.onChange();
                     };
                 }
                 OperandSurfaceBase.prototype.getRealParent = function (parent) {
@@ -8149,13 +10129,14 @@ var DevExpress;
                 Object.defineProperty(OperandSurfaceBase.prototype, "changeTypeItems", {
                     get: function () {
                         var _this = this;
-                        var items = [{ name: "Value", instance: JS.Data.OperandValue }];
+                        var items = [{ name: "Value", instance: JS.Data.OperandValue, localizationId: "ASPxReportsStringId.FilterEditor_Operand_Type_Value" }];
                         if (this.helper.canChoiceProperty) {
-                            items.push({ name: "Property", instance: JS.Data.OperandProperty });
+                            items.push({ name: "Property", instance: JS.Data.OperandProperty, localizationId: "ASPxReportsStringId.FilterEditor_Operand_Type_Property" });
                         }
                         if (this.helper.canChoiceParameters && (this.helper.parameters() && this.helper.parameters().filter(function (item) { return item.specifics && item.specifics.toLowerCase() === _this.parent.specifics(); }).length > 0 || this.helper.canCreateParameters)) {
-                            items.push({ name: "Parameter", instance: JS.Data.OperandParameter });
+                            items.push({ name: "Parameter", instance: JS.Data.OperandParameter, localizationId: "ASPxReportsStringId.FilterEditor_Operand_Type_Parameter" });
                         }
+                        items.forEach(initDisplayText);
                         return items;
                     },
                     enumerable: true,
@@ -8207,7 +10188,7 @@ var DevExpress;
                         var _this = this;
                         var item = this.items.filter(function (item) { return _this.operatorType() === item.value && _this.reverse === item.reverse && _this.model.enumType === item.type; })[0];
                         if (item && item.name) {
-                            return item.name;
+                            return item.displayText || DevExpress.Designer.getLocalization(item.name, item.localizationId);
                         }
                         else {
                             if (!isNaN(parseInt(this.operatorType()))) {
@@ -8221,6 +10202,10 @@ var DevExpress;
                     enumerable: true,
                     configurable: true
                 });
+                FunctionOperandSurface.prototype.dispose = function () {
+                    this.operands().forEach(function (x) { return x.dispose(); });
+                    _super.prototype.dispose.call(this);
+                };
                 return FunctionOperandSurface;
             })(OperandSurfaceBase);
             Widgets.FunctionOperandSurface = FunctionOperandSurface;
@@ -8256,6 +10241,11 @@ var DevExpress;
                     enumerable: true,
                     configurable: true
                 });
+                InOperandSurface.prototype.dispose = function () {
+                    this.criteriaOperator().dispose();
+                    this.operands().forEach(function (x) { return x.dispose(); });
+                    _super.prototype.dispose.call(this);
+                };
                 return InOperandSurface;
             })(CriteriaOperatorSurface);
             Widgets.InOperandSurface = InOperandSurface;
@@ -8285,6 +10275,12 @@ var DevExpress;
                     enumerable: true,
                     configurable: true
                 });
+                BetweenOperandSurface.prototype.dispose = function () {
+                    this.property().dispose();
+                    this.begin().dispose();
+                    this.end().dispose();
+                    _super.prototype.dispose.call(this);
+                };
                 return BetweenOperandSurface;
             })(CriteriaOperatorSurface);
             Widgets.BetweenOperandSurface = BetweenOperandSurface;
@@ -8310,9 +10306,11 @@ var DevExpress;
                         var propertyLocation = _this.getPropertyName(parent, property);
                         var model = parent.model.changeValue(_this.model, _this.reverse, propertyLocation);
                         if (propertyLocation.index !== null) {
+                            parent[propertyLocation.name]()[propertyLocation.index].dispose();
                             parent[propertyLocation.name].splice(propertyLocation.index, 1, parent.createChildSurface(model));
                         }
                         else {
+                            parent[propertyLocation.name]().dispose();
                             parent[propertyLocation.name](parent.createChildSurface(model));
                         }
                     };
@@ -8334,22 +10332,23 @@ var DevExpress;
                         this.specifics = parent.specifics;
                         this.dataType = parent.dataType;
                     }
-                    this.specifics.subscribe(function (newVal) {
+                    this._disposables.push(this.specifics.subscribe(function (newVal) {
                         operator.specifics = newVal;
                         _this._updateDate(newVal);
-                    });
+                    }));
                     this._value(operator.value);
-                    this._value.subscribe(function (newVal) {
+                    this._disposables.push(this._value.subscribe(function (newVal) {
                         _this.model.value = newVal;
-                    });
+                        _this.helper.onChange();
+                    }));
                     if (this._value() === null || this._value() === undefined || this._value() === "") {
                         this._updateDate(this.specifics());
                     }
-                    this.value = ko.computed({
+                    this._disposables.push(this.value = ko.computed({
                         read: function () {
                             var value = _this._value();
                             if (value instanceof Date) {
-                                value = Globalize["formatDate"](value);
+                                value = JS.Localization.Globalize["formatDate"](value);
                             }
                             if (_this.items.length > 0) {
                                 var result = _this.items.filter(function (item) { return item.value === value; })[0];
@@ -8360,7 +10359,7 @@ var DevExpress;
                             if (_this.reverse) {
                                 value = "-" + value;
                             }
-                            return value !== null && value !== undefined && value !== "" ? value : OperandValueSurface.defaultDisplay;
+                            return value !== null && value !== undefined && value !== "" ? value : _this.getDefaultValue();
                         },
                         write: function (newVal) {
                             if (newVal > 0 && !_this.reverse || newVal < 0 && _this.reverse) {
@@ -8372,8 +10371,8 @@ var DevExpress;
                                 _this.changeValue();
                             }
                         }
-                    });
-                    ko.computed(function () {
+                    }));
+                    this._disposables.push(ko.computed(function () {
                         var itemsProvider = ko.unwrap(fieldListProvider);
                         if (itemsProvider && itemsProvider.getValues && _this.parent.leftPart instanceof OperandPropertySurface) {
                             if (_this.parent.leftPart.propertyName()) {
@@ -8382,7 +10381,7 @@ var DevExpress;
                                 });
                             }
                         }
-                    });
+                    }));
                     operator.specifics = this.specifics();
                 }
                 Object.defineProperty(OperandValueSurface.prototype, "items", {
@@ -8399,7 +10398,13 @@ var DevExpress;
                     enumerable: true,
                     configurable: true
                 });
-                OperandValueSurface.defaultDisplay = "Enter a value";
+                OperandValueSurface.prototype.isDefaultDisplay = function () {
+                    return this.value() === this.getDefaultValue();
+                };
+                OperandValueSurface.prototype.getDefaultValue = function () {
+                    return OperandValueSurface._defaultValue ? OperandValueSurface._defaultValue :
+                        OperandValueSurface._defaultValue = DevExpress.Designer.getLocalization("Enter a value", "StringId.FilterEmptyEnter");
+                };
                 return OperandValueSurface;
             })(OperandSurfaceBase);
             Widgets.OperandValueSurface = OperandValueSurface;
@@ -8413,9 +10418,10 @@ var DevExpress;
                     this.operands = ko.observableArray([]);
                     this.createItems = null;
                     this.createItems = [
-                        { name: JS.Utils.getLocalization("Add group"), value: true },
-                        { name: JS.Utils.getLocalization("Add condition"), value: false }
+                        { name: "Add group", value: true, localizationId: "StringId.FilterMenuGroupAdd" },
+                        { name: "Add condition", value: false, localizationId: "StringId.FilterMenuConditionAdd" }
                     ];
+                    this.createItems.forEach(initDisplayText);
                     this.operands((operator.operands || []).map(function (operand) {
                         return _this.createChildSurface(operand);
                     }));
@@ -8439,24 +10445,30 @@ var DevExpress;
                         var newModel = this.model.change(type, surface.model, surface.leftPart instanceof AggregateOperandSurface && surface.leftPart.leftPart.specifics() !== "list");
                         var position = this.operands().indexOf(surface);
                         var operand = this.createChildSurface(newModel);
+                        this.operands()[position].dispose();
                         this.operands.splice(position, 1, operand);
                     }
                     else {
                         _super.prototype.change.call(this, type, surface);
                     }
+                    this.helper.onChange();
                 };
                 GroupOperandSurface.prototype.remove = function (surface) {
                     if (surface) {
                         this.model.remove(surface.model);
                         this.operands.remove(surface);
+                        surface.dispose();
                     }
                     else {
                         this.parent.remove(this);
+                        this.dispose();
                     }
+                    this.helper.onChange();
                 };
                 GroupOperandSurface.prototype.create = function (type) {
                     var newModel = this.model.create(type.value, new JS.Data.OperandProperty());
                     this.operands.push(this.createChildSurface(newModel));
+                    this.helper.onChange();
                 };
                 Object.defineProperty(GroupOperandSurface.prototype, "rightPart", {
                     get: function () {
@@ -8465,6 +10477,10 @@ var DevExpress;
                     enumerable: true,
                     configurable: true
                 });
+                GroupOperandSurface.prototype.dispose = function () {
+                    this.operands().forEach(function (x) { return x.dispose(); });
+                    _super.prototype.dispose.call(this);
+                };
                 return GroupOperandSurface;
             })(CriteriaOperatorSurface);
             Widgets.GroupOperandSurface = GroupOperandSurface;
@@ -8481,6 +10497,7 @@ var DevExpress;
                     var childPath = ko.computed(function () {
                         return _this.path() + "." + _this.property().propertyName();
                     });
+                    this._disposables.push(childPath);
                     if (operator.aggregatedExpression) {
                         this.aggregatedExpression(this.createChildSurface(operator.aggregatedExpression, childPath));
                         this.templateName = "dx-filtereditor-aggregate-common";
@@ -8517,6 +10534,7 @@ var DevExpress;
                                 }
                             }
                         }
+                        _this.helper.onChange();
                     };
                 }
                 Object.defineProperty(AggregateOperandSurface.prototype, "leftPart", {
@@ -8533,6 +10551,12 @@ var DevExpress;
                     enumerable: true,
                     configurable: true
                 });
+                AggregateOperandSurface.prototype.dispose = function () {
+                    this.property().dispose();
+                    this.condition().dispose();
+                    this.aggregatedExpression() && this.aggregatedExpression().dispose();
+                    _super.prototype.dispose.call(this);
+                };
                 return AggregateOperandSurface;
             })(CriteriaOperatorSurface);
             Widgets.AggregateOperandSurface = AggregateOperandSurface;
@@ -8544,6 +10568,7 @@ var DevExpress;
                     this.changeParameter = function (item) {
                         _this.model.parameterName = item.name;
                         _this.parameterName(item.name);
+                        _this.helper.onChange();
                     };
                     this.operatorClass = "criteria-operator-item-parameter";
                     this.parameterName = ko.observable("");
@@ -8582,6 +10607,7 @@ var DevExpress;
                         this.specifics = operand.specifics;
                     }
                     else {
+                        operand.dispose();
                         operand = this._createLeftPartProperty(operator.operand);
                     }
                     this.operand(operand);
@@ -8604,6 +10630,10 @@ var DevExpress;
                     enumerable: true,
                     configurable: true
                 });
+                UnaryOperandSurface.prototype.dispose = function () {
+                    this.operand().dispose();
+                    _super.prototype.dispose.call(this);
+                };
                 return UnaryOperandSurface;
             })(CriteriaOperatorSurface);
             Widgets.UnaryOperandSurface = UnaryOperandSurface;
@@ -8623,14 +10653,21 @@ var DevExpress;
                     this.templateName = "dx-filtereditor-property";
                     this.operatorClass = "criteria-operator-item-field";
                     this.propertyName(operator.propertyName);
-                    this.fieldsOptions = this.helper.generateTreelistOptions(fieldListProvider, path);
-                    this.fieldsOptions().selectedPath.subscribe(function (newVal) {
+                    var options = this.helper.generateTreelistOptions(fieldListProvider, path);
+                    if (options.options && options.subscription) {
+                        this.fieldsOptions = options.options;
+                        this._disposables.push(options.subscription);
+                    }
+                    else {
+                        this.fieldsOptions = options;
+                    }
+                    this._disposables.push(this.fieldsOptions().selectedPath.subscribe(function (newVal) {
                         var realName = _this.fieldsOptions().selectedPath().substr(_this.path && _this.path().length > 0 ? _this.path().length + 1 : 0);
                         _this.propertyName(realName);
                         _this.model.propertyName = realName;
                         _this.popupService.visible(false);
-                    });
-                    this.fieldsOptions().selected.subscribe(function (newVal) {
+                    }));
+                    this._disposables.push(this.fieldsOptions().selected.subscribe(function (newVal) {
                         _this._updateDisplayName(path, _this.propertyName(), newVal.displayName);
                         var specifics = newVal.specifics.toLowerCase();
                         if (specifics.indexOf("calc") === 0) {
@@ -8641,12 +10678,13 @@ var DevExpress;
                             _this.dataType(newVal.dataType);
                             _this.parent.change();
                         }
-                    });
+                        _this.helper.onChange();
+                    }));
                     this.fieldsOptions().selectedPath(this.path && !!ko.unwrap(this.path) ? [ko.unwrap(this.path), this.propertyName()].join('.') : this.propertyName());
                     this._updateSpecifics();
-                    this.displayName = ko.computed(function () {
+                    this._disposables.push(this.displayName = ko.computed(function () {
                         return _this._displayName() || _this.propertyName();
-                    });
+                    }));
                 }
                 OperandPropertySurface.prototype._updateDisplayName = function (path, propertyName, displayName) {
                     var _this = this;
@@ -8708,20 +10746,26 @@ var DevExpress;
                     $(element).addClass("dx-popup-general");
                     var templateHtml = $('#dx-filtereditor').text(), $element = $(element).append(templateHtml), values = valueAccessor();
                     var itemsProvider = ko.observable(ko.unwrap(values.fieldListProvider));
-                    ko.computed(function () {
-                        if (values.options().itemsProvider) {
+                    var subscriptions = [];
+                    subscriptions.push(ko.computed(function () {
+                        if (values.options() && values.options().itemsProvider) {
                             itemsProvider(ko.unwrap(values.options().itemsProvider));
                         }
                         else {
                             itemsProvider(ko.unwrap(values.fieldListProvider));
                         }
-                    });
-                    ko.computed(function () {
+                    }));
+                    subscriptions.push(ko.computed(function () {
                         if (values.getDisplayNameByPath && values.options() && values.options().helper && !values.options().helper.getDisplayPropertyName) {
                             values.options().helper.getDisplayPropertyName = values.getDisplayNameByPath;
                         }
+                    }));
+                    var editor = new FilterEditor(values.options, itemsProvider, $(element).closest('.dx-rtl').length > 0);
+                    ko.applyBindings(editor, $element.children()[0]);
+                    ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                        subscriptions.forEach(function (x) { return x.dispose(); });
+                        editor.dispose();
                     });
-                    ko.applyBindings(new FilterEditor(values.options, itemsProvider, $(element).closest('.dx-rtl').length > 0), $element.children()[0]);
                     return { controlsDescendantBindings: true };
                 }
             };
@@ -8739,6 +10783,12 @@ var DevExpress;
                 },
                 template: { element: 'dx-filtereditor-plain' }
             });
+            ko.bindingHandlers["cacheElement"] = {
+                init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+                    var value = valueAccessor();
+                    value.action($(element));
+                }
+            };
         })(Widgets = JS.Widgets || (JS.Widgets = {}));
     })(JS = DevExpress.JS || (DevExpress.JS = {}));
 })(DevExpress || (DevExpress = {}));
@@ -8750,7 +10800,9 @@ var DevExpress;
     (function (JS) {
         var Widgets;
         (function (Widgets) {
-            var operatorNames = [
+            Widgets.ace = DevExpress.JS.Widgets["ace"] || window["ace"];
+            Widgets.aceAvailable = !!Widgets.ace;
+            Widgets.operatorNames = [
                 { text: "+", image: "addition", descriptionStringId: 'XtraEditorsExpressionEditor.Plus.Description' },
                 { text: "-", image: "subtraction", descriptionStringId: 'XtraEditorsExpressionEditor.Minus.Description' },
                 { text: "*", image: "multiplication", descriptionStringId: 'XtraEditorsExpressionEditor.Multiply.Description' },
@@ -8775,22 +10827,27 @@ var DevExpress;
             ];
             Widgets.functionDisplay = [
                 {
-                    display: DevExpress.Designer.getLocalization("Aggregate", 'XtraEditorsExpressionEditor.functionsTypes.Properties.AggregateItems'),
+                    display: "Aggregate",
+                    localizationId: 'XtraEditorsExpressionEditor.functionsTypes.Properties.AggregateItems',
+                    category: "Aggregate",
                     items: {
-                        Avg: [{ paramCount: 0, text: "[].Avg()", displayName: "Avg()", descriptionStringId: 'XtraEditorsExpressionEditor.AvgAggregate.Description' }],
-                        Count: [{ paramCount: 0, text: "[].Count()", displayName: "Count()", descriptionStringId: 'XtraEditorsExpressionEditor.CountAggregate.Description' }],
-                        Exists: [{ paramCount: 0, text: "[].Exists()", displayName: "Exists()", descriptionStringId: 'XtraEditorsExpressionEditor.ExistsAggregate.Description' }],
-                        Max: [{ paramCount: 0, text: "[].Max()", displayName: "Max()", descriptionStringId: 'XtraEditorsExpressionEditor.MaxAggregate.Description' }],
-                        Min: [{ paramCount: 0, text: "[].Min()", displayName: "Min()", descriptionStringId: 'XtraEditorsExpressionEditor.MinAggregate.Description' }],
-                        Single: [{ paramCount: 0, text: "[].Single()", displayName: "Single()", descriptionStringId: 'XtraEditorsExpressionEditor.SingleAggregate.Description' }],
-                        Sum: [{ paramCount: 0, text: "[].Sum()", displayName: "Sum()", descriptionStringId: 'XtraEditorsExpressionEditor.SumAggregate.Description' }],
+                        Avg: [{ paramCount: 1, text: "[].Avg()", displayName: "Avg()", descriptionStringId: 'XtraEditorsExpressionEditor.AvgAggregate.Description' }],
+                        Count: [{ paramCount: 1, text: "[].Count()", displayName: "Count()", descriptionStringId: 'XtraEditorsExpressionEditor.CountAggregate.Description' }],
+                        Exists: [{ paramCount: 1, text: "[].Exists()", displayName: "Exists()", descriptionStringId: 'XtraEditorsExpressionEditor.ExistsAggregate.Description' }],
+                        Max: [{ paramCount: 1, text: "[].Max()", displayName: "Max()", descriptionStringId: 'XtraEditorsExpressionEditor.MaxAggregate.Description' }],
+                        Min: [{ paramCount: 1, text: "[].Min()", displayName: "Min()", descriptionStringId: 'XtraEditorsExpressionEditor.MinAggregate.Description' }],
+                        Single: [{ paramCount: 1, text: "[].Single()", displayName: "Single()", descriptionStringId: 'XtraEditorsExpressionEditor.SingleAggregate.Description' }],
+                        Sum: [{ paramCount: 1, text: "[].Sum()", displayName: "Sum()", descriptionStringId: 'XtraEditorsExpressionEditor.SumAggregate.Description' }],
                     }
                 }, {
-                    display: DevExpress.Designer.getLocalization("Date-Time", 'XtraEditorsExpressionEditor.functionsTypes.Properties.DateTimeItems'),
+                    display: "Date-Time",
+                    localizationId: 'XtraEditorsExpressionEditor.functionsTypes.Properties.DateTimeItems',
                     items: {
                         LocalDateTimeThisYear: [{ paramCount: 0, text: "LocalDateTimeThisYear()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeThisYear.Description' }],
                         LocalDateTimeThisMonth: [{ paramCount: 0, text: "LocalDateTimeThisMonth()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeThisMonth.Description' }],
+                        LocalDateTimeLastMonth: [{ paramCount: 0, text: "LocalDateTimeLastMonth()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeLastMonth.Description' }],
                         LocalDateTimeLastWeek: [{ paramCount: 0, text: "LocalDateTimeLastWeek()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeLastWeek.Description' }],
+                        LocalDateTimeLastYear: [{ paramCount: 0, text: "LocalDateTimeLastYear()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeLastYear.Description' }],
                         LocalDateTimeThisWeek: [{ paramCount: 0, text: "LocalDateTimeThisWeek()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeThisWeek.Description' }],
                         LocalDateTimeYesterday: [{ paramCount: 0, text: "LocalDateTimeYesterday()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeYesterday.Description' }],
                         LocalDateTimeToday: [{ paramCount: 0, text: "LocalDateTimeToday()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeToday.Description' }],
@@ -8798,9 +10855,12 @@ var DevExpress;
                         LocalDateTimeTomorrow: [{ paramCount: 0, text: "LocalDateTimeTomorrow()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeTomorrow.Description' }],
                         LocalDateTimeDayAfterTomorrow: [{ paramCount: 0, text: "LocalDateTimeDayAfterTomorrow()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeDayAfterTomorrow.Description' }],
                         LocalDateTimeNextWeek: [{ paramCount: 0, text: "LocalDateTimeNextWeek()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeNextWeek.Description' }],
+                        LocalDateTimeTwoMonthsAway: [{ paramCount: 0, text: "LocalDateTimeTwoMonthsAway()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeTwoMonthsAway.Description' }],
+                        LocalDateTimeTwoYearsAway: [{ paramCount: 0, text: "LocalDateTimeTwoYearsAway()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeTwoYearsAway.Description' }],
                         LocalDateTimeTwoWeeksAway: [{ paramCount: 0, text: "LocalDateTimeTwoWeeksAway()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeTwoWeeksAway.Description' }],
                         LocalDateTimeNextMonth: [{ paramCount: 0, text: "LocalDateTimeNextMonth()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeNextMonth.Description' }],
                         LocalDateTimeNextYear: [{ paramCount: 0, text: "LocalDateTimeNextYear()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeNextYear.Description' }],
+                        LocalDateTimeYearBeforeToday: [{ paramCount: 0, text: "LocalDateTimeYearBeforeToday()", descriptionStringId: 'XtraEditorsExpressionEditor.LocalDateTimeYearBeforeToday.Description' }],
                         IsOutlookIntervalBeyondThisYear: null,
                         IsOutlookIntervalLaterThisYear: null,
                         IsOutlookIntervalLaterThisMonth: null,
@@ -8814,9 +10874,27 @@ var DevExpress;
                         IsOutlookIntervalEarlierThisMonth: null,
                         IsOutlookIntervalEarlierThisYear: null,
                         IsOutlookIntervalPriorThisYear: null,
+                        IsLastMonth: [{ paramCount: 1, text: "IsLastMonth()", descriptionStringId: 'XtraEditorsExpressionEditor.IsLastMonth.Description' }],
+                        IsLastYear: [{ paramCount: 1, text: "IsLastYear()", descriptionStringId: 'XtraEditorsExpressionEditor.IsLastYear.Description' }],
+                        IsNextMonth: [{ paramCount: 1, text: "IsNextMonth()", descriptionStringId: 'XtraEditorsExpressionEditor.IsNextMonth.Description' }],
+                        IsNextYear: [{ paramCount: 1, text: "IsNextYear()", descriptionStringId: 'XtraEditorsExpressionEditor.IsNextYear.Description' }],
                         IsThisWeek: [{ paramCount: 1, text: "IsThisWeek()", descriptionStringId: 'XtraEditorsExpressionEditor.IsThisWeek.Description' }],
                         IsThisMonth: [{ paramCount: 1, text: "IsThisMonth()", descriptionStringId: 'XtraEditorsExpressionEditor.IsThisMonth.Description' }],
                         IsThisYear: [{ paramCount: 1, text: "IsThisYear()", descriptionStringId: 'XtraEditorsExpressionEditor.IsThisYear.Description' }],
+                        IsJanuary: [{ paramCount: 1, text: "IsJanuary()", descriptionStringId: 'XtraEditorsExpressionEditor.IsJanuary.Description' }],
+                        IsFebruary: [{ paramCount: 1, text: "IsFebruary()", descriptionStringId: 'XtraEditorsExpressionEditor.IsFebruary.Description' }],
+                        IsMarch: [{ paramCount: 1, text: "IsMarch()", descriptionStringId: 'XtraEditorsExpressionEditor.IsMarch.Description' }],
+                        IsApril: [{ paramCount: 1, text: "IsApril()", descriptionStringId: 'XtraEditorsExpressionEditor.IsApril.Description' }],
+                        IsMay: [{ paramCount: 1, text: "IsMay()", descriptionStringId: 'XtraEditorsExpressionEditor.IsMay.Description' }],
+                        IsJune: [{ paramCount: 1, text: "IsJune()", descriptionStringId: 'XtraEditorsExpressionEditor.IsJune.Description' }],
+                        IsJule: [{ paramCount: 1, text: "IsJule()", descriptionStringId: 'XtraEditorsExpressionEditor.IsJule.Description' }],
+                        IsAugust: [{ paramCount: 1, text: "IsAugust()", descriptionStringId: 'XtraEditorsExpressionEditor.IsAugust.Description' }],
+                        IsSemptember: [{ paramCount: 1, text: "IsSemptember()", descriptionStringId: 'XtraEditorsExpressionEditor.IsSemptember.Description' }],
+                        IsOctober: [{ paramCount: 1, text: "IsOctober()", descriptionStringId: 'XtraEditorsExpressionEditor.IsOctober.Description' }],
+                        IsNovember: [{ paramCount: 1, text: "IsNovember()", descriptionStringId: 'XtraEditorsExpressionEditor.IsNovember.Description' }],
+                        IsDecember: [{ paramCount: 1, text: "IsDecember()", descriptionStringId: 'XtraEditorsExpressionEditor.IsDecember.Description' }],
+                        IsSameDay: [{ paramCount: 2, text: "IsSameDay(, )", descriptionStringId: 'XtraEditorsExpressionEditor.IsSameDay.Description' }],
+                        IsYearToDate: [{ paramCount: 1, text: "IsYearToDate()", descriptionStringId: 'XtraEditorsExpressionEditor.IsYearToDate.Description' }],
                         DateDiffTick: [{ paramCount: 2, text: "DateDiffTick(, )", descriptionStringId: 'XtraEditorsExpressionEditor.DateDiffTick.Description' }],
                         DateDiffSecond: [{ paramCount: 2, text: "DateDiffSecond(, )", descriptionStringId: 'XtraEditorsExpressionEditor.DateDiffSecond.Description' }],
                         DateDiffMilliSecond: [{ paramCount: 2, text: "DateDiffMilliSecond(, )", descriptionStringId: 'XtraEditorsExpressionEditor.DateDiffMilliSecond.Description' }],
@@ -8850,14 +10928,16 @@ var DevExpress;
                         AddYears: [{ paramCount: 2, text: "AddYears(, )", descriptionStringId: 'XtraEditorsExpressionEditor.AddYears.Description' }],
                     },
                 }, {
-                    display: DevExpress.Designer.getLocalization("Logical", 'XtraEditorsExpressionEditor.functionsTypes.Properties.LogicalItems'),
+                    display: "Logical",
+                    localizationId: 'XtraEditorsExpressionEditor.functionsTypes.Properties.LogicalItems',
                     items: {
                         Iif: [{ paramCount: 3, text: "Iif(, , )", descriptionStringId: 'XtraEditorsExpressionEditor.Iif.Description' }],
                         IsNull: [{ paramCount: 1, text: "IsNull()", descriptionStringId: 'XtraEditorsExpressionEditor.IsNull.Description' }],
                         IsNullOrEmpty: [{ paramCount: 1, text: "IsNullOrEmpty()", descriptionStringId: 'XtraEditorsExpressionEditor.IsNullOrEmpty.Description' }],
                     }
                 }, {
-                    display: DevExpress.Designer.getLocalization("Math", 'XtraEditorsExpressionEditor.functionsTypes.Properties.MathItems'),
+                    display: "Math",
+                    localizationId: 'XtraEditorsExpressionEditor.functionsTypes.Properties.MathItems',
                     items: {
                         Abs: [{ paramCount: 1, text: "Abs()", descriptionStringId: 'XtraEditorsExpressionEditor.Abs.Description' }],
                         Sqr: [{ paramCount: 1, text: "Sqr()", descriptionStringId: 'XtraEditorsExpressionEditor.Sqr.Description' }],
@@ -8896,7 +10976,8 @@ var DevExpress;
                         ToDecimal: [{ paramCount: 1, text: "ToDecimal()", descriptionStringId: 'XtraEditorsExpressionEditor.ToDecimal.Description' }],
                     }
                 }, {
-                    display: DevExpress.Designer.getLocalization("String", 'XtraEditorsExpressionEditor.functionsTypes.Properties.StringItems'),
+                    display: "String",
+                    localizationId: 'XtraEditorsExpressionEditor.functionsTypes.Properties.StringItems',
                     items: {
                         Trim: [{ paramCount: 1, text: "Trim()", descriptionStringId: 'XtraEditorsExpressionEditor.Trim.Description' }],
                         Len: [{ paramCount: 1, text: "Len()", descriptionStringId: 'XtraEditorsExpressionEditor.Len.Description' }],
@@ -8933,67 +11014,122 @@ var DevExpress;
                     }
                 }
             ];
-            var Tools = (function () {
-                function Tools(onClick, parametersOptions, fieldListOptions, functionGroups) {
+            var Tools = (function (_super) {
+                __extends(Tools, _super);
+                function Tools(onClick, parametersOptions, fieldListOptions, functionGroups, customizeCategories) {
                     var _this = this;
                     if (functionGroups === void 0) { functionGroups = Widgets.functionDisplay; }
-                    this.popularItems = [];
+                    _super.call(this);
+                    this.searchPlaceholder = function () { return DevExpress.Designer.getLocalization("Enter text to search...", "ASPxReportsStringId.ReportDesigner_QueryBuilder_SearchBox_EmptyText"); };
+                    this.showDescription = ko.observable(true);
                     this.toolBox = [];
                     this.description = ko.observable();
                     this._defaultClick = onClick;
-                    operatorNames.filter(function (item) { return !!item.descriptionStringId; }).forEach(function (item) { return _this._initDescription(item); });
-                    this.popularItems = this._generatePopularItems(operatorNames.filter(function (item) { return !!item.image; }));
-                    this.toolBox = [
-                        this._generateList(DevExpress.Designer.getLocalization("FUNCTIONS", 'XtraEditorsExpressionEditor.Functions.Text'), functionGroups.map(function (funtionGroup) {
-                            var result = {
-                                display: funtionGroup.display,
-                                collapsed: ko.observable(true),
-                                items: []
-                            };
-                            $.map(funtionGroup.items, (function (item) {
-                                if (item) {
-                                    item.forEach(function (functionItem) {
-                                        _this._initDescription(functionItem);
-                                        result.items.push(functionItem);
-                                    });
-                                }
-                            }));
-                            return result;
-                        }), "dx-expressioneditor-functions"),
-                        this._generateList(DevExpress.Designer.getLocalization("OPERATORS", 'XtraEditorsExpressionEditor.Operators.Text'), operatorNames.filter(function (item) { return !!item.descriptionStringId; }))
+                    var textToSearch = ko.observable("");
+                    Widgets.operatorNames.filter(function (item) { return !!item.descriptionStringId; }).forEach(function (item) { return _this._initDescription(item); });
+                    var functions = functionGroups.map(function (funtionGroup) {
+                        var result = {
+                            display: DevExpress.Designer.getLocalization(funtionGroup.display, funtionGroup.localizationId),
+                            isSelected: ko.observable(false),
+                            data: {
+                                textToSearch: textToSearch,
+                                items: [],
+                                availableItems: ko.observableArray([])
+                            },
+                            name: "dx-expressioneditor-collection-function",
+                        };
+                        $.map(funtionGroup.items, (function (item) {
+                            if (item) {
+                                item.forEach(function (functionItem) {
+                                    _this._initDescription(functionItem);
+                                    result.data.items.push(functionItem);
+                                });
+                            }
+                        }));
+                        result.data.availableItems(result.data.items);
+                        var timeout = null;
+                        _this._disposables.push(result.data.textToSearch.subscribe(function (newVal) {
+                            timeout && clearTimeout(timeout);
+                            timeout = setTimeout(function () {
+                                result.data.availableItems(result.data.items.filter(function (x) { return !!JS.Utils.findMatchesInString(x.text, newVal); }));
+                            }, 150);
+                        }));
+                        return result;
+                    });
+                    var fieldsGroup = {
+                        displayName: "Fields",
+                        content: {
+                            isSelected: ko.observable(false),
+                            data: {
+                                fields: fieldListOptions, parameters: parametersOptions
+                            },
+                            name: "dx-expressioneditor-fields"
+                        }
+                    };
+                    this._disposables.push(fieldsGroup.content.isSelected.subscribe(function (newVal) {
+                        _this.showDescription(!newVal);
+                    }));
+                    var categories = [
+                        fieldsGroup,
+                        {
+                            displayName: "Constants",
+                            content: {
+                                isSelected: ko.observable(false),
+                                data: [
+                                    { text: "?", descriptionStringId: 'XtraEditorsExpressionEditor.Null.Description' },
+                                    { text: "False", descriptionStringId: 'XtraEditorsExpressionEditor.False.Description' },
+                                    { text: "True", descriptionStringId: 'XtraEditorsExpressionEditor.True.Description' }
+                                ],
+                                name: "dx-expressioneditor-collection"
+                            }
+                        },
+                        {
+                            displayName: "Functions",
+                            items: functions,
+                            collapsed: ko.observable(true)
+                        },
+                        {
+                            displayName: "Operators",
+                            content: {
+                                isSelected: ko.observable(false),
+                                data: Widgets.operatorNames,
+                                name: "dx-expressioneditor-collection"
+                            }
+                        }
                     ];
-                    this.toolBox.push(this._generateList(DevExpress.Designer.getLocalization("FIELDS", 'XtraEditorsExpressionEditor.Fields.Text'), { fields: fieldListOptions, parameters: parametersOptions }, "dx-expressioneditor-fields", "37%"));
+                    customizeCategories && customizeCategories(this, categories, onClick);
+                    var selectedContent = ko.observable(null);
+                    var firstItem = categories[0].content || categories[0].items[0];
+                    selectedContent(firstItem);
+                    firstItem.isSelected(true);
+                    this.toolBox = [
+                        this._generateTab(categories, "dx-expressioneditor-categories", "170px", function (item) {
+                            if (selectedContent() === item)
+                                return;
+                            selectedContent().isSelected(false);
+                            item.isSelected(true);
+                            selectedContent(item);
+                        }),
+                        this._generateTab(selectedContent, "dx-expressioneditor-selectedcontent", ko.computed(function () { return _this.showDescription() ? "248px" : "435px"; }), function (item) { _this.description(DevExpress.Designer.getLocalization(item.text, item.descriptionStringId)); }, this._defaultClick),
+                        this._generateTab(this.description, "dx-expressioneditor-description", undefined, undefined, undefined, this.showDescription)
+                    ];
                 }
-                Tools.prototype._generateList = function (title, content, templateName, width, click) {
-                    var _this = this;
+                Tools.prototype._generateTab = function (content, templateName, width, click, dblclick, visible) {
                     if (templateName === void 0) { templateName = null; }
                     return {
                         templateName: templateName,
                         width: width || "30%",
-                        title: title,
                         content: content,
-                        click: click || this._defaultClick,
-                        selection: function (item) { _this.description(item.description || item.text); }
+                        click: click,
+                        dblclick: dblclick,
+                        visible: visible || true
                     };
                 };
                 Tools.prototype._initDescription = function (expressionEditorItem) {
                     expressionEditorItem.description = DevExpress.Designer.getLocalization(expressionEditorItem.text, expressionEditorItem.descriptionStringId);
                 };
-                Tools.prototype._generatePopularItems = function (values, click) {
-                    var _this = this;
-                    return values.map(function (item) {
-                        return {
-                            templateName: item.templateName || null,
-                            text: item.text || item,
-                            imgClassName: "dx-image-expressioneditor-" + item.image,
-                            hasSeparator: item.hasSeparator,
-                            description: item.description,
-                            click: click || _this._defaultClick
-                        };
-                    });
-                };
                 return Tools;
-            })();
+            })(JS.Utils.Disposable);
             Widgets.Tools = Tools;
             var ExpressionEditorTreeListController = (function (_super) {
                 __extends(ExpressionEditorTreeListController, _super);
@@ -9004,14 +11140,14 @@ var DevExpress;
                     this.selectionHandler = selectionHandler;
                 }
                 ExpressionEditorTreeListController.prototype.itemsFilter = function (item) {
-                    return item.specifics !== "none" && item.name !== ko.unwrap(this.fieldName);
+                    return item.specifics !== "none" && item.name !== "ReportItems";
                 };
                 ExpressionEditorTreeListController.prototype.select = function (value) {
-                    this.selectionHandler(ko.unwrap(value.data["type"]));
+                    this.selectionHandler && this.selectionHandler(ko.unwrap(value.data["type"]));
                 };
                 ExpressionEditorTreeListController.prototype.getActions = function (item) {
                     var _this = this;
-                    return [{ clickAction: function (element) { _this.putSelectionHandler(item.path, element); } }];
+                    return [{ clickAction: function (element) { return _this.putSelectionHandler(item, $(element)); } }];
                 };
                 ExpressionEditorTreeListController.prototype.canSelect = function (value) {
                     return true;
@@ -9019,15 +11155,46 @@ var DevExpress;
                 return ExpressionEditorTreeListController;
             })(Widgets.TreeListController);
             Widgets.ExpressionEditorTreeListController = ExpressionEditorTreeListController;
-            var ExpressionEditor = (function () {
+            var ExpressionEditorParametersTreeListController = (function (_super) {
+                __extends(ExpressionEditorParametersTreeListController, _super);
+                function ExpressionEditorParametersTreeListController(customFilter, putSelectionHandler, selectionHandler) {
+                    _super.call(this);
+                    this.customFilter = customFilter;
+                    this.putSelectionHandler = putSelectionHandler;
+                    this.selectionHandler = selectionHandler;
+                }
+                ExpressionEditorParametersTreeListController.prototype.itemsFilter = function (item) {
+                    return item.specifics !== "none" && (!this.customFilter || this.customFilter(item));
+                };
+                ExpressionEditorParametersTreeListController.prototype.select = function (value) {
+                    this.selectionHandler(ko.unwrap(value.data["type"]));
+                };
+                ExpressionEditorParametersTreeListController.prototype.getActions = function (item) {
+                    var _this = this;
+                    return [{
+                            clickAction: function (element) {
+                                if (item && item.text !== "Parameters")
+                                    _this.putSelectionHandler(item.path, $(element));
+                            }
+                        }];
+                };
+                ExpressionEditorParametersTreeListController.prototype.canSelect = function (value) {
+                    return true;
+                };
+                return ExpressionEditorParametersTreeListController;
+            })(Widgets.TreeListController);
+            Widgets.ExpressionEditorParametersTreeListController = ExpressionEditorParametersTreeListController;
+            var ExpressionEditor = (function (_super) {
+                __extends(ExpressionEditor, _super);
                 function ExpressionEditor(options, fieldListProvider, disabled, rtl, _displayConverter) {
                     var _this = this;
                     if (disabled === void 0) { disabled = ko.observable(false); }
                     if (rtl === void 0) { rtl = false; }
+                    _super.call(this);
                     this.options = options;
                     this._displayConverter = _displayConverter;
                     this._updateTextAreaValue = function (item, element) {
-                        var textArea = _this._getTextArea(element), textAreaValue = _this.textAreaValue().toString(), cursorPosition = textArea && textArea.selectionStart || textAreaValue.length, newAddedText = textAreaValue[cursorPosition - 1] == " " ? (item.text || item) + " " : " " + (item.text || item) + " ";
+                        var textArea = _this._getTextArea(element), textAreaValue = _this.textAreaValue().toString(), cursorPosition = textArea && textArea.selectionStart || textAreaValue.length, newAddedText = textAreaValue[cursorPosition - 1] == " " ? (item.val || item.text || item) + " " : " " + (item.val || item.text || item) + " ";
                         _this.textAreaValue([textAreaValue.slice(0, cursorPosition), newAddedText, textAreaValue.slice(cursorPosition)].join(''));
                         if (textArea && textArea.setSelectionRange) {
                             textArea.focus();
@@ -9035,11 +11202,25 @@ var DevExpress;
                             textArea.setSelectionRange(posisition, posisition);
                         }
                     };
+                    this._updateAceValue = function (item, element) {
+                        var editor = _this.editorContainer(), _a = editor.getCursorPosition(), row = _a.row, col = _a.column, insertion = (item.val || item.text || item) + " ";
+                        if (col && editor.getSession().getValue().split("\n")[row][col - 1] !== " ")
+                            insertion = " " + insertion;
+                        editor.insert(insertion);
+                        editor.focus();
+                        if (item.paramCount && item.paramCount > 0) {
+                            var cursorPosition = editor.getCursorPosition();
+                            editor.gotoLine(cursorPosition.row + 1, cursorPosition.column - (insertion.length - 1 - insertion.lastIndexOf("(")));
+                        }
+                    };
+                    this._updateValue = function (item, element) {
+                        _this.aceAvailable ? _this._updateAceValue(item, $(element)) : _this._updateTextAreaValue(item, $(element));
+                    };
                     this.patchFieldName = function (fieldName) { return fieldName; };
                     this._parametersPutSelectionHandler = function (selectedItemPath, element) {
                         var proposedFieldName = selectedItemPath;
                         var newAddedString = '[' + _this.patchFieldName(proposedFieldName) + ']';
-                        _this._updateTextAreaValue(newAddedString, element);
+                        _this._updateValue(newAddedString, element);
                     };
                     this._fieldsPutSelectionHandler = function (selectedItemPath, element) {
                         var path = _this.options.path.peek();
@@ -9047,88 +11228,167 @@ var DevExpress;
                         var newAddedString = '[' + _this.patchFieldName(proposedFieldName) + ']';
                         if (_this._displayConverter) {
                             _this._displayConverter.toDisplayExpression(path, newAddedString)
-                                .done(function (result) { _this._updateTextAreaValue(result, element); })
-                                .fail(function () { _this._updateTextAreaValue(newAddedString, element); });
+                                .done(function (result) { _this._updateValue(result, element); })
+                                .fail(function () { _this._updateValue(newAddedString, element); });
                         }
                         else {
-                            _this._updateTextAreaValue(newAddedString, element);
+                            _this._updateValue(newAddedString, element);
                         }
                     };
+                    this.aceAvailable = Widgets.aceAvailable;
                     this.popupVisible = ko.observable(false);
+                    this.title = function () { return DevExpress.Designer.getLocalization('Expression Editor', 'XtraEditorsExpressionEditor.Expression.Text'); };
                     this.value = ko.observable("");
                     this.textAreaValue = ko.observable("");
+                    this.languageHelper = {
+                        getLanguageMode: function () { return "ace/mode/criteria"; },
+                        createCompleters: function (editor, bindingContext, viewModel) { return [new Widgets.CodeCompletor(editor, bindingContext, viewModel.fieldListProvider, viewModel.options.path, viewModel.options.functions, viewModel.options.rootItems)]; }
+                    };
+                    this.aceOptions = {
+                        showLineNumbers: false,
+                        showPrintMargin: false,
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true,
+                        showFoldWidgets: false,
+                        highlightActiveLine: false
+                    };
+                    this.additionalOptions = {
+                        onChange: function (session) {
+                            var value = session.getValue();
+                            try {
+                                JS.Data.CriteriaOperator.parse(value);
+                                session.clearAnnotations();
+                            }
+                            catch (exception) {
+                                var row = exception.hash.line;
+                                var column = 0;
+                                var lines = exception.message.split('\n');
+                                var text = lines[1] + "\n" + lines[2];
+                                session.setAnnotations([{ row: row, column: column, text: text, "type": "error" }]);
+                            }
+                        }
+                    };
+                    this.callbacks = {
+                        focus: $.noop
+                    };
+                    this.editorContainer = ko.observable();
                     this.isValid = ko.observable(true);
                     this.buttonItems = [];
                     this.rtl = false;
                     if (options.patchFieldName) {
                         this.patchFieldName = options.patchFieldName;
                     }
+                    this.theme = options.theme;
                     this.value = options.value;
                     this.rtl = rtl;
-                    this.textAreaValue(this.value());
-                    this.popupVisible.subscribe(function (newVal) {
-                        _this.textAreaValue(_this.value());
-                    });
-                    this.fieldListProvider = ko.unwrap(fieldListProvider);
-                    this.disabled = disabled;
-                    var self = this;
-                    this.save = function (sender) {
+                    var validate = function (value, sender) {
                         try {
-                            JS.Data.CriteriaOperator.parse(_this.textAreaValue());
-                            options.value(_this.textAreaValue());
-                            _this.popupVisible(false);
+                            JS.Data.CriteriaOperator.parse(value);
+                            _this.isValid(true);
+                            return true;
                         }
                         catch (exception) {
-                            var result = JS.Data.CriteriaOperator.getNotValidRange(_this.textAreaValue(), exception.message);
-                            var textArea = _this._getTextArea(sender.element);
+                            var result = JS.Data.CriteriaOperator.getNotValidRange(value, exception.message);
+                            var textArea = _this._getTextArea(sender && sender.element);
                             textArea && textArea.setSelectionRange(result.start, result.end);
                             _this.isValid(false);
                         }
                     };
+                    this._disposables.push(this.popupVisible.subscribe(function (newVal) {
+                        if (!newVal)
+                            return;
+                        if (!_this.aceAvailable) {
+                            _this.textAreaValue(_this.value());
+                            validate(_this.value());
+                        }
+                        else {
+                            var editor = _this.editorContainer();
+                            var session = editor && editor.getSession();
+                            session && session.setValue(_this.value());
+                        }
+                    }));
+                    this.fieldListProvider = createExpressionEditorFieldListProvider(ko.unwrap(fieldListProvider), options.fieldName);
+                    this.disabled = disabled;
+                    var self = this;
+                    this.save = function (sender) {
+                        var value = _this.textAreaValue();
+                        if (_this.aceAvailable) {
+                            var editor = _this.editorContainer();
+                            var session = editor && editor.getSession();
+                            value = session && session.getValue();
+                        }
+                        if (validate(value, sender)) {
+                            options.value(value);
+                            _this.popupVisible(false);
+                        }
+                    };
+                    var selectionHandler = function (objectName) { return function (selectedItemType) {
+                        _this.tools.description(selectedItemType && selectedItemType !== "None" ? DevExpress.Designer.getLocalization("The type of this " + objectName + " is: ", 'XtraEditorsExpressionEditor.Fields Description Prefix') + " " + selectedItemType : "");
+                    }; };
                     var fieldsTreeListOptions = options.path && ko.pureComputed(function () {
-                        return options.path() && _this._createToolsOptions("field", options.path(), _this._fieldsPutSelectionHandler, options.fieldName);
+                        return options.path() && _this._createToolsOptions(options.path(), _this.fieldListProvider, new ExpressionEditorTreeListController(options.fieldName || "", function (data, element) { _this._fieldsPutSelectionHandler(data.path, element); }, selectionHandler("field")));
                     });
-                    this.tools = new Tools(this._updateTextAreaValue, this._createToolsOptions("parameter", "parameters", this._parametersPutSelectionHandler), fieldsTreeListOptions, options.functions);
+                    this._disposables.push(fieldsTreeListOptions);
+                    this.tools = new Tools(this._updateValue, this._createToolsOptions("", this.fieldListProvider, new ExpressionEditorParametersTreeListController(function (item) { return item.specifics === "parameters" || !JS.Utils.isList(item); }, this._parametersPutSelectionHandler, selectionHandler("Parameter"))), fieldsTreeListOptions, ko.unwrap(options.functions), options.customizeCategories);
                     this._createMainPopupButtons();
+                    this._disposables.push(this.tools);
                 }
                 ExpressionEditor.prototype._createMainPopupButtons = function () {
                     var self = this;
                     this.buttonItems = [
                         { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: DevExpress.Designer.getLocalization('Save', 'XtraEditorsExpressionEditor.buttonOK.Text'), onClick: function (sender) { self.save(sender); } } },
-                        { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: DevExpress.Designer.getLocalization('Cancel', 'XtraEditorsExpressionEditor.buttonCancel.Text'), onClick: function () { self.popupVisible(false); } } },
-                        { toolbar: 'bottom', location: 'before', template: function () { return $('#dx-expressioneditor-description'); }, text: self.tools.description }
+                        { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: DevExpress.Designer.getLocalization('Cancel', 'XtraEditorsExpressionEditor.buttonCancel.Text'), onClick: function () { self.popupVisible(false); } } }
                     ];
                 };
                 ExpressionEditor.prototype._getTextArea = function (element) {
                     return element && element.parents(".dx-expressioneditor").find(":input")[0];
                 };
-                ExpressionEditor.prototype._createToolsOptions = function (objectName, path, putSelectionHandler, fieldName) {
-                    var _this = this;
-                    var selectionHandler = function (selectedItemType) {
-                        _this.tools.description(selectedItemType && selectedItemType !== "None" ? DevExpress.Designer.getLocalization("The type of this " + objectName + " is: ", 'XtraEditorsExpressionEditor.Fields Description Prefix') + " " + selectedItemType : "");
-                    };
+                ExpressionEditor.prototype._createToolsOptions = function (path, fieldListProvider, treeListController) {
                     return {
-                        itemsProvider: this.fieldListProvider,
+                        itemsProvider: fieldListProvider,
                         selectedPath: ko.observable(""),
                         path: path,
                         templateName: "dx-ee-treelist-item",
-                        treeListController: new ExpressionEditorTreeListController(fieldName || "", putSelectionHandler, selectionHandler),
+                        treeListController: treeListController,
                         rtl: this.rtl
                     };
                 };
+                ExpressionEditor.prototype.onShown = function () {
+                    this.callbacks.focus();
+                };
+                ExpressionEditor.prototype.getPopupContainer = function (el) { return $(el).closest('.dx-viewport'); };
+                ;
                 return ExpressionEditor;
-            })();
+            })(DevExpress.JS.Utils.Disposable);
             Widgets.ExpressionEditor = ExpressionEditor;
-            function wrapExpressionOptionsValue(options, converter, element) {
+            function createExpressionEditorFieldListProvider(originalProvider, fieldName) {
+                return (!fieldName || !originalProvider) ? originalProvider : {
+                    getItems: function (path) {
+                        var $deferred = $.Deferred();
+                        originalProvider.getItems(path)
+                            .done(function (data) {
+                            $deferred.resolve(data.filter(function (field) { return field.name !== ko.unwrap(fieldName); }));
+                        })
+                            .fail(function () { return $deferred.reject(); });
+                        return $deferred.promise();
+                    },
+                    getValues: originalProvider.getValues
+                };
+            }
+            function wrapExpressionOptionsValue(options, converter, element, subscriptions) {
                 if (!(converter && options.path))
                     return options;
                 var _displayValue = ko.observable(options.value());
                 converter.toDisplayExpression(options.path(), options.value()).done(function (result) {
                     _displayValue(result);
+                }).fail(function () {
+                    _displayValue(options.value());
                 });
                 var subscription = options.value.subscribe(function (newValue) {
                     converter.toDisplayExpression(options.path(), newValue).done(function (result) {
                         _displayValue(result);
+                    }).fail(function () {
+                        _displayValue(newValue);
                     });
                 });
                 var displayValue = ko.pureComputed({
@@ -9141,24 +11401,254 @@ var DevExpress;
                         });
                     }
                 });
+                if (subscriptions) {
+                    subscriptions.push(displayValue);
+                    subscriptions.push(subscription);
+                }
                 ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-                    subscription.dispose();
                     displayValue.dispose();
+                    subscription.dispose();
                 });
                 return $.extend({}, options, { value: displayValue });
             }
             Widgets.wrapExpressionOptionsValue = wrapExpressionOptionsValue;
+            ko.bindingHandlers["dxAceEditor"] = {
+                init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+                    var values = valueAccessor(), text = values.value, editorContainer = values.editorContainer, editor, _setEditorText = function (editorInstance, text) {
+                        editorInstance.getSession().setValue(text || "");
+                        editorInstance.clearSelection();
+                        editorInstance.getSession().getUndoManager().reset();
+                    };
+                    if (Widgets.ace) {
+                        var showGutter = values.options.showGutter != undefined ? values.options.showGutter : true;
+                        var additionalOptions = values.additionalOptions;
+                        var langTools = Widgets.ace.require("ace/ext/language_tools");
+                        editor = Widgets.ace.edit(element);
+                        var guid = ko.observable(null);
+                        var theme = values.theme;
+                        if (!theme)
+                            theme = JS.Utils.classExists(".dx-designer-dark") ? "ace/theme/ambiance" : "ace/theme/dreamweaver";
+                        editor.setTheme(theme);
+                        editor.$blockScrolling = Infinity;
+                        var languageMode = viewModel.languageHelper.getLanguageMode();
+                        var session = editor.getSession();
+                        session.setMode(languageMode);
+                        session.gutterRenderer = {
+                            getWidth: function (session, lastLineNumber, config) { return 0; },
+                            getText: function (session, row) { return ""; }
+                        };
+                        if (additionalOptions && additionalOptions.onChange) {
+                            var timer = null;
+                            session.on("change", function (e) {
+                                if (timer !== null)
+                                    clearTimeout(timer);
+                                timer = setTimeout(function () {
+                                    additionalOptions.onChange(session);
+                                }, additionalOptions && additionalOptions.validationTimeout || 1000);
+                            });
+                        }
+                        if (additionalOptions && additionalOptions.onFocus) {
+                            editor.onFocus = function (_) { return additionalOptions.onFocus(); };
+                        }
+                        if (additionalOptions && additionalOptions.onBlur) {
+                            editor.onBlur = function (_) { return additionalOptions.onBlur(); };
+                        }
+                        langTools.setCompleters(viewModel.languageHelper.createCompleters(editor, bindingContext, viewModel));
+                        editor.setOptions(values.options);
+                        editor.renderer.setShowGutter(showGutter);
+                        var oldMouseMove = editor._defaultHandlers.guttermousemove;
+                        editor._defaultHandlers.guttermousemove = function (e) {
+                            var rect = element.getBoundingClientRect();
+                            e.x = e.x - rect.left;
+                            e.y = e.y - rect.top;
+                            oldMouseMove(e);
+                        };
+                        if (ko.isSubscribable(text)) {
+                            var subscription = text.subscribe(function (newText) {
+                                if (newText !== session.getValue()) {
+                                    _setEditorText(editor, newText);
+                                }
+                            });
+                        }
+                        _setEditorText(editor, ko.unwrap(text));
+                        if (values.callbacks)
+                            values.callbacks.focus = function () {
+                                editor.focus();
+                            };
+                        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                            subscription.dispose();
+                            values.options.focus = $.noop;
+                        });
+                    }
+                    if (ko.isObservable(editorContainer)) {
+                        editorContainer(editor);
+                    }
+                }
+            };
             ko.bindingHandlers['dxExpressionEditor'] = {
                 init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                     var $element = $(element);
                     $element.children().remove();
                     $(element).addClass("dx-popup-general");
                     var templateHtml = $('#dx-expressioneditor').text(), $element = $element.append(templateHtml), values = valueAccessor();
-                    var editorOptions = wrapExpressionOptionsValue(ko.unwrap(values.options), values.displayExpressionConverter, element);
-                    ko.applyBindings(new ExpressionEditor(editorOptions, values.fieldListProvider, viewModel.disabled, $(element).closest('.dx-rtl').length > 0, values.displayExpressionConverter), $element.children()[0]);
+                    var editor = ko.observable(null);
+                    var subscriptions = [];
+                    var optionSubscription = null;
+                    var functionsSubscription = null;
+                    var displayExpressionConverter = values.displayExpressionConverter;
+                    if (!displayExpressionConverter && values.displayNameProvider) {
+                        var displayExpressionConverterType = DevExpress.Designer["Report"]["DisplayExpressionConverter"];
+                        if (displayExpressionConverterType) {
+                            displayExpressionConverter = new displayExpressionConverterType(values.displayNameProvider);
+                        }
+                    }
+                    var createEditor = function (options) {
+                        subscriptions.forEach(function (x) { return x.dispose(); });
+                        subscriptions.splice(0);
+                        functionsSubscription && functionsSubscription.dispose();
+                        functionsSubscription = options["functions"] && ko.isSubscribable(options["functions"])
+                            ? options["functions"].subscribe(function (_) { return editor(createEditor(options)); })
+                            : null;
+                        editor() && editor().dispose();
+                        var editorOptions = wrapExpressionOptionsValue(options, displayExpressionConverter, element, subscriptions);
+                        return new ExpressionEditor(editorOptions, values.fieldListProvider, viewModel.disabled, $(element).closest('.dx-rtl').length > 0, values.displayExpressionConverter);
+                    };
+                    if (ko.isSubscribable(values.options)) {
+                        optionSubscription = values.options.subscribe(function (newOptions) {
+                            editor(createEditor(newOptions));
+                        });
+                    }
+                    var options = ko.unwrap(values.options);
+                    editor(createEditor(ko.unwrap(values.options)));
+                    ko.applyBindings(editor, $element.children()[0]);
+                    ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                        editor() && editor().dispose();
+                        optionSubscription && optionSubscription.dispose();
+                        functionsSubscription && functionsSubscription.dispose();
+                        subscriptions.forEach(function (x) { return x.dispose(); });
+                        subscriptions.splice(0);
+                    });
                     return { controlsDescendantBindings: true };
                 }
             };
+        })(Widgets = JS.Widgets || (JS.Widgets = {}));
+    })(JS = DevExpress.JS || (DevExpress.JS = {}));
+})(DevExpress || (DevExpress = {}));
+var DevExpress;
+(function (DevExpress) {
+    var JS;
+    (function (JS) {
+        var Widgets;
+        (function (Widgets) {
+            var FilterEditorCodeCompletor = (function (_super) {
+                __extends(FilterEditorCodeCompletor, _super);
+                function FilterEditorCodeCompletor(editor, bindingContext, fieldListProvider, path) {
+                    _super.call(this, editor, bindingContext, fieldListProvider, path);
+                    var helper = new Widgets.FilterEditorHelper();
+                    var functions = [];
+                    var aggregate = [];
+                    var operators = [];
+                    var groups = Object.keys(helper.filterEditorOperators);
+                    groups.forEach(function (groupName) {
+                        helper.filterEditorOperators[groupName].forEach(function (operator) {
+                            if (operator.insertVal) {
+                                var name = operator.name, insertVal = operator.insertVal, paramCount = operator.paramCount;
+                                if (operator.type === JS.Data.FunctionOperatorType && functions.filter(function (x) { return x.name === name; }).length === 0) {
+                                    functions.push({ name: name, insertVal: insertVal });
+                                }
+                                else if (operator.type === JS.Data.Aggregate && aggregate.filter(function (x) { return x.name === name; }).length === 0) {
+                                    aggregate.push({ name: name, insertVal: insertVal });
+                                }
+                                else if (operator.type !== JS.Data.Aggregate && operator.type !== JS.Data.FunctionOperatorType && operators.filter(function (x) { return x.name === name; }).length === 0) {
+                                    operators.push({ name: name, insertVal: insertVal, paramCount: paramCount });
+                                }
+                            }
+                        });
+                    });
+                    this.filterEditorAvailable = { operators: operators, aggregate: aggregate, functions: functions };
+                }
+                FilterEditorCodeCompletor.prototype.getFunctionsCompletions = function () {
+                    var functions = [];
+                    this.filterEditorAvailable.functions.forEach(function (funcItem) {
+                        functions.push(Widgets.createFunctionCompletion({ text: funcItem.name, paramCount: funcItem.insertVal.split(',').length }, funcItem.insertVal, funcItem.insertVal));
+                    });
+                    return functions;
+                };
+                FilterEditorCodeCompletor.prototype.getAggregateCompletions = function () {
+                    var functions = [];
+                    this.filterEditorAvailable.aggragate.forEach(function (funcItem) {
+                        functions.push(Widgets.createFunctionCompletion({ text: funcItem.name, paramCount: 0 }, funcItem.insertVal, funcItem.insertVal));
+                    });
+                    return functions;
+                };
+                FilterEditorCodeCompletor.prototype.getOperatorCompletions = function (prefix) {
+                    var operators = [];
+                    this.filterEditorAvailable.operators.forEach(function (operator) {
+                        operators.push((operator.insertVal.match(new RegExp("[\(][^\(\)]*[\)]", "g"))) ?
+                            Widgets.createFunctionCompletion({ text: operator.name, paramCount: operator.paramCount || operator.insertVal.split(',').length }, operator.insertVal, operator.insertVal) :
+                            { caption: operator.insertVal, snippet: prefix + operator.insertVal, meta: "operator" });
+                    });
+                    return operators;
+                };
+                FilterEditorCodeCompletor.prototype.beforeInsertMatch = function (editor, token, parentPrefix) {
+                    if (parentPrefix === "Parameters.") {
+                        var cursorPosition = editor.getCursorPosition();
+                        token = token || !this["_isInContext"]() && editor.session.getTokenAt(cursorPosition.row, cursorPosition.column);
+                        if (token) {
+                            var trimmedText = token.value.trim();
+                            var lastNonSpaceSymbol = trimmedText[trimmedText.length - 1];
+                            if ((token.type === "support.variable" || token.type === "support.function")) {
+                                editor.session.remove({
+                                    start: { column: token.start - 1 || 0, row: cursorPosition.row },
+                                    end: { column: Math.max(token.start + token.value.length, cursorPosition.column), row: cursorPosition.row }
+                                });
+                            }
+                            else if (lastNonSpaceSymbol === "?") {
+                                editor.session.remove({
+                                    start: { column: (token.start + token.value.length - 1) || 0, row: cursorPosition.row },
+                                    end: { column: Math.max(token.start + token.value.length, cursorPosition.column), row: cursorPosition.row }
+                                });
+                            }
+                        }
+                    }
+                    else {
+                        _super.prototype.beforeInsertMatch.call(this, editor, token, parentPrefix);
+                    }
+                };
+                FilterEditorCodeCompletor.prototype.insertMatch = function (editor, parentPrefix, fieldName) {
+                    if (parentPrefix === "Parameters.") {
+                        editor.insert("?" + fieldName);
+                    }
+                    else {
+                        _super.prototype.insertMatch.call(this, editor, parentPrefix, fieldName);
+                    }
+                };
+                FilterEditorCodeCompletor.prototype.generateFieldDisplayName = function (parentPrefix, displayName) {
+                    if (parentPrefix === "Parameters.") {
+                        return "?" + displayName;
+                    }
+                    return _super.prototype.generateFieldDisplayName.call(this, parentPrefix, displayName);
+                };
+                FilterEditorCodeCompletor.prototype.defaultProcess = function (token, text, completions) {
+                    var _this = this;
+                    var trimmedText = text.trim();
+                    var lastNonSpaceSymbol = trimmedText[trimmedText.length - 1];
+                    if (lastNonSpaceSymbol === '?' && text[text.length - 1] !== " ") {
+                        var $deferred = $.Deferred();
+                        var $parametersPromise = this["_fieldListProvider"].getItems(new Widgets.PathRequest("Parameters"))
+                            .done(function (fields) {
+                            completions.push.apply(completions, _this["_convertDataMemberInfoToCompletions"](fields, token, "Parameters."));
+                        });
+                        $.when($parametersPromise).always(function () { $deferred.resolve(completions); });
+                        return $deferred.promise();
+                    }
+                    else {
+                        return _super.prototype.defaultProcess.call(this, token, text, completions);
+                    }
+                };
+                return FilterEditorCodeCompletor;
+            })(Widgets.CodeCompletor);
+            Widgets.FilterEditorCodeCompletor = FilterEditorCodeCompletor;
         })(Widgets = JS.Widgets || (JS.Widgets = {}));
     })(JS = DevExpress.JS || (DevExpress.JS = {}));
 })(DevExpress || (DevExpress = {}));
@@ -9190,6 +11680,15 @@ var DevExpress;
                     this.selectedFormats = ko.observable([]);
                     this.selectedTypes = ko.observable([]);
                     this.popupVisible = ko.observable(false);
+                    this.localizationIdMap = {
+                        'title': { text: 'FormatString Editor', localizationId: 'ASPxReportsStringId.ReportDesigner_FormatStringEditor_Title' },
+                        'category': { text: 'Category', localizationId: 'DevExpress.XtraPrinting.XlDocumentOptions.Category' },
+                        'preview': { text: 'Preview', localizationId: 'ASPxReportsStringId.ReportDesigner_TooltipButtons_Preview' },
+                        'types': { text: 'Types', localizationId: 'ASPxReportsStringId.ReportDesigner_FormatStringEditor_Types' },
+                        'add': { text: 'Add', localizationId: 'ChartStringId.MenuItemAdd' },
+                        'prefix': { text: 'Prefix', localizationId: 'DevExpress.XtraPrinting.Recipient.Prefix' },
+                        'suffix': { text: 'Suffix', localizationId: 'ASPxReportsStringId.ReportDesigner_FormatStringEditor_Suffix' }
+                    };
                     this.option("value", value);
                     this.option("disabled", disabled || false);
                     this.option("rtl", rtl || false);
@@ -9267,12 +11766,12 @@ var DevExpress;
                 FormatStringEditor.prototype._createMainPopupButtons = function () {
                     var self = this;
                     this.buttonItems = [
-                        { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: 'OK', onClick: function () { self.okAction(); } } },
-                        { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: 'Cancel', onClick: function () { self.popupVisible(false); } } }
+                        { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: DevExpress.Designer.getLocalization('OK', DevExpress.Designer.StringId.DataAccessBtnOK), onClick: function () { self.okAction(); } } },
+                        { toolbar: 'bottom', location: 'after', widget: 'dxButton', options: { text: DevExpress.Designer.getLocalization('Cancel', DevExpress.Designer.StringId.DataAccessBtnCancel), onClick: function () { self.popupVisible(false); } } }
                     ];
                 };
                 FormatStringEditor.prototype._convertArray = function (array, canRemove) {
-                    return array.map(function (item) { return { name: item, canRemove: !!canRemove }; });
+                    return array.map(function (item) { return { name: item, displayName: DevExpress.Designer.getLocalization(item), canRemove: !!canRemove }; });
                 };
                 FormatStringEditor.prototype._scrollToBottom = function () {
                     var $scrollView = $(".dx-format-string .dx-format-string-formats").find(".dx-scrollview").filter(":visible");
@@ -9306,7 +11805,7 @@ var DevExpress;
                             _this.previewString(previewString);
                     }).fail(function (error) {
                         if (_this._lastUpdatePreviewPromise === updatedPreviewPromise)
-                            _this.previewString('Preview string is not available');
+                            _this.previewString(DevExpress.Designer.getLocalization("Preview string is not available", "ASPxReportsStringId.ReportDesigner_FormatStringEditor_PreviewNotAvailable_Text"));
                     });
                 };
                 FormatStringEditor.prototype._getGeneralPreview = function (value) {
@@ -9404,6 +11903,12 @@ var DevExpress;
                     enumerable: true,
                     configurable: true
                 });
+                FormatStringEditor.prototype.getDisplayText = function (key) {
+                    return DevExpress.Designer.getLocalization(this.localizationIdMap[key].text, this.localizationIdMap[key].localizationId);
+                };
+                FormatStringEditor.prototype.getPopupContainer = function (el) {
+                    return $(el).closest(this.option("popupContainer"));
+                };
                 return FormatStringEditor;
             })(DevExpress.JS.Utils.Disposable);
             Widgets.FormatStringEditor = FormatStringEditor;
@@ -9412,7 +11917,7 @@ var DevExpress;
                     $(element).children().remove();
                     $(element).addClass("dx-popup-general");
                     var templateHtml = $('#dx-format-string').text(), $element = $(element).append(templateHtml), values = valueAccessor();
-                    var formatEditor = new FormatStringEditor(values.value, values['disabled'], values['standardPatterns'], values['customPatterns'], values['actions'], values['rtl'], values['popupContainer']);
+                    var formatEditor = new FormatStringEditor(values.value, values['disabled'], values['standardPatterns'], values['customPatterns'] || DevExpress.Designer["Report"] && DevExpress.Designer["Report"]["formatStringEditorCustomSet"], values['actions'] || DevExpress.Designer["Report"] && DevExpress.Designer["Report"]["FormatStringService"].actions, values['rtl'], values['popupContainer']);
                     ko.applyBindings(formatEditor, $element.children()[0]);
                     ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
                         formatEditor.dispose();
@@ -9462,14 +11967,31 @@ var DevExpress;
                 return JS.Widgets.ValueEditorHelper.isValid(this.value, "float", stringValue) ? stringValue : defaultValue;
             }
             Utils.floatValueConverter = floatValueConverter;
+            function classExists(selector) {
+                var lowerCaseSelector = selector.toLowerCase(), result = false;
+                for (var sheetIndex = 0; sheetIndex < (document.styleSheets || []).length; sheetIndex++) {
+                    var rules = document.styleSheets[sheetIndex]["rules"] ? document.styleSheets[sheetIndex]["rules"] : document.styleSheets[sheetIndex]["cssRules"];
+                    for (var ruleIndex = 0; ruleIndex < (rules || []).length; ruleIndex++) {
+                        if (rules[ruleIndex].selectorText && rules[ruleIndex].selectorText.toLowerCase() === lowerCaseSelector) {
+                            result = true;
+                            break;
+                        }
+                    }
+                    if (result) {
+                        break;
+                    }
+                }
+                return result;
+            }
+            Utils.classExists = classExists;
             ko.bindingHandlers["focus"] = {
                 init: function (element, valueAccessor) {
                     var visible = valueAccessor().on || valueAccessor();
                     var subscription = visible.subscribe(function (newVal) {
                         if (newVal) {
-                            if (navigator.userAgent.toLowerCase().indexOf('firefox') === -1) {
+                            setTimeout(function () {
                                 $(element).find(":input").focus();
-                            }
+                            }, 1);
                         }
                     });
                     ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
@@ -9477,6 +11999,10 @@ var DevExpress;
                     });
                 }
             };
+            function isList(data) {
+                return data.isList === true || data.specifics === "List" || data.specifics === "ListSource";
+            }
+            Utils.isList = isList;
         })(Utils = JS.Utils || (JS.Utils = {}));
     })(JS = DevExpress.JS || (DevExpress.JS = {}));
 })(DevExpress || (DevExpress = {}));
@@ -9719,7 +12245,7 @@ var DevExpress;
     })(JS = DevExpress.JS || (DevExpress.JS = {}));
 })(DevExpress || (DevExpress = {}));
 //# sourceMappingURL=dx-ko-widgets.js.map
-/* parser generated by jison 0.4.17 */
+/* parser generated by jison 0.4.18 */
 /*
   Returns a Parser object of the following structure:
 
@@ -9793,12 +12319,12 @@ var DevExpress;
   }
 */
 var criteriaparser = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,16],$V1=[1,11],$V2=[1,29],$V3=[1,4],$V4=[1,27],$V5=[1,10],$V6=[1,21],$V7=[1,19],$V8=[1,30],$V9=[1,32],$Va=[1,25],$Vb=[1,24],$Vc=[1,34],$Vd=[1,31],$Ve=[1,33],$Vf=[1,13],$Vg=[1,5],$Vh=[1,14],$Vi=[1,3],$Vj=[1,12],$Vk=[1,15],$Vl=[1,38],$Vm=[1,47],$Vn=[1,46],$Vo=[1,43],$Vp=[1,39],$Vq=[1,50],$Vr=[1,52],$Vs=[1,53],$Vt=[1,56],$Vu=[1,55],$Vv=[1,51],$Vw=[1,54],$Vx=[1,36],$Vy=[1,37],$Vz=[1,40],$VA=[1,41],$VB=[1,42],$VC=[1,44],$VD=[1,45],$VE=[1,48],$VF=[1,49],$VG=[5,11,17,19,20,23,26,40,41,42,43,44,45,46,50,56,60,61,62,63,64,66,67,68,69],$VH=[1,66],$VI=[5,11,15,16,17,19,20,22,23,26,40,41,42,43,44,45,46,50,56,60,61,62,63,64,66,67,68,69],$VJ=[2,14],$VK=[1,69],$VL=[1,71],$VM=[5,11,17,19,20,23,26,27,40,41,42,43,44,45,46,50,56,60,61,62,63,64,66,67,68,69],$VN=[1,94],$VO=[1,95],$VP=[1,93],$VQ=[1,78],$VR=[1,79],$VS=[1,80],$VT=[1,81],$VU=[1,82],$VV=[1,83],$VW=[1,84],$VX=[1,85],$VY=[1,86],$VZ=[1,87],$V_=[1,88],$V$=[1,89],$V01=[1,90],$V11=[1,91],$V21=[1,92],$V31=[5,11,16,17,19,20,23,26,40,41,42,43,44,45,46,50,56,60,61,62,63,64,66,67,68,69],$V41=[1,96],$V51=[1,97],$V61=[5,11,19,20,23,40,41,42,43,44,45,46,50,56,63,64,66,67,68,69],$V71=[5,11,41,42,50,56],$V81=[16,50],$V91=[15,16,17,22,25,26,27,28,50],$Va1=[16,17,20],$Vb1=[5,11,17,19,20,23,26,40,41,42,43,44,45,46,50,56,63,64,66,67,68,69],$Vc1=[5,11,40,41,42,45,46,50,56,66,67],$Vd1=[5,11,19,20,40,41,42,45,46,50,56,66,67,68,69],$Ve1=[11,56],$Vf1=[5,11,16,17,19,20,23,26,27,40,41,42,43,44,45,46,50,56,60,61,62,63,64,66,67,68,69];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,16],$V1=[1,11],$V2=[1,29],$V3=[1,4],$V4=[1,27],$V5=[1,3],$V6=[1,30],$V7=[1,32],$V8=[1,25],$V9=[1,24],$Va=[1,34],$Vb=[1,31],$Vc=[1,33],$Vd=[1,13],$Ve=[1,5],$Vf=[1,10],$Vg=[1,21],$Vh=[1,14],$Vi=[1,19],$Vj=[1,12],$Vk=[1,15],$Vl=[1,38],$Vm=[1,47],$Vn=[1,46],$Vo=[1,43],$Vp=[1,50],$Vq=[1,52],$Vr=[1,53],$Vs=[1,56],$Vt=[1,55],$Vu=[1,51],$Vv=[1,54],$Vw=[1,40],$Vx=[1,39],$Vy=[1,37],$Vz=[1,36],$VA=[1,41],$VB=[1,42],$VC=[1,44],$VD=[1,45],$VE=[1,48],$VF=[1,49],$VG=[5,11,17,19,20,23,34,35,36,37,38,39,40,42,43,46,48,55,62,63,64,66,67,68,69],$VH=[1,66],$VI=[5,11,15,16,17,19,20,22,23,34,35,36,37,38,39,40,42,43,46,48,55,62,63,64,66,67,68,69],$VJ=[2,14],$VK=[1,69],$VL=[1,71],$VM=[5,11,17,19,20,23,34,35,36,37,38,39,40,42,43,44,46,48,55,62,63,64,66,67,68,69],$VN=[1,79],$VO=[1,96],$VP=[1,78],$VQ=[1,80],$VR=[1,81],$VS=[1,82],$VT=[1,83],$VU=[1,84],$VV=[1,85],$VW=[1,86],$VX=[1,87],$VY=[1,88],$VZ=[1,89],$V_=[1,90],$V$=[1,91],$V01=[1,92],$V11=[1,93],$V21=[1,94],$V31=[1,95],$V41=[5,11,16,17,19,20,23,34,35,36,37,38,39,40,42,43,46,48,55,62,63,64,66,67,68,69],$V51=[1,97],$V61=[1,98],$V71=[5,11,19,20,23,34,35,36,37,38,39,40,48,55,63,64,66,67,68,69],$V81=[5,11,35,36,48,55],$V91=[16,55],$Va1=[1,147],$Vb1=[1,169],$Vc1=[1,165],$Vd1=[1,164],$Ve1=[1,148],$Vf1=[1,149],$Vg1=[1,150],$Vh1=[1,151],$Vi1=[1,152],$Vj1=[1,153],$Vk1=[1,154],$Vl1=[1,155],$Vm1=[1,156],$Vn1=[1,157],$Vo1=[1,158],$Vp1=[1,159],$Vq1=[1,160],$Vr1=[1,161],$Vs1=[1,162],$Vt1=[1,163],$Vu1=[1,166],$Vv1=[1,167],$Vw1=[1,168],$Vx1=[1,170],$Vy1=[1,171],$Vz1=[1,172],$VA1=[15,16,17,22,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,55],$VB1=[16,17,20],$VC1=[5,11,17,19,20,23,34,35,36,37,38,39,40,43,48,55,63,64,66,67,68,69],$VD1=[5,11,34,35,36,39,40,48,55,66,67],$VE1=[5,11,19,20,34,35,36,39,40,48,55,66,67,68,69],$VF1=[11,48],$VG1=[5,11,16,17,19,20,23,34,35,36,37,38,39,40,42,43,44,46,48,55,62,63,64,66,67,68,69];
 var parser = {trace: function trace() { },
 yy: {},
-symbols_: {"error":2,"expressions":3,"exp":4,"EOF":5,"criteriaList":6,"\\0":7,"queryCollection":8,"expOrSort":9,";":10,",":11,"SORT_ASC":12,"SORT_DESC":13,"type":14,"COL":15,".":16,"+":17,"upcast":18,"OP_LT":19,"OP_GT":20,"column":21,"NUM":22,"^":23,"fieldColumn":24,"something":25,"-":26,"[":27,"=":28,"param":29,"?":30,"property":31,"columnOrAggregate":32,"AGG_COUNT":33,"AGG_AVG":34,"AGG_MAX":35,"AGG_MIN":36,"AGG_SINGLE":37,"AGG_EXISTS":38,"AGG_SUM":39,"OP_LIKE":40,"AND":41,"OR":42,"OP_BETWEEN":43,"OP_IN":44,"NOT":45,"IS":46,"NULL":47,"propertyWithAggregate":48,"compositeProperty":49,"]":50,"field":51,"aggregate":52,"aggregateSuffix":53,"topLevelAggregate":54,"(":55,")":56,"MinStart":57,"MaxStart":58,"CONST":59,"*":60,"/":61,"%":62,"|":63,"&":64,"~":65,"OP_EQ":66,"OP_NE":67,"OP_GE":68,"OP_LE":69,"argumentslist":70,"FUNCTION":71,"commadelimitedlist":72,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",7:"\\0",10:";",11:",",12:"SORT_ASC",13:"SORT_DESC",15:"COL",16:".",17:"+",19:"OP_LT",20:"OP_GT",22:"NUM",23:"^",25:"something",26:"-",27:"[",28:"=",30:"?",33:"AGG_COUNT",34:"AGG_AVG",35:"AGG_MAX",36:"AGG_MIN",37:"AGG_SINGLE",38:"AGG_EXISTS",39:"AGG_SUM",40:"OP_LIKE",41:"AND",42:"OR",43:"OP_BETWEEN",44:"OP_IN",45:"NOT",46:"IS",47:"NULL",50:"]",55:"(",56:")",59:"CONST",60:"*",61:"/",62:"%",63:"|",64:"&",65:"~",66:"OP_EQ",67:"OP_NE",68:"OP_GE",69:"OP_LE",71:"FUNCTION"},
-productions_: [0,[3,2],[6,1],[6,2],[8,1],[8,3],[8,3],[9,1],[9,2],[9,2],[14,1],[14,3],[14,3],[18,4],[21,1],[21,2],[21,2],[21,1],[21,1],[24,1],[24,1],[24,2],[24,2],[24,2],[24,1],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[29,2],[29,1],[31,1],[31,3],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[48,1],[48,3],[49,3],[49,4],[49,5],[49,6],[51,1],[51,2],[52,4],[52,3],[52,6],[52,5],[52,4],[52,3],[52,1],[54,1],[53,1],[53,1],[53,3],[53,3],[53,4],[53,4],[53,3],[53,4],[53,2],[53,2],[57,3],[58,3],[4,1],[4,1],[4,1],[4,1],[4,1],[4,1],[4,1],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,2],[4,2],[4,2],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,4],[4,2],[4,3],[4,3],[4,3],[4,3],[4,4],[4,3],[4,7],[4,2],[4,2],[4,2],[4,4],[4,4],[70,3],[70,2],[72,1],[72,3]],
+symbols_: {"error":2,"expressions":3,"exp":4,"EOF":5,"criteriaList":6,"\\0":7,"queryCollection":8,"expOrSort":9,";":10,",":11,"SORT_ASC":12,"SORT_DESC":13,"type":14,"COL":15,".":16,"+":17,"upcast":18,"OP_LT":19,"OP_GT":20,"column":21,"NUM":22,"^":23,"fieldColumn":24,"something":25,"CONST":26,"AGG_COUNT":27,"AGG_AVG":28,"AGG_MAX":29,"AGG_MIN":30,"AGG_SINGLE":31,"AGG_EXISTS":32,"AGG_SUM":33,"OP_LIKE":34,"AND":35,"OR":36,"OP_BETWEEN":37,"OP_IN":38,"NOT":39,"IS":40,"NULL":41,"%":42,"-":43,"[":44,"=":45,"/":46,"(":47,")":48,"param":49,"?":50,"property":51,"columnOrAggregate":52,"propertyWithAggregate":53,"compositeProperty":54,"]":55,"field":56,"aggregate":57,"aggregateSuffix":58,"topLevelAggregate":59,"MinStart":60,"MaxStart":61,"*":62,"|":63,"&":64,"~":65,"OP_EQ":66,"OP_NE":67,"OP_GE":68,"OP_LE":69,"argumentslist":70,"FUNCTION":71,"commadelimitedlist":72,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",7:"\\0",10:";",11:",",12:"SORT_ASC",13:"SORT_DESC",15:"COL",16:".",17:"+",19:"OP_LT",20:"OP_GT",22:"NUM",23:"^",25:"something",26:"CONST",27:"AGG_COUNT",28:"AGG_AVG",29:"AGG_MAX",30:"AGG_MIN",31:"AGG_SINGLE",32:"AGG_EXISTS",33:"AGG_SUM",34:"OP_LIKE",35:"AND",36:"OR",37:"OP_BETWEEN",38:"OP_IN",39:"NOT",40:"IS",41:"NULL",42:"%",43:"-",44:"[",45:"=",46:"/",47:"(",48:")",50:"?",55:"]",62:"*",63:"|",64:"&",65:"~",66:"OP_EQ",67:"OP_NE",68:"OP_GE",69:"OP_LE",71:"FUNCTION"},
+productions_: [0,[3,2],[6,1],[6,2],[8,1],[8,3],[8,3],[9,1],[9,2],[9,2],[14,1],[14,3],[14,3],[18,4],[21,1],[21,2],[21,2],[21,1],[21,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,2],[24,1],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,3],[24,4],[24,4],[24,4],[49,2],[49,1],[51,1],[51,3],[52,1],[53,1],[53,3],[54,3],[54,4],[54,5],[54,6],[56,1],[56,2],[57,4],[57,3],[57,6],[57,5],[57,4],[57,3],[57,1],[59,1],[58,1],[58,1],[58,3],[58,3],[58,4],[58,4],[58,3],[58,4],[58,2],[58,2],[60,3],[61,3],[4,1],[4,1],[4,1],[4,1],[4,1],[4,1],[4,1],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,2],[4,2],[4,2],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,3],[4,4],[4,2],[4,3],[4,3],[4,3],[4,3],[4,4],[4,3],[4,7],[4,2],[4,2],[4,2],[4,4],[4,4],[70,3],[70,2],[72,1],[72,3]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -9819,10 +12345,10 @@ break;
 case 5: case 6:
  this.$ = $$[$0-2]; this.$.push($$[$0]); 
 break;
-case 7: case 10: case 17: case 39: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57: case 88: case 89: case 90: case 91:
+case 7: case 10: case 17: case 83: case 86: case 117: case 118: case 119: case 120:
  this.$ = $$[$0]; 
 break;
-case 8: case 81: case 82: case 114: case 124:
+case 8: case 110: case 111: case 143: case 153:
  this.$ = $$[$0-1]; 
 break;
 case 9:
@@ -9837,10 +12363,10 @@ break;
 case 13:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: '<' + $$[$0-2].propertyName + '>' + $$[$0].propertyName }); 
 break;
-case 14: case 20:
+case 14: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0] }); 
 break;
-case 15: case 16: case 21:
+case 15: case 16: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-1].propertyName + ' ' + $$[$0] }); 
 break;
 case 18:
@@ -9849,40 +12375,52 @@ break;
 case 19:
   this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0] }); 
 break;
-case 22: case 23:
+case 54: case 55: case 56:
   this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-1].propertyName + ' ' + $$[$0] }); 
 break;
-case 24:
+case 57:
   this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: "^" }); 
 break;
-case 25: case 26: case 27:
+case 58: case 59: case 60: case 61:
   this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-2].propertyName + '-' + $$[$0] }); 
 break;
-case 28: case 29: case 30:
+case 62: case 63: case 64: case 65:
   this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-2].propertyName + '[' + $$[$0] }); 
 break;
-case 31: case 32: case 33:
+case 66: case 67: case 68: case 69:
   this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-2].propertyName + '+' + $$[$0] }); 
 break;
-case 34: case 35: case 36:
+case 70: case 71: case 72: case 73:
   this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-2].propertyName + '=' + $$[$0] }); 
 break;
-case 37:
+case 74:
+  this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-2].propertyName + '/' + $$[$0] }); 
+break;
+case 75: case 76: case 77:
+  this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-2].propertyName + '/'  + $$[$0] }); 
+break;
+case 78: case 79:
+  this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-3].propertyName + ' (' + $$[$0-1] + ')' }); 
+break;
+case 80:
+  this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-3].propertyName + ' (' + $$[$0-1].propertyName + ')' }); 
+break;
+case 81:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("parameter", { parameterName: $$[$0] }); 
 break;
-case 38:
+case 82:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("value", { }); 
 break;
-case 40:
+case 84:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-2].propertyName + '.' + $$[$0].propertyName }); 
 break;
-case 41:
+case 85:
  this.$ = $$[$0].propertyName; 
 break;
-case 58:
+case 87:
  this.$ = $$[$0-2] + $$[$0-1] + $$[$0]; 
 break;
-case 59:
+case 88:
 
   var lst = [];
   lst.push($$[$0-1]);
@@ -9893,7 +12431,7 @@ case 59:
   };
  
 break;
-case 60:
+case 89:
 
 	var lst = [];
   lst.push($$[$0-2] + '.');
@@ -9904,59 +12442,59 @@ case 60:
   };
  
 break;
-case 61:
+case 90:
 
   var propertyNameObject = $$[$0-4];
   propertyNameObject.names.push($$[$0-1]);
   this.$ = propertyNameObject;
  
 break;
-case 62:
+case 91:
 
   var propertyNameObject = $$[$0-5];
   propertyNameObject.names.push($$[$0-2] + '.');
   this.$ = propertyNameObject;
  
 break;
-case 63:
+case 92:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0].names.join('.'), startColumn: $$[$0].column, startLine: $$[$0].line }); 
 break;
-case 64:
+case 93:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("property", { }); 
 break;
-case 65:
+case 94:
 
 		var agg = $$[$0];
 		var collectionProperty = DevExpress.JS.Data.criteriaCreator.process("property", { });
 		this.$ = DevExpress.JS.Data.JoinOperand.joinOrAggregate(collectionProperty, null, agg.operatorType, agg.aggregatedExpression);
 	
 break;
-case 66:
+case 95:
 
 		var agg = $$[$0];
 		var prop = DevExpress.JS.Data.criteriaCreator.process("property", { propertyName: $$[$0-2].names.join('.'), startColumn: $$[$0-2].column, startLine: $$[$0-2].line });
 		this.$ = DevExpress.JS.Data.JoinOperand.joinOrAggregate(prop, null, agg.operatorType, agg.aggregatedExpression);
 	
 break;
-case 67:
+case 96:
 
 		var agg = $$[$0];
 		this.$ = DevExpress.JS.Data.JoinOperand.joinOrAggregate($$[$0-5], $$[$0-3], agg.operatorType, agg.aggregatedExpression);
 	
 break;
-case 68:
+case 97:
 
 		var agg = $$[$0];
 		this.$ = DevExpress.JS.Data.JoinOperand.joinOrAggregate($$[$0-4], null, agg.operatorType, agg.aggregatedExpression);
 	
 break;
-case 69:
+case 98:
  this.$ = DevExpress.JS.Data.JoinOperand.joinOrAggregate($$[$0-3], $$[$0-1], DevExpress.JS.Data.Aggregate.Exists, null); 
 break;
-case 70:
+case 99:
  this.$ = DevExpress.JS.Data.JoinOperand.joinOrAggregate($$[$0-2], null, DevExpress.JS.Data.Aggregate.Exists, null); 
 break;
-case 73: case 75:
+case 102: case 104:
  
 		this.$ = DevExpress.JS.Data.criteriaCreator.process("aggregate", { 
 			property: null,
@@ -9966,7 +12504,7 @@ case 73: case 75:
 		});
 	
 break;
-case 74: case 76:
+case 103: case 105:
  
 		this.$ = DevExpress.JS.Data.criteriaCreator.process("aggregate", { 
 			property: null,
@@ -9976,7 +12514,7 @@ case 74: case 76:
 		});
 	
 break;
-case 77:
+case 106:
  
 		this.$ = DevExpress.JS.Data.criteriaCreator.process("aggregate", { 
 			property: null,
@@ -9986,7 +12524,7 @@ case 77:
 		});
 	
 break;
-case 78:
+case 107:
 
 		this.$ = DevExpress.JS.Data.criteriaCreator.process("aggregate", { 
 			property: null,
@@ -9996,7 +12534,7 @@ case 78:
 		});
 	
 break;
-case 79:
+case 108:
  
 		this.$ = DevExpress.JS.Data.criteriaCreator.process("aggregate", { 
 			property: null,
@@ -10006,7 +12544,7 @@ case 79:
 		});
 	
 break;
-case 80:
+case 109:
  
 		this.$ = DevExpress.JS.Data.criteriaCreator.process("aggregate", { 
 			property: null,
@@ -10016,7 +12554,7 @@ case 80:
 		});
 	
 break;
-case 83:
+case 112:
  
 		this.$ = DevExpress.JS.Data.criteriaCreator.process("aggregate", { 
 			property: null,
@@ -10026,7 +12564,7 @@ case 83:
 		});
 	
 break;
-case 84:
+case 113:
  
 		this.$ = DevExpress.JS.Data.criteriaCreator.process("aggregate", { 
 			property: null,
@@ -10036,69 +12574,69 @@ case 84:
 		});
 	
 break;
-case 85: case 86:
+case 114: case 115:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("const", { value: $$[$0] }); 
 break;
-case 87:
+case 116:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("const", { value: null }); 
 break;
-case 92:
+case 121:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.Multiply }); 
 break;
-case 93:
+case 122:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.Divide }); 
 break;
-case 94:
+case 123:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.Plus }); 
 break;
-case 95:
+case 124:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.Minus }); 
 break;
-case 96:
+case 125:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.Modulo }); 
 break;
-case 97:
+case 126:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.BitwiseOr }); 
 break;
-case 98:
+case 127:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.BitwiseAnd }); 
 break;
-case 99:
+case 128:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.BitwiseXor }); 
 break;
-case 100:
+case 129:
 
 								this.$ = DevExpress.JS.Data.criteriaCreator.process("unary", { operatorType: DevExpress.JS.Data.UnaryOperatorType.Minus, operator: $$[$0] });
 							
 break;
-case 101:
+case 130:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("unary", { operatorType: DevExpress.JS.Data.UnaryOperatorType.Plus, operator: $$[$0] }); 
 break;
-case 102:
+case 131:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("unary", { operatorType: DevExpress.JS.Data.UnaryOperatorType.BitwiseNot, operator: $$[$0] }); 
 break;
-case 103:
+case 132:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.Equal }); 
 break;
-case 104:
+case 133:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.NotEqual }); 
 break;
-case 105:
+case 134:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.Greater }); 
 break;
-case 106:
+case 135:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.Less }); 
 break;
-case 107:
+case 136:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.GreaterOrEqual }); 
 break;
-case 108:
+case 137:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.LessOrEqual }); 
 break;
-case 109:
+case 138:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("binary",  { left: $$[$0-2], right: $$[$0], operatorType: DevExpress.JS.Data.BinaryOperatorType.Like }); 
 break;
-case 110:
+case 139:
 
 		this.$ = DevExpress.JS.Data.criteriaCreator.process("unary", { 
 			operatorType: DevExpress.JS.Data.UnaryOperatorType.Not, 
@@ -10106,19 +12644,19 @@ case 110:
 		});
 	
 break;
-case 111:
+case 140:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("unary", { operatorType: DevExpress.JS.Data.UnaryOperatorType.Not, operator: $$[$0] }); 
 break;
-case 112:
+case 141:
  this.$ = DevExpress.JS.Data.GroupOperator.combine(DevExpress.JS.Data.GroupOperatorType.And, [$$[$0-2], $$[$0]]); 
 break;
-case 113:
+case 142:
  this.$ = DevExpress.JS.Data.GroupOperator.combine(DevExpress.JS.Data.GroupOperatorType.Or, [$$[$0-2], $$[$0]]); 
 break;
-case 115:
+case 144:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("unary", { operatorType: DevExpress.JS.Data.UnaryOperatorType.IsNull, operator: $$[$0-2] }); 
 break;
-case 116:
+case 145:
  
 		this.$ = DevExpress.JS.Data.criteriaCreator.process("unary", { 
 			operatorType: DevExpress.JS.Data.UnaryOperatorType.Not,
@@ -10126,35 +12664,35 @@ case 116:
 		}); 
 	
 break;
-case 117:
+case 146:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("in", { criteriaOperator: $$[$0-2], operands: $$[$0] }); 
 break;
-case 118:
+case 147:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("between", { property: $$[$0-6], begin: $$[$0-3], end: $$[$0-1] }); 
 break;
-case 119: case 120:
+case 148: case 149:
   this.$ = DevExpress.JS.Data.criteriaCreator.process("function", { operatorType: DevExpress.JS.Data.FunctionOperatorType[$$[$0-1]] || $$[$0-1], operands: $$[$0] }); 
 break;
-case 121:
+case 150:
  this.$ = null; 
 break;
-case 122:
+case 151:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("function", { operatorType: DevExpress.JS.Data.FunctionOperatorType.Min, operands: [$$[$0-3].aggregatedExpression, $$[$0-1]] }); 
 break;
-case 123:
+case 152:
  this.$ = DevExpress.JS.Data.criteriaCreator.process("function", { operatorType: DevExpress.JS.Data.FunctionOperatorType.Max, operands: [$$[$0-3].aggregatedExpression, $$[$0-1]] }); 
 break;
-case 125:
+case 154:
  this.$ = []; 
 break;
-case 126:
+case 155:
 
 							var lst = [];
 							lst.push($$[$0]);
 							this.$ = lst;
 						
 break;
-case 127:
+case 156:
 
 							var lst = $$[$0-2];
 							lst.push($$[$0]);
@@ -10163,19 +12701,15 @@ case 127:
 break;
 }
 },
-table: [{3:1,4:2,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{1:[3]},{5:[1,35],17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,85]),o($VG,[2,86]),o($VG,[2,87]),o($VG,[2,88]),o($VG,[2,89],{27:[1,57]}),o($VG,[2,90],{16:[1,58]}),o($VG,[2,91]),{4:59,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:60,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:61,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:62,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:63,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,56:[1,64],57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{55:$VH,70:65},o($VI,$VJ,{70:67,55:$VH}),{11:[1,68],56:$VK},{11:[1,70],56:$VL},o($VG,[2,38],{15:[1,72]}),o($VM,[2,63],{16:[1,73]}),{15:$VN,23:$VO,24:77,25:$VP,32:76,33:$VQ,34:$VR,35:$VS,36:$VT,37:$VU,38:$VV,39:$VW,40:$VX,41:$VY,42:$VZ,43:$V_,44:$V$,45:$V01,46:$V11,47:$V21,48:75,50:[1,74]},o($V31,[2,39],{15:$V41,22:$V51}),o($VG,[2,71]),{55:[1,98]},{55:[1,99]},o($VI,[2,17]),o($VI,[2,18]),o($VG,[2,72]),{14:100,15:[1,101]},o($VG,[2,73],{55:[1,102]}),o($VG,[2,74],{55:[1,103]}),{55:[1,104]},{55:[1,105]},{55:[1,106]},{1:[2,1]},{4:107,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:108,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:109,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:110,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:111,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:112,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:113,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:114,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:115,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:116,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:117,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:118,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:119,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:120,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:121,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{40:[1,122]},{4:123,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:124,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{45:[1,126],47:[1,125]},{55:$VH,70:127},{55:[1,128]},{4:129,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,50:[1,130],51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{15:[1,132],18:26,19:$V2,21:131,23:$V4},o($VG,[2,100]),o($VG,[2,101]),o($V61,[2,102],{17:$Vl,26:$Vp,60:$Vx,61:$Vy,62:$Vz}),o($V71,[2,111],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,43:$Vt,44:$Vu,45:$Vv,46:$Vw,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,56:[1,133],60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,121]),o($VG,[2,119]),{4:136,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,56:[1,135],57:17,58:18,59:$Vi,65:$Vj,71:$Vk,72:134},o($VG,[2,120]),{4:137,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},o($VG,[2,81]),{4:138,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},o($VG,[2,82]),o($VG,[2,37]),{27:[1,140],33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,53:139,57:141,58:142},o($VM,[2,64],{16:[1,143]}),{16:[1,145],50:[1,144]},o($V81,[2,57]),o($V81,[2,41],{15:[1,146],17:[1,151],22:[1,148],25:[1,147],26:[1,149],27:[1,150],28:[1,152]}),o($V81,[2,42]),o($V81,[2,43]),o($V81,[2,44]),o($V81,[2,45]),o($V81,[2,46]),o($V81,[2,47]),o($V81,[2,48]),o($V81,[2,49]),o($V81,[2,50]),o($V81,[2,51]),o($V81,[2,52]),o($V81,[2,53]),o($V81,[2,54]),o($V81,[2,55]),o($V81,[2,56]),o($V91,[2,19]),o($V91,[2,20]),o($V91,[2,24]),o($VI,[2,15]),o($VI,[2,16]),{4:153,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:154,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{16:[1,156],17:[1,157],20:[1,155]},o($Va1,[2,10]),{56:[1,158]},{56:[1,159]},{4:160,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:161,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{4:163,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,56:[1,162],57:17,58:18,59:$Vi,65:$Vj,71:$Vk},o($VG,[2,92]),o($VG,[2,93]),o($Vb1,[2,94],{60:$Vx,61:$Vy,62:$Vz}),o($Vb1,[2,95],{60:$Vx,61:$Vy,62:$Vz}),o($VG,[2,96]),o([5,11,19,20,40,41,42,43,44,45,46,50,56,63,66,67,68,69],[2,97],{17:$Vl,23:$Vo,26:$Vp,60:$Vx,61:$Vy,62:$Vz,64:$VB}),o($V61,[2,98],{17:$Vl,26:$Vp,60:$Vx,61:$Vy,62:$Vz}),o([5,11,19,20,23,40,41,42,43,44,45,46,50,56,63,66,67,68,69],[2,99],{17:$Vl,26:$Vp,60:$Vx,61:$Vy,62:$Vz,64:$VB}),o($Vc1,[2,103],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,43:$Vt,44:$Vu,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,68:$VE,69:$VF}),o($Vc1,[2,104],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,43:$Vt,44:$Vu,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,68:$VE,69:$VF}),o($Vd1,[2,105],{17:$Vl,23:$Vo,26:$Vp,43:$Vt,44:$Vu,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB}),o($Vd1,[2,106],{17:$Vl,23:$Vo,26:$Vp,43:$Vt,44:$Vu,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB}),o($Vd1,[2,107],{17:$Vl,23:$Vo,26:$Vp,43:$Vt,44:$Vu,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB}),o($Vd1,[2,108],{17:$Vl,23:$Vo,26:$Vp,43:$Vt,44:$Vu,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB}),o($Vc1,[2,109],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,43:$Vt,44:$Vu,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,68:$VE,69:$VF}),{4:164,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},o($V71,[2,112],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,43:$Vt,44:$Vu,45:$Vv,46:$Vw,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),o([5,11,42,50,56],[2,113],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,43:$Vt,44:$Vu,45:$Vv,46:$Vw,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),o($VG,[2,115]),{47:[1,165]},o($VG,[2,117]),{4:166,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,50:[1,167],60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,70],{16:[1,168]}),o($V31,[2,40],{15:$V41,22:$V51}),o($VI,$VJ),o($VG,[2,114]),{11:[1,170],56:[1,169]},o($VG,[2,125]),o($Ve1,[2,126],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,56:[1,171],60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,56:[1,172],60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,66]),{15:$VN,23:$VO,24:77,25:$VP,32:76,33:$VQ,34:$VR,35:$VS,36:$VT,37:$VU,38:$VV,39:$VW,40:$VX,41:$VY,42:$VZ,43:$V_,44:$V$,45:$V01,46:$V11,47:$V21,48:173},{56:$VK},{56:$VL},{33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,53:174,57:141,58:142},o($Vf1,[2,59]),{15:$VN,23:$VO,24:77,25:$VP,32:176,33:$VQ,34:$VR,35:$VS,36:$VT,37:$VU,38:$VV,39:$VW,40:$VX,41:$VY,42:$VZ,43:$V_,44:$V$,45:$V01,46:$V11,47:$V21,50:[1,175]},o($V91,[2,21]),o($V91,[2,22]),o($V91,[2,23]),{15:[1,177],22:[1,179],25:[1,178]},{15:[1,180],22:[1,182],25:[1,181]},{15:[1,183],22:[1,185],25:[1,184]},{15:[1,186],22:[1,188],25:[1,187]},o($Ve1,[2,83],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),o($Ve1,[2,84],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),{15:[1,189]},{15:[1,190]},{15:[1,191]},o($VG,[2,75]),o($VG,[2,76]),{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,56:[1,192],60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,56:[1,193],60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,79]),{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,56:[1,194],60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($Vc1,[2,110],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,43:$Vt,44:$Vu,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,68:$VE,69:$VF}),o($VG,[2,116]),{11:[1,195],17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,69],{16:[1,196]}),{33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,53:197,57:141,58:142},o($VG,[2,124]),{4:198,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},o($VG,[2,122]),o($VG,[2,123]),{16:[1,200],50:[1,199]},o($VG,[2,65]),o($Vf1,[2,60]),o($V81,[2,58]),o($V91,[2,25]),o($V91,[2,26]),o($V91,[2,27]),o($V91,[2,28]),o($V91,[2,29]),o($V91,[2,30]),o($V91,[2,31]),o($V91,[2,32]),o($V91,[2,33]),o($V91,[2,34]),o($V91,[2,35]),o($V91,[2,36]),o($VI,[2,13]),o($Va1,[2,11]),o($Va1,[2,12]),o($VG,[2,77]),o($VG,[2,78]),o($VG,[2,80]),{4:201,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,29:6,30:$V7,31:8,33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,45:$Vf,47:$Vg,49:20,51:7,52:9,53:28,54:23,55:$Vh,57:17,58:18,59:$Vi,65:$Vj,71:$Vk},{33:$V8,34:$V9,35:$Va,36:$Vb,37:$Vc,38:$Vd,39:$Ve,53:202,57:141,58:142},o($VG,[2,68]),o($Ve1,[2,127],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),o($Vf1,[2,61]),{15:$VN,23:$VO,24:77,25:$VP,32:176,33:$VQ,34:$VR,35:$VS,36:$VT,37:$VU,38:$VV,39:$VW,40:$VX,41:$VY,42:$VZ,43:$V_,44:$V$,45:$V01,46:$V11,47:$V21,50:[1,203]},{17:$Vl,19:$Vm,20:$Vn,23:$Vo,26:$Vp,40:$Vq,41:$Vr,42:$Vs,43:$Vt,44:$Vu,45:$Vv,46:$Vw,56:[1,204],60:$Vx,61:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,67]),o($Vf1,[2,62]),o($VG,[2,118])],
+table: [{3:1,4:2,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{1:[3]},{5:[1,35],17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,114]),o($VG,[2,115]),o($VG,[2,116]),o($VG,[2,117]),o($VG,[2,118],{44:[1,57]}),o($VG,[2,119],{16:[1,58]}),o($VG,[2,120]),{4:59,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:60,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:61,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:62,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:63,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,48:[1,64],49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{47:$VH,70:65},o($VI,$VJ,{70:67,47:$VH}),{11:[1,68],48:$VK},{11:[1,70],48:$VL},o($VG,[2,82],{15:[1,72]}),o($VM,[2,92],{16:[1,73]}),{15:$VN,23:$VO,24:77,25:$VP,26:$VQ,27:$VR,28:$VS,29:$VT,30:$VU,31:$VV,32:$VW,33:$VX,34:$VY,35:$VZ,36:$V_,37:$V$,38:$V01,39:$V11,40:$V21,41:$V31,52:76,53:75,55:[1,74]},o($V41,[2,83],{15:$V51,22:$V61}),o($VG,[2,100]),{47:[1,99]},{47:[1,100]},o($VI,[2,17]),o($VI,[2,18]),o($VG,[2,101]),{14:101,15:[1,102]},o($VG,[2,102],{47:[1,103]}),o($VG,[2,103],{47:[1,104]}),{47:[1,105]},{47:[1,106]},{47:[1,107]},{1:[2,1]},{4:108,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:109,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:110,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:111,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:112,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:113,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:114,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:115,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:116,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:117,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:118,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:119,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:120,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:121,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:122,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{34:[1,123]},{4:124,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:125,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{39:[1,127],41:[1,126]},{47:$VH,70:128},{47:[1,129]},{4:130,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,55:[1,131],56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{15:[1,133],18:26,19:$V2,21:132,23:$V4},o($VG,[2,129]),o($VG,[2,130]),o($V71,[2,131],{17:$Vl,42:$Vw,43:$Vx,46:$Vy,62:$Vz}),o($V81,[2,140],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,48:[1,134],62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,150]),o($VG,[2,148]),{4:137,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,48:[1,136],49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk,72:135},o($VG,[2,149]),{4:138,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},o($VG,[2,110]),{4:139,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},o($VG,[2,111]),o($VG,[2,81]),{27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,44:[1,141],58:140,60:142,61:143},o($VM,[2,93],{16:[1,144]}),{16:[1,146],55:[1,145]},o($V91,[2,86]),o($V91,[2,85],{15:$Va1,17:$Vb1,22:$Vc1,25:$Vd1,26:$Ve1,27:$Vf1,28:$Vg1,29:$Vh1,30:$Vi1,31:$Vj1,32:$Vk1,33:$Vl1,34:$Vm1,35:$Vn1,36:$Vo1,37:$Vp1,38:$Vq1,39:$Vr1,40:$Vs1,41:$Vt1,42:$Vu1,43:$Vv1,44:$Vw1,45:$Vx1,46:$Vy1,47:$Vz1}),o($VA1,[2,19]),o($VA1,[2,20]),o($VA1,[2,21]),o($VA1,[2,22]),o($VA1,[2,23]),o($VA1,[2,24]),o($VA1,[2,25]),o($VA1,[2,26]),o($VA1,[2,27]),o($VA1,[2,28]),o($VA1,[2,29]),o($VA1,[2,30]),o($VA1,[2,31]),o($VA1,[2,32]),o($VA1,[2,33]),o($VA1,[2,34]),o($VA1,[2,35]),o($VA1,[2,36]),o($VA1,[2,57]),o($VI,[2,15]),o($VI,[2,16]),{4:173,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:174,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{16:[1,176],17:[1,177],20:[1,175]},o($VB1,[2,10]),{48:[1,178]},{48:[1,179]},{4:180,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:181,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{4:183,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,48:[1,182],49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},o($VG,[2,121]),o($VG,[2,122]),o($VC1,[2,123],{42:$Vw,46:$Vy,62:$Vz}),o($VC1,[2,124],{42:$Vw,46:$Vy,62:$Vz}),o($VG,[2,125]),o([5,11,19,20,34,35,36,37,38,39,40,48,55,63,66,67,68,69],[2,126],{17:$Vl,23:$Vo,42:$Vw,43:$Vx,46:$Vy,62:$Vz,64:$VB}),o($V71,[2,127],{17:$Vl,42:$Vw,43:$Vx,46:$Vy,62:$Vz}),o([5,11,19,20,23,34,35,36,37,38,39,40,48,55,63,66,67,68,69],[2,128],{17:$Vl,42:$Vw,43:$Vx,46:$Vy,62:$Vz,64:$VB}),o($VD1,[2,132],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,37:$Vs,38:$Vt,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,68:$VE,69:$VF}),o($VD1,[2,133],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,37:$Vs,38:$Vt,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,68:$VE,69:$VF}),o($VE1,[2,134],{17:$Vl,23:$Vo,37:$Vs,38:$Vt,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB}),o($VE1,[2,135],{17:$Vl,23:$Vo,37:$Vs,38:$Vt,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB}),o($VE1,[2,136],{17:$Vl,23:$Vo,37:$Vs,38:$Vt,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB}),o($VE1,[2,137],{17:$Vl,23:$Vo,37:$Vs,38:$Vt,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB}),o($VD1,[2,138],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,37:$Vs,38:$Vt,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,68:$VE,69:$VF}),{4:184,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},o($V81,[2,141],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),o([5,11,36,48,55],[2,142],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),o($VG,[2,144]),{41:[1,185]},o($VG,[2,146]),{4:186,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,55:[1,187],62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,99],{16:[1,188]}),o($V41,[2,84],{15:$V51,22:$V61}),o($VI,$VJ),o($VG,[2,143]),{11:[1,190],48:[1,189]},o($VG,[2,154]),o($VF1,[2,155],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,48:[1,191],62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,48:[1,192],62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,95]),{15:$VN,23:$VO,24:77,25:$VP,26:$VQ,27:$VR,28:$VS,29:$VT,30:$VU,31:$VV,32:$VW,33:$VX,34:$VY,35:$VZ,36:$V_,37:$V$,38:$V01,39:$V11,40:$V21,41:$V31,52:76,53:193},{48:$VK},{48:$VL},{27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,58:194,60:142,61:143},o($VG1,[2,88]),{15:$VN,23:$VO,24:77,25:$VP,26:$VQ,27:$VR,28:$VS,29:$VT,30:$VU,31:$VV,32:$VW,33:$VX,34:$VY,35:$VZ,36:$V_,37:$V$,38:$V01,39:$V11,40:$V21,41:$V31,52:196,55:[1,195]},o($VA1,[2,37]),o($VA1,[2,38]),o($VA1,[2,39]),o($VA1,[2,40]),o($VA1,[2,41]),o($VA1,[2,42]),o($VA1,[2,43]),o($VA1,[2,44]),o($VA1,[2,45]),o($VA1,[2,46]),o($VA1,[2,47]),o($VA1,[2,48]),o($VA1,[2,49]),o($VA1,[2,50]),o($VA1,[2,51]),o($VA1,[2,52]),o($VA1,[2,53]),o($VA1,[2,54]),o($VA1,[2,55]),o($VA1,[2,56]),{15:[1,197],22:[1,199],25:[1,198],42:[1,200]},{15:[1,201],22:[1,203],25:[1,202],42:[1,204]},{15:[1,205],22:[1,207],25:[1,206],42:[1,208]},{15:[1,209],22:[1,211],25:[1,210],42:[1,212]},{15:[1,213],22:[1,215],25:[1,214],42:[1,216]},{15:$VN,22:[1,217],23:$VO,24:219,25:$VP,26:$VQ,27:$VR,28:$VS,29:$VT,30:$VU,31:$VV,32:$VW,33:$VX,34:$VY,35:$VZ,36:$V_,37:$V$,38:$V01,39:$V11,40:$V21,41:$V31,42:[1,218]},o($VF1,[2,112],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),o($VF1,[2,113],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),{15:[1,220]},{15:[1,221]},{15:[1,222]},o($VG,[2,104]),o($VG,[2,105]),{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,48:[1,223],62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,48:[1,224],62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,108]),{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,48:[1,225],62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VD1,[2,139],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,37:$Vs,38:$Vt,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,68:$VE,69:$VF}),o($VG,[2,145]),{11:[1,226],17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,98],{16:[1,227]}),{27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,58:228,60:142,61:143},o($VG,[2,153]),{4:229,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},o($VG,[2,151]),o($VG,[2,152]),{16:[1,231],55:[1,230]},o($VG,[2,94]),o($VG1,[2,89]),o($V91,[2,87]),o($VA1,[2,58]),o($VA1,[2,59]),o($VA1,[2,60]),o($VA1,[2,61]),o($VA1,[2,62]),o($VA1,[2,63]),o($VA1,[2,64]),o($VA1,[2,65]),o($VA1,[2,66]),o($VA1,[2,67]),o($VA1,[2,68]),o($VA1,[2,69]),o($VA1,[2,70]),o($VA1,[2,71]),o($VA1,[2,72]),o($VA1,[2,73]),o($VA1,[2,74]),o($VA1,[2,75]),o($VA1,[2,76]),o($VA1,[2,77]),{48:[1,232]},{48:[1,233]},{15:$Va1,17:$Vb1,22:$Vc1,25:$Vd1,26:$Ve1,27:$Vf1,28:$Vg1,29:$Vh1,30:$Vi1,31:$Vj1,32:$Vk1,33:$Vl1,34:$Vm1,35:$Vn1,36:$Vo1,37:$Vp1,38:$Vq1,39:$Vr1,40:$Vs1,41:$Vt1,42:$Vu1,43:$Vv1,44:$Vw1,45:$Vx1,46:$Vy1,47:$Vz1,48:[1,234]},o($VI,[2,13]),o($VB1,[2,11]),o($VB1,[2,12]),o($VG,[2,106]),o($VG,[2,107]),o($VG,[2,109]),{4:235,15:$V0,17:$V1,18:26,19:$V2,21:22,22:$V3,23:$V4,26:$V5,27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,39:$Vd,41:$Ve,43:$Vf,44:$Vg,47:$Vh,49:6,50:$Vi,51:8,54:20,56:7,57:9,58:28,59:23,60:17,61:18,65:$Vj,71:$Vk},{27:$V6,28:$V7,29:$V8,30:$V9,31:$Va,32:$Vb,33:$Vc,58:236,60:142,61:143},o($VG,[2,97]),o($VF1,[2,156],{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF}),o($VG1,[2,90]),{15:$VN,23:$VO,24:77,25:$VP,26:$VQ,27:$VR,28:$VS,29:$VT,30:$VU,31:$VV,32:$VW,33:$VX,34:$VY,35:$VZ,36:$V_,37:$V$,38:$V01,39:$V11,40:$V21,41:$V31,52:196,55:[1,237]},o($VA1,[2,78]),o($VA1,[2,79]),o($VA1,[2,80]),{17:$Vl,19:$Vm,20:$Vn,23:$Vo,34:$Vp,35:$Vq,36:$Vr,37:$Vs,38:$Vt,39:$Vu,40:$Vv,42:$Vw,43:$Vx,46:$Vy,48:[1,238],62:$Vz,63:$VA,64:$VB,66:$VC,67:$VD,68:$VE,69:$VF},o($VG,[2,96]),o($VG1,[2,91]),o($VG,[2,147])],
 defaultActions: {35:[2,1]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
     } else {
-        function _parseError (msg, hash) {
-            this.message = msg;
-            this.hash = hash;
-        }
-        _parseError.prototype = Error;
-
-        throw new _parseError(str, hash);
+        var error = new Error(str);
+        error.hash = hash;
+        throw error;
     }
 },
 parse: function parse(input) {
@@ -10645,21 +13179,21 @@ var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
 case 0:/* skip whitespace */
 break;
-case 1:return 43
+case 1:return 37
 break;
-case 2:return 44
+case 2:return 38
 break;
-case 3:return 45
+case 3:return 39
 break;
-case 4:return 46
+case 4:return 40
 break;
-case 5:return 47
+case 5:return 41
 break;
-case 6:return 60
+case 6:return 62
 break;
-case 7:return 61
+case 7:return 46
 break;
-case 8:return 26
+case 8:return 43
 break;
 case 9:return 17
 break;
@@ -10669,15 +13203,15 @@ case 11:return 67
 break;
 case 12:return '!'
 break;
-case 13:return 62
+case 13:return 42
 break;
-case 14:return 55
+case 14:return 47
 break;
-case 15:return 56
+case 15:return 48
 break;
-case 16:return 27
+case 16:return 44
 break;
-case 17:return 50
+case 17:return 55
 break;
 case 18:return 67
 break;
@@ -10689,33 +13223,33 @@ case 21:return 20
 break;
 case 22:return 19
 break;
-case 23:return 42
+case 23:return 36
 break;
-case 24:return 41
+case 24:return 35
 break;
-case 25:return 34
+case 25:return 28
 break;
-case 26:return 35
+case 26:return 29
 break;
-case 27:return 36
+case 27:return 30
 break;
-case 28:return 37
+case 28:return 31
 break;
-case 29:return 33
+case 29:return 27
 break;
-case 30:return 38
+case 30:return 32
 break;
-case 31:return 39
+case 31:return 33
 break;
 case 32:return 66
 break;
 case 33:return 66
 break;
-case 34:return 40
+case 34:return 34
 break;
-case 35:return 41
+case 35:return 35
 break;
-case 36:return 42
+case 36:return 36
 break;
 case 37:return 5
 break;
@@ -10725,17 +13259,17 @@ case 39:return 16
 break;
 case 40:return 11
 break;
-case 41:return 30
+case 41:return 50
 break;
-case 42:return 59
+case 42:return 26
 break;
-case 43:return 59
+case 43:return 26
 break;
 case 44:return 15	
 break;
-case 45:return 59	
+case 45:return 26	
 break;
-case 46:return 59
+case 46:return 26
 break;
 case 47:return 25   
 break;
@@ -10743,7 +13277,7 @@ case 48:return 'INVALID'
 break;
 }
 },
-rules: [/^(?:\s+)/i,/^(?:Between\b)/i,/^(?:In\b)/i,/^(?:Not\b)/i,/^(?:Is\b)/i,/^(?:Null\b)/i,/^(?:\*)/i,/^(?:\/)/i,/^(?:-)/i,/^(?:\+)/i,/^(?:\^)/i,/^(?:!=)/i,/^(?:!)/i,/^(?:%)/i,/^(?:\()/i,/^(?:\))/i,/^(?:\[)/i,/^(?:\])/i,/^(?:<>)/i,/^(?:>=)/i,/^(?:<=)/i,/^(?:>)/i,/^(?:<)/i,/^(?:\|\|)/i,/^(?:&&)/i,/^(?:Avg\b)/i,/^(?:Max\b)/i,/^(?:Min\b)/i,/^(?:Single\b)/i,/^(?:Count\b)/i,/^(?:Exists\b)/i,/^(?:Sum\b)/i,/^(?:==)/i,/^(?:=)/i,/^(?:Like\b)/i,/^(?:And\b)/i,/^(?:Or\b)/i,/^(?:$)/i,/^(?:(?:\d*\.)?\d+)/i,/^(?:\.)/i,/^(?:,)/i,/^(?:\?)/i,/^(?:True\b)/i,/^(?:False\b)/i,/^(?:^[a-zA-Z_][a-zA-Z0-9_]*)/i,/^(?:'[^']*')/i,/^(?:#[^#]*#)/i,/^(?:.+(?=\]))/i,/^(?:.)/i],
+rules: [/^(?:\s+)/i,/^(?:Between\b)/i,/^(?:In\b)/i,/^(?:Not\b)/i,/^(?:Is\b)/i,/^(?:Null\b)/i,/^(?:\*)/i,/^(?:\/)/i,/^(?:-)/i,/^(?:\+)/i,/^(?:\^)/i,/^(?:!=)/i,/^(?:!)/i,/^(?:%)/i,/^(?:\()/i,/^(?:\))/i,/^(?:\[)/i,/^(?:\])/i,/^(?:<>)/i,/^(?:>=)/i,/^(?:<=)/i,/^(?:>)/i,/^(?:<)/i,/^(?:\|\|)/i,/^(?:&&)/i,/^(?:Avg\b)/i,/^(?:Max\b)/i,/^(?:Min\b)/i,/^(?:Single\b)/i,/^(?:Count\b)/i,/^(?:Exists\b)/i,/^(?:Sum\b)/i,/^(?:==)/i,/^(?:=)/i,/^(?:Like\b)/i,/^(?:And\b)/i,/^(?:Or\b)/i,/^(?:$)/i,/^(?:(?:\d*\.)?\d+)/i,/^(?:\.)/i,/^(?:,)/i,/^(?:\?)/i,/^(?:True\b)/i,/^(?:False\b)/i,/^(?:[_\u0041-\u005A\u0061-\u007A\u00AA\u00B5\u00BA\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376-\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0561-\u0587\u05D0-\u05EA\u05F0-\u05F2\u0620-\u064A\u066E-\u066F\u0671-\u06D3\u06D5\u06E5-\u06E6\u06EE-\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4-\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u08A0-\u08B4\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F-\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC-\u09DD\u09DF-\u09E1\u09F0-\u09F1\u0A05-\u0A0A\u0A0F-\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32-\u0A33\u0A35-\u0A36\u0A38-\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2-\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0-\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F-\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32-\u0B33\u0B35-\u0B39\u0B3D\u0B5C-\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99-\u0B9A\u0B9C\u0B9E-\u0B9F\u0BA3-\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C60-\u0C61\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDE\u0CE0-\u0CE1\u0CF1-\u0CF2\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32-\u0E33\u0E40-\u0E46\u0E81-\u0E82\u0E84\u0E87-\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA-\u0EAB\u0EAD-\u0EB0\u0EB2-\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065-\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16F1-\u16F8\u1700-\u170C\u170E-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1877\u1880-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4B\u1B83-\u1BA0\u1BAE-\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1CE9-\u1CEC\u1CEE-\u1CF1\u1CF5-\u1CF6\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2183-\u2184\u2C00-\u2C2E\u2C30-\u2C5E\u2C60-\u2CE4\u2CEB-\u2CEE\u2CF2-\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005-\u3006\u3031-\u3035\u303B-\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312D\u3131-\u318E\u31A0-\u31BA\u31F0-\u31FF\u3400-\u4DB5\u4E00-\u9FD5\uA000-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A-\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6E5\uA717-\uA71F\uA722-\uA788\uA78B-\uA7AD\uA7B0-\uA7B7\uA7F7-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5-\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB65\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40-\uFB41\uFB43-\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC][\d_\u0041-\u005A\u0061-\u007A\u00AA\u00B5\u00BA\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376-\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0561-\u0587\u05D0-\u05EA\u05F0-\u05F2\u0620-\u064A\u066E-\u066F\u0671-\u06D3\u06D5\u06E5-\u06E6\u06EE-\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4-\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u08A0-\u08B4\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F-\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC-\u09DD\u09DF-\u09E1\u09F0-\u09F1\u0A05-\u0A0A\u0A0F-\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32-\u0A33\u0A35-\u0A36\u0A38-\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2-\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0-\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F-\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32-\u0B33\u0B35-\u0B39\u0B3D\u0B5C-\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99-\u0B9A\u0B9C\u0B9E-\u0B9F\u0BA3-\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C60-\u0C61\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDE\u0CE0-\u0CE1\u0CF1-\u0CF2\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32-\u0E33\u0E40-\u0E46\u0E81-\u0E82\u0E84\u0E87-\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA-\u0EAB\u0EAD-\u0EB0\u0EB2-\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065-\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16F1-\u16F8\u1700-\u170C\u170E-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1877\u1880-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4B\u1B83-\u1BA0\u1BAE-\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1CE9-\u1CEC\u1CEE-\u1CF1\u1CF5-\u1CF6\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2183-\u2184\u2C00-\u2C2E\u2C30-\u2C5E\u2C60-\u2CE4\u2CEB-\u2CEE\u2CF2-\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005-\u3006\u3031-\u3035\u303B-\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312D\u3131-\u318E\u31A0-\u31BA\u31F0-\u31FF\u3400-\u4DB5\u4E00-\u9FD5\uA000-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A-\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6E5\uA717-\uA71F\uA722-\uA788\uA78B-\uA7AD\uA7B0-\uA7B7\uA7F7-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5-\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB65\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40-\uFB41\uFB43-\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]*)/i,/^(?:'[^']*')/i,/^(?:#[^#]*#)/i,/^(?:.+(?=\]))/i,/^(?:.)/i],
 conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48],"inclusive":true}}
 });
 return lexer;
@@ -10755,24 +13289,99 @@ function Parser () {
 Parser.prototype = parser;parser.Parser = Parser;
 return new Parser;
 })();
+DevExpress.JS.Data.criteriaparser = criteriaparser;
+if(window["ace"]) {
+    var _define = window["ace"].define || define;
+    _define("ace/mode/criteria", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text"], function (require, exports, module) {
+        "use strict";
+        var oop = require("../lib/oop");
+        // defines the parent mode
+        var TextMode = require("./text").Mode;
+
+        // defines the language specific highlighters and folding rules
+        var CriteriaHighlightRules = require("./criteria_highlight_rules").CriteriaHighlightRules;
+
+        var Mode = function() {
+            // set everything up
+            this.HighlightRules = CriteriaHighlightRules;
+        };
+        oop.inherits(Mode, TextMode);
+
+        /*(function () {
+            // create worker for live syntax checking
+            this.createWorker = function (session) {
+                var worker = new WorkerClient(["ace"], "ace/mode/xpo_worker", "NewWorker");
+                worker.attachToDocument(session.getDocument());
+                worker.on("errors", function (e) {
+                    session.setAnnotations(e.data);
+                });
+                return worker;
+            };
+    
+        }).call(Mode.prototype);*/
+
+        exports.Mode = Mode;
+    });
+
+    _define("ace/mode/criteria_highlight_rules", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules"], function (require, exports, module) {
+        "use strict";
+        var oop = require("../lib/oop");
+        var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+
+        var CriteriaHighlightRules = function() {
+
+            // regexp must not have capturing parentheses. Use (?:) instead.
+            // regexps are ordered -> the first match is used
+            this.$rules = {
+                "start": [
+                    {
+                        token: "string.quoted.single",
+                        regex: /N?'(?:\\.|[^'\\])*'?/,
+                    },
+                    {
+                        token: "constant.numeric",
+                        regex: /[+\-]?\.?\d[\d.]*/i
+                    },
+                    {
+                        token: "support.other.aggregate",
+                        regex: /\.([a-zA-Z_]\w*)?/
+                    },
+                    {
+                        token: "keyword.operator",
+                        regex: /[+\-*/%|&^<>]|==|!=|<=|>=|In|Like|Between|And|Or|Not/i
+                    },
+                    {
+                        token: "constant.language",
+                        regex: /True|False/i
+                    },
+                    {
+                        token: "support.context.start",
+                        regex: /\[(?:[^\]\)])*\]\[/
+                    },
+                    {
+                        token: "support.variable",
+                        regex: /\[(?:[^\]\)\,])*\]?/
+                    },
+                    {
+                        token: "support.context.end",
+                        regex: /\]/
+                    },
+
+                    {
+                        token: "support.function",
+                        regex: /\w+/
+                    }
+                ]
+            };
+        };
+
+        oop.inherits(CriteriaHighlightRules, TextHighlightRules);
+
+        exports.CriteriaHighlightRules = CriteriaHighlightRules;
+    });
+}
 
 
-if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
-exports.parser = criteriaparser;
-exports.Parser = criteriaparser.Parser;
-exports.parse = function () { return criteriaparser.parse.apply(criteriaparser, arguments); };
-exports.main = function commonjsMain(args) {
-    if (!args[1]) {
-        console.log('Usage: '+args[0]+' FILE');
-        process.exit(1);
-    }
-    var source = require('fs').readFileSync(require('path').normalize(args[1]), "utf8");
-    return exports.parser.parse(source);
-};
-if (typeof module !== 'undefined' && require.main === module) {
-  exports.main(process.argv.slice(1));
-}
-}
 var DevExpress;
 (function (DevExpress) {
     var Designer;
@@ -10835,9 +13444,11 @@ var DevExpress;
         ko.bindingHandlers["updateTop"] = {
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 var value = valueAccessor();
+                var $element = $(element);
                 var updateTop = function (value) {
-                    var top = (value === 0 || !!value) ? value : $(element).prev().position().top + $(element).prev().height();
-                    $(element).css('top', top + "px");
+                    var scaleY = element.getBoundingClientRect().height / element.offsetHeight;
+                    var top = (value === 0 || !!value) ? value : ($element.prev().position().top / scaleY) + $element.prev().outerHeight();
+                    $element.css('top', top + "px");
                 };
                 var subscription = value.subscribe(function (newVal) {
                     updateTop(newVal);
@@ -10853,16 +13464,22 @@ var DevExpress;
                 var values = valueAccessor();
                 if (!values)
                     return;
-                var $element = $(element), parent = $($(element).parents(".dx-designer")[0]), containment = values.containment || ".dxrd-ghost-container", initialScroll = { left: 0, top: 0 }, attachDelta = function (ui) {
-                    var $containment = parent.find(containment), $ghost_container = parent.find(".dxrd-ghost-container");
-                    ui["delta"] = { left: $ghost_container.offset().left - $containment.offset().left, top: $ghost_container.offset().top - $containment.offset().top };
-                    var $viewport = parent.find(".dxrd-viewport");
-                    ui["scroll"] = { left: $viewport.scrollLeft() - initialScroll.left, top: $viewport.scrollTop() - initialScroll.top };
-                }, options = $.extend({ snap: '.dxrd-drag-snap-line', snapTolerance: Designer.SnapLinesHelper.snapTolerance }, ko.unwrap(values), {
+                var $element = $(element), $parent = $element.closest(".dx-designer"), containment = values.containment || ".dxrd-ghost-container", $viewport, $ghostContainerOffset, $containmentOffset, initialScroll = { left: 0, top: 0 }, attachDelta = function (ui) {
+                    ui["delta"] = {
+                        left: $ghostContainerOffset.left - $containmentOffset.left,
+                        top: $ghostContainerOffset.top - $containmentOffset.top
+                    };
+                    ui["scroll"] = {
+                        left: $viewport.scrollLeft() - initialScroll.left,
+                        top: $viewport.scrollTop() - initialScroll.top
+                    };
+                }, options = $.extend({}, ko.unwrap(values), {
                     start: function (event, ui) {
                         Designer.DragDropHandler.started(true);
                         var draggable = $element.data("ui-draggable");
-                        var $viewport = parent.find(".dxrd-viewport");
+                        $viewport = $parent.find(".dxrd-viewport");
+                        $ghostContainerOffset = $parent.find(".dxrd-ghost-container").offset();
+                        $containmentOffset = $parent.find(containment).offset();
                         initialScroll.left = $viewport.scrollLeft();
                         initialScroll.top = $viewport.scrollTop();
                         values.startDrag && values.startDrag(ko.dataFor(event.currentTarget || event.toElement));
@@ -10873,31 +13490,46 @@ var DevExpress;
                         Designer.DragDropHandler.started(false);
                     },
                     drag: function (event, ui) {
-                        if (event.altKey === true || values.alwaysAlt) {
-                            $element.draggable("option", "snap", false);
-                        }
-                        else {
-                            $element.draggable("option", "snap", ".dxrd-drag-snap-line");
-                        }
                         attachDelta(ui);
                         values.drag && values.drag(event, ui);
                     },
                     helper: function (event) {
-                        $element.draggable("option", "snap", ".dxrd-drag-snap-line");
                         values.helper && values.helper(ko.dataFor(event.currentTarget || event["toElement"]), event);
-                        var $container = parent.find('.dxrd-drag-helper-source').clone().css({ 'display': 'block' });
-                        $container.prependTo(parent.find(options.containment));
+                        var $container = $parent.find('.dxrd-drag-helper-source').clone().css({ 'display': 'block' });
+                        $container.prependTo($parent.find(options.containment));
                         ko.applyBindings(bindingContext.$root, $container[0]);
                         return $container;
                     }
                 });
-                options.containment = parent.find(options.containment);
+                options.containment = $parent.find(options.containment);
                 $element.draggable(options);
             }
         };
+        function getControlNewAbsolutePositionOnResize(snapHelper, absolutePosition, ui, delta) {
+            var newAbsolutePosition = {
+                top: absolutePosition.top + delta.y,
+                left: absolutePosition.left + delta.x,
+                bottom: absolutePosition.top + ui.originalSize.height,
+                right: absolutePosition.left + ui.originalSize.width
+            };
+            if (delta.x !== 0) {
+                newAbsolutePosition.left = snapHelper.snapPosition(newAbsolutePosition.left, false);
+            }
+            else if (delta.width !== 0) {
+                newAbsolutePosition.right = snapHelper.snapPosition(absolutePosition.left + ui.size.width, false);
+            }
+            if (delta.y !== 0) {
+                newAbsolutePosition.top = snapHelper.snapPosition(newAbsolutePosition.top, true);
+            }
+            else if (delta.height !== 0) {
+                newAbsolutePosition.bottom = snapHelper.snapPosition(absolutePosition.top + ui.size.height, true);
+            }
+            return newAbsolutePosition;
+        }
+        Designer.getControlNewAbsolutePositionOnResize = getControlNewAbsolutePositionOnResize;
         ko.bindingHandlers["resizable"] = {
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-                var values = valueAccessor(), $element = $(element), $selectedNodes = null, options = $.extend({
+                var values = valueAccessor(), $element = $(element), $parent = $element.closest(".dx-designer"), $selectedNodes = null, absolutePosition = null, options = $.extend({
                     handles: values.handles || "all", ghost: false,
                     stop: function (event, ui) {
                         $selectedNodes.each(function (_, el) {
@@ -10917,6 +13549,9 @@ var DevExpress;
                         });
                         values.stopped();
                         values.started = false;
+                        if (values.snapHelper) {
+                            values.snapHelper.deactivateSnapLines();
+                        }
                     },
                     start: function () {
                         values.started = true;
@@ -10929,11 +13564,35 @@ var DevExpress;
                             $el.data("originalPosition", { top: parseFloat($el.css("top")), left: parseFloat($el.css("left")) });
                             $el.data("originalSize", { width: bounds.width, height: bounds.height });
                         });
+                        var elementOffset = $element.offset();
+                        var ghostContainerOffset = $parent.find(".dxrd-ghost-container").offset();
+                        if (!ghostContainerOffset) {
+                            absolutePosition = elementOffset;
+                        }
+                        else {
+                            absolutePosition = {
+                                top: elementOffset.top - ghostContainerOffset.top,
+                                left: elementOffset.left - ghostContainerOffset.left
+                            };
+                        }
+                        if (values.snapHelper) {
+                            values.snapHelper.updateSnapLines(viewModel);
+                        }
                     },
                     resize: function (event, ui) {
                         var dw = ui.size.width - ui.originalSize.width, dh = ui.size.height - ui.originalSize.height, dx = ui.position.left - ui.originalPosition.left, dy = ui.position.top - ui.originalPosition.top;
                         if (values.forceResize) {
                             values.forceResize({ size: new Designer.Size(ui.size.width, ui.size.height), delta: { dx: dx, dy: dy, dw: dw, dh: dh } });
+                        }
+                        if (values.snapHelper && $selectedNodes.length === 1) {
+                            var newAbsolutePosition = getControlNewAbsolutePositionOnResize(values.snapHelper, absolutePosition, ui, { x: dx, y: dy, width: dw, height: dh });
+                            values.snapHelper.activateSnapLines(newAbsolutePosition);
+                            $element.css({
+                                left: ui.originalPosition.left + newAbsolutePosition.left - absolutePosition.left,
+                                top: ui.originalPosition.top + newAbsolutePosition.top - absolutePosition.top,
+                                width: newAbsolutePosition.right - newAbsolutePosition.left,
+                                height: newAbsolutePosition.bottom - newAbsolutePosition.top
+                            });
                         }
                         $selectedNodes
                             .each(function (key, el) {
@@ -11196,7 +13855,7 @@ var DevExpress;
                         }
                     }
                 };
-                this.actions.push({ action: this.resetValue, title: "Reset", visible: this.isResettableProperty });
+                this.actions.push({ action: this.resetValue, title: Designer.getLocalization("Reset", "ASPxReportsStringId.ReportDesigner_PropertyGrid_PopupMenu_Reset"), visible: this.isResettableProperty });
             }
             ElementViewModel.prototype.getPropertyDefaultValue = function (propertyName) {
                 var info = this.getPropertyInfo(propertyName);
@@ -11262,6 +13921,9 @@ var DevExpress;
                     control.parentModel(this);
                     this["controls"].splice(0, 0, control);
                 }
+            };
+            ElementViewModel.prototype.isPropertyVisible = function (name) {
+                return true;
             };
             ElementViewModel.prototype.isPropertyDisabled = function (name) {
                 return false;
@@ -11373,10 +14035,12 @@ var DevExpress;
         })();
         Designer.HoverInfo = HoverInfo;
         function createObservableReverseArrayMapCollection(elementModels, target, createItem) {
+            var array = target();
             elementModels.peek().forEach(function (item) {
                 var surface = createItem(item);
-                target.splice(0, 0, surface);
+                array.splice(0, 0, surface);
             });
+            target.valueHasMutated();
             elementModels.subscribe(function (args) {
                 var unwrapedTarget = target();
                 var targetLength = unwrapedTarget.length;
@@ -11395,10 +14059,12 @@ var DevExpress;
         }
         Designer.createObservableReverseArrayMapCollection = createObservableReverseArrayMapCollection;
         function createObservableArrayMapCollection(elementModels, target, createItem) {
+            var array = target();
             elementModels.peek().forEach(function (item) {
                 var surface = createItem(item);
-                target.push(surface);
+                array.push(surface);
             });
+            target.valueHasMutated();
             elementModels.subscribe(function (args) {
                 var startIndex = target().length, deleteCount = 0, valuesToAdd = [];
                 args.forEach(function (changeSet) {
@@ -11560,7 +14226,6 @@ var DevExpress;
                 this.underCursor = ko.observable(new HoverInfo());
                 this.allowMultiselect = true;
                 this.absolutePosition = new Designer.Point(0, 0);
-                this.snapLines = ko.observableArray([]);
                 this.getControlModel = function () {
                     return control;
                 };
@@ -11649,7 +14314,7 @@ var DevExpress;
                 function ControlProperties(target, editorsInfo, level) {
                     var _this = this;
                     if (level === void 0) { level = 0; }
-                    _super.call(this, target, editorsInfo, level, undefined);
+                    _super.call(this, target, editorsInfo, level, undefined, undefined, ko.observable(""));
                     this.focusedItem = ko.observable();
                     this.createEditorAddOn = function (editor) {
                         var editorAddOn = new DevExpress.JS.Widgets.EditorAddOn(editor, _this.popupService);
@@ -11658,163 +14323,129 @@ var DevExpress;
                             data: editorAddOn
                         };
                     };
+                    this.editorsRendered = ko.observable(false);
+                    this.isSortingByGroups = ko.observable(true);
+                    this.isSearching = ko.observable(false);
+                    this.allEditorsCreated = ko.observable(false);
+                    this.textToSearch = ko.observable("");
+                    this._searchBox = null;
+                    this.searchPlaceholder = function () { return Designer.getLocalization("Enter text to search...", "ASPxReportsStringId.ReportDesigner_QueryBuilder_SearchBox_EmptyText"); };
+                    this.switchSearchBox = function () {
+                        if (_this.isSearching()) {
+                            _this.isSearching(false);
+                            _this.textToSearch("");
+                        }
+                        else {
+                            _this.isSearching(true);
+                            _this._searchBox && _this._searchBox.focus();
+                        }
+                    };
                     this.popupService = new DevExpress.JS.Utils.PopupService();
-                    this.createGroups(editorsInfo.groups);
+                    this.createGroups(editorsInfo.groups, editorsInfo.groupLocalizationIDs);
                     this.update(target());
                     this.focusedImageClassName = ko.pureComputed(function () {
                         return Designer.getImageClassName(target() && target().controlType);
                     });
+                    var subscription = this.isSortingByGroups.subscribe(function (newVal) {
+                        if (!newVal) {
+                            _this.editorsRendered(true);
+                            subscription.dispose();
+                        }
+                    });
                     this.focusedItem = target;
                     this.displayExpr = function (value) { return DevExpress.Designer.getControlFullName(value); };
+                    var timeout = null;
+                    this.textToSearch.subscribe(function (newValue) {
+                        timeout && clearTimeout(timeout);
+                        timeout = setTimeout(function () {
+                            _this._textToSearch(newValue);
+                            newValue && _this.groups.forEach(function (group) { return group.collapsed() && group.editors().some(function (editor) { return editor.isSearchedProperty(); }) && group.collapsed(false); });
+                        }, 200);
+                    });
                 }
+                ControlProperties.prototype.getEditors = function () {
+                    var editors = _super.prototype.getEditors.call(this);
+                    var editorNames = editors.map(function (editor) { return editor.displayName(); }).sort();
+                    editors.sort(function (a, b) {
+                        return editorNames.indexOf(a.displayName()) - editorNames.indexOf(b.displayName());
+                    });
+                    return editors;
+                };
                 ControlProperties.prototype.update = function (viewModel) {
                     _super.prototype.update.call(this, viewModel);
-                    if (viewModel) {
-                        (this.groups || []).forEach(function (group) {
-                            group.update(viewModel);
-                        });
-                    }
+                    if (this.isSortingByGroups && !this.isSortingByGroups())
+                        return;
+                    (this.groups || []).forEach(function (group) {
+                        group.update(viewModel);
+                    });
                 };
-                ControlProperties.prototype.createGroups = function (groups) {
+                ControlProperties.prototype.createGroups = function (groups, getGroupLocalizationId) {
                     var _this = this;
                     this.groups = $.map(groups, function (groupInfo, displayName) {
-                        return new Group(displayName, groupInfo, function (serializationInfo) { return _this.createEditors(serializationInfo); });
+                        return new Group(displayName, groupInfo, function (serializationInfo) {
+                            return serializationInfo
+                                .filter(function (info) { return !!info.editor; })
+                                .map(function (info) {
+                                var editor = _this.findEditorByInfo(info);
+                                if (editor)
+                                    return editor;
+                                editor = _this.createEditor(info);
+                                _this._editors.push(editor);
+                                return editor;
+                            });
+                        }, true, getGroupLocalizationId && getGroupLocalizationId[displayName]);
                     });
+                };
+                ControlProperties.prototype.searchBox = function ($element) {
+                    this._searchBox = $element.dxTextBox("instance");
                 };
                 return ControlProperties;
             })(DevExpress.JS.Widgets.ObjectProperties);
             Widgets.ControlProperties = ControlProperties;
             var Group = (function (_super) {
                 __extends(Group, _super);
-                function Group(displayName, serializationsInfo, createEditors, collapsed) {
+                function Group(displayName, serializationsInfo, createEditors, collapsed, localizationId) {
                     var _this = this;
                     if (collapsed === void 0) { collapsed = true; }
+                    if (localizationId === void 0) { localizationId = ""; }
                     _super.call(this);
                     this.editors = ko.observableArray();
                     this.editorsCreated = ko.observable(false);
-                    this.displayName = displayName;
+                    this.editorsRendered = ko.observable(false);
+                    this._displayName = displayName;
+                    this._localizationId = localizationId;
                     this._serializationsInfo = serializationsInfo;
                     this.collapsed = ko.observable(collapsed);
-                    this.visible = ko.observable(false);
                     if (collapsed) {
-                        var subscription = this.collapsed.subscribe(function (val) {
+                        var subscription = this.collapsed.subscribe(function (newVal) {
                             subscription.dispose();
-                            _this.editors(createEditors(serializationsInfo));
-                            if (_this._viewModel) {
-                                _this.editors().forEach(function (editor) {
-                                    editor.update(_this._viewModel);
-                                });
-                            }
+                            _this.editorsRendered(true);
                         });
                     }
-                    else {
-                        this.editors(createEditors(serializationsInfo));
-                    }
+                    this.visible = ko.computed(function () {
+                        return _this.editors().some(function (editor) { return editor.visible(); });
+                    });
+                    this.editors(createEditors(serializationsInfo));
+                    this._disposables.push(this.visible);
                 }
                 Group.prototype.update = function (viewModel) {
                     var _this = this;
                     this._viewModel = viewModel;
-                    if (viewModel) {
-                        var isVisible = (viewModel.getInfo && viewModel.getInfo() || this._serializationsInfo).filter(function (modelInfo) {
-                            return _this._serializationsInfo.filter(function (info) { return info.propertyName === modelInfo.propertyName; }).length > 0
-                                && !!viewModel[modelInfo.propertyName]
-                                && ko.unwrap(modelInfo.visible) !== false;
-                        }).length > 0;
-                        this.visible(isVisible);
-                        if (isVisible) {
-                            this.editors().forEach(function (editor) {
-                                editor.update(_this._viewModel);
-                            });
-                        }
-                    }
-                    else {
-                        this.visible(false);
-                    }
+                    this.editors().forEach(function (editor) {
+                        editor.update(_this._viewModel);
+                    });
+                };
+                Group.prototype.displayName = function () {
+                    return this._localizationId ? Designer.getLocalization(this._displayName, this._localizationId) : Designer.getLocalization(this._displayName);
                 };
                 return Group;
             })(Designer.Disposable);
             Widgets.Group = Group;
-            var MultiValuesHelper = (function () {
-                function MultiValuesHelper(value, items) {
-                    var _this = this;
-                    this.selectedItems = ko.observable([]);
-                    var values = value();
-                    this.value = value;
-                    var valueHasMutated = function () {
-                        _this.editorValue.notifySubscribers(_this.displayItems[0]);
-                    };
-                    this._items = items.map(function (item) {
-                        var selected = ko.observable(_this._isValueSelected(item.value, values));
-                        return { selected: selected, value: item.value, displayValue: item.displayValue || item.value, toggleSelected: function () { selected(!selected()); valueHasMutated(); } };
-                    });
-                    this.selectedItems = ko.pureComputed(function () {
-                        return _this._items.filter(function (item) { return item.selected(); });
-                    });
-                    var selectionInProcess = ko.observable(false), isSelectedAllState, stringValue;
-                    this.selectedValuesString = ko.pureComputed({
-                        read: function () {
-                            if (selectionInProcess())
-                                return stringValue;
-                            stringValue = "";
-                            _this.selectedItems().forEach(function (item, index, array) {
-                                stringValue += item.displayValue;
-                                if (index < array.length - 1) {
-                                    stringValue += ", ";
-                                }
-                            });
-                            return stringValue;
-                        },
-                        write: function (newValue) { }
-                    });
-                    this.isSelectedAll = ko.pureComputed({
-                        read: function () {
-                            if (selectionInProcess())
-                                return isSelectedAllState;
-                            var selectedItemCount = _this.selectedItems().length;
-                            if (selectedItemCount > 0 && selectedItemCount < _this._items.length) {
-                                return undefined;
-                            }
-                            isSelectedAllState = selectedItemCount === _this._items.length;
-                            return isSelectedAllState;
-                        },
-                        write: function (newValue) {
-                            isSelectedAllState = newValue;
-                            try {
-                                selectionInProcess(true);
-                                _this._items.forEach(function (item) { item.selected(newValue); });
-                            }
-                            finally {
-                                selectionInProcess(false);
-                            }
-                        }
-                    });
-                    var selectAllItem = { selected: this.isSelectedAll, value: null, displayValue: Designer.getLocalization('(Select All)'), toggleSelected: function () { _this.isSelectedAll(!_this.isSelectedAll()); valueHasMutated(); } };
-                    this.displayItems = [selectAllItem].concat(this._items);
-                    this.dataSource = this.displayItems;
-                    this.editorValue = ko.observable(selectAllItem);
-                    this.updateValue = function () {
-                        value(_this._items.filter(function (item) { return item.selected(); }).map(function (item) { return item.value; }));
-                    };
-                    this.onOptionChanged = function (e) {
-                        if (e.name !== "opened" || e.value)
-                            return;
-                        _this.updateValue();
-                    };
-                }
-                MultiValuesHelper.prototype._isValueSelected = function (value, array) {
-                    if (value instanceof Date) {
-                        return array.filter(function (item) { return item - value === 0; }).length > 0;
-                    }
-                    return array.indexOf(value) !== -1;
-                };
-                return MultiValuesHelper;
-            })();
-            Widgets.MultiValuesHelper = MultiValuesHelper;
             var FieldListEditor = (function (_super) {
                 __extends(FieldListEditor, _super);
-                function FieldListEditor(modelPropertyInfo, level, parentDisabled) {
+                function FieldListEditor(modelPropertyInfo, level, parentDisabled, textToSearch) {
                     var _this = this;
-                    _super.call(this, modelPropertyInfo, level, parentDisabled);
+                    _super.call(this, modelPropertyInfo, level, parentDisabled, textToSearch);
                     this.path = ko.pureComputed(function () {
                         return _this._model() && _this._model()["getPath"] && _this._model()["getPath"](_this.name) || "";
                     });
@@ -11825,8 +14456,8 @@ var DevExpress;
             Widgets.FieldListEditor = FieldListEditor;
             var DataMemberEditor = (function (_super) {
                 __extends(DataMemberEditor, _super);
-                function DataMemberEditor(modelPropertyInfo, level, parentDisabled) {
-                    _super.call(this, modelPropertyInfo, level, parentDisabled);
+                function DataMemberEditor(modelPropertyInfo, level, parentDisabled, textToSearch) {
+                    _super.call(this, modelPropertyInfo, level, parentDisabled, textToSearch);
                     this.treeListController = new Designer.DataMemberTreeListController();
                 }
                 return DataMemberEditor;
@@ -11834,9 +14465,9 @@ var DevExpress;
             Widgets.DataMemberEditor = DataMemberEditor;
             var ColorPickerEditor = (function (_super) {
                 __extends(ColorPickerEditor, _super);
-                function ColorPickerEditor(info, level, parentDisabled) {
+                function ColorPickerEditor(info, level, parentDisabled, textToSearch) {
                     var _this = this;
-                    _super.call(this, info, level, parentDisabled);
+                    _super.call(this, info, level, parentDisabled, textToSearch);
                     this.displayValue = ko.pureComputed({
                         read: function () {
                             if (_this.value() && _this.value().toLowerCase() === "transparent") {
@@ -11863,7 +14494,7 @@ var DevExpress;
         var Widgets;
         (function (Widgets) {
             Widgets.editorTemplates = {
-                guid: { header: "dxrd-guid" },
+                guid: { header: "dxrd-guid", editorType: DevExpress.JS.Widgets.GuidEditor },
                 borders: { header: "dxrd-borders" },
                 controls: { header: "dxrd-controls" },
                 objecteditorCustom: { custom: "dxrd-objectEditorContent", editorType: DevExpress.JS.Widgets.PropertyGridEditor },
@@ -11891,8 +14522,8 @@ var DevExpress;
             function createNumericEditor(dotNetTypeFullName, specifics) {
                 var DynamicNumberEditor = (function (_super) {
                     __extends(DynamicNumberEditor, _super);
-                    function DynamicNumberEditor(info, level, parentDisabled) {
-                        _super.call(this, info, level, parentDisabled);
+                    function DynamicNumberEditor(info, level, parentDisabled, textToSearch) {
+                        _super.call(this, info, level, parentDisabled, textToSearch);
                     }
                     DynamicNumberEditor.prototype.getOptions = function (templateOptions) {
                         var options = _super.prototype.getOptions.call(this, templateOptions);
@@ -11914,8 +14545,8 @@ var DevExpress;
     var Designer;
     (function (Designer) {
         Designer.sizeFake = [
-            { propertyName: "height", displayName: "Height", editor: DevExpress.JS.Widgets.editorTemplates.numeric },
-            { propertyName: "width", displayName: "Width", editor: DevExpress.JS.Widgets.editorTemplates.numeric }
+            { propertyName: "height", displayName: "Height", localizationId: "System.Drawing.SizeF.Height", editor: DevExpress.JS.Widgets.editorTemplates.numeric },
+            { propertyName: "width", displayName: "Width", localizationId: "System.Drawing.SizeF.Width", editor: DevExpress.JS.Widgets.editorTemplates.numeric }
         ];
         Designer.locationFake = [
             { propertyName: "x", displayName: "X", editor: DevExpress.JS.Widgets.editorTemplates.numeric },
@@ -11928,6 +14559,12 @@ var DevExpress;
 (function (DevExpress) {
     var Designer;
     (function (Designer) {
+        Designer.NotifyType = {
+            info: "info",
+            warning: "warning",
+            error: "error",
+            success: "success"
+        };
         Designer.DEBUG = true;
         function num(v) {
             return parseInt(v, 10) || 0;
@@ -11970,7 +14607,7 @@ var DevExpress;
         }
         Designer.getControlRect = getControlRect;
         function initGlobalize(settings) {
-            var globalize = window["Globalize"];
+            var globalize = DevExpress.JS.Localization.Globalize;
             if (globalize && settings) {
                 settings.cldrSupplemental && globalize.load(settings.cldrSupplemental);
                 settings.cldrData && globalize.load(settings.cldrData);
@@ -12001,6 +14638,13 @@ var DevExpress;
             });
         }
         Designer.deserializeChildArray = deserializeChildArray;
+        function appendStaticContextToRootViewModel(root) {
+            root.dx = DevExpress;
+            root.getLocalization = function () {
+                return Designer.getLocalization.apply(DevExpress.Designer, arguments);
+            };
+        }
+        Designer.appendStaticContextToRootViewModel = appendStaticContextToRootViewModel;
         function _processError(errorThrown, deferred, jqXHR, textStatus, processErrorCallback) {
             var message = errorThrown;
             var error = getErrorMessage(jqXHR);
@@ -12072,9 +14716,11 @@ var DevExpress;
         function minHeightWithoutScroll(element) {
             return Math.min(element.scrollHeight, element.offsetHeight, element.clientHeight) + element.offsetTop;
         }
+        Designer.minHeightWithoutScroll = minHeightWithoutScroll;
         function chooseBetterPositionOf(html, designer) {
-            return minHeightWithoutScroll(html) <= minHeightWithoutScroll(designer) ? window : designer;
+            return minHeightWithoutScroll(html) < minHeightWithoutScroll(designer) ? window : designer;
         }
+        Designer.chooseBetterPositionOf = chooseBetterPositionOf;
         function ShowMessage(msg, type, displayTime, debugInfo) {
             if (type === void 0) { type = "error"; }
             DevExpress.ui.notify({
@@ -12083,6 +14729,7 @@ var DevExpress;
                 position: { of: chooseBetterPositionOf(document.documentElement, $(".dx-designer")[0]), my: "bottom", at: "bottom", offset: "0 -10" },
                 targetContainer: $(".dx-designer")[0],
                 closeOnOutsideClick: true,
+                closeOnSwipe: false,
                 displayTime: displayTime || (type === "error" ? 60000 : 3000)
             });
         }
@@ -12125,11 +14772,11 @@ var DevExpress;
                 }
                 var dss = dataSources.peek();
                 for (var i = 0; i < dss.length; i++) {
-                    if (dss[i].id === request.id) {
+                    if (dss[i].id === request.id && !!request.id) {
                         request.ref = undefined;
                         return;
                     }
-                    if (dss[i].ref === request.ref) {
+                    if (dss[i].ref === request.ref && !!request.ref) {
                         request.id = undefined;
                         return;
                     }
@@ -12145,22 +14792,18 @@ var DevExpress;
         })();
         Designer.FieldListProvider = FieldListProvider;
         function validateName(nameCandidate) {
-            return nameCandidate && /^[A-Za-z_][A-Za-z0-9_]+$/.test(nameCandidate);
+            if (!nameCandidate)
+                return false;
+            var letter = "\\u0041-\\u005A\\u0061-\\u007A\\u00AA\\u00B5\\u00BA\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02C1\\u02C6-\\u02D1\\u02E0-\\u02E4\\u02EC\\u02EE\\u0370-\\u0374\\u0376-\\u0377\\u037A-\\u037D\\u037F\\u0386\\u0388-\\u038A\\u038C\\u038E-\\u03A1\\u03A3-\\u03F5\\u03F7-\\u0481\\u048A-\\u052F\\u0531-\\u0556\\u0559\\u0561-\\u0587\\u05D0-\\u05EA\\u05F0-\\u05F2\\u0620-\\u064A\\u066E-\\u066F\\u0671-\\u06D3\\u06D5\\u06E5-\\u06E6\\u06EE-\\u06EF\\u06FA-\\u06FC\\u06FF\\u0710\\u0712-\\u072F\\u074D-\\u07A5\\u07B1\\u07CA-\\u07EA\\u07F4-\\u07F5\\u07FA\\u0800-\\u0815\\u081A\\u0824\\u0828\\u0840-\\u0858\\u08A0-\\u08B4\\u0904-\\u0939\\u093D\\u0950\\u0958-\\u0961\\u0971-\\u0980\\u0985-\\u098C\\u098F-\\u0990\\u0993-\\u09A8\\u09AA-\\u09B0\\u09B2\\u09B6-\\u09B9\\u09BD\\u09CE\\u09DC-\\u09DD\\u09DF-\\u09E1\\u09F0-\\u09F1\\u0A05-\\u0A0A\\u0A0F-\\u0A10\\u0A13-\\u0A28\\u0A2A-\\u0A30\\u0A32-\\u0A33\\u0A35-\\u0A36\\u0A38-\\u0A39\\u0A59-\\u0A5C\\u0A5E\\u0A72-\\u0A74\\u0A85-\\u0A8D\\u0A8F-\\u0A91\\u0A93-\\u0AA8\\u0AAA-\\u0AB0\\u0AB2-\\u0AB3\\u0AB5-\\u0AB9\\u0ABD\\u0AD0\\u0AE0-\\u0AE1\\u0AF9\\u0B05-\\u0B0C\\u0B0F-\\u0B10\\u0B13-\\u0B28\\u0B2A-\\u0B30\\u0B32-\\u0B33\\u0B35-\\u0B39\\u0B3D\\u0B5C-\\u0B5D\\u0B5F-\\u0B61\\u0B71\\u0B83\\u0B85-\\u0B8A\\u0B8E-\\u0B90\\u0B92-\\u0B95\\u0B99-\\u0B9A\\u0B9C\\u0B9E-\\u0B9F\\u0BA3-\\u0BA4\\u0BA8-\\u0BAA\\u0BAE-\\u0BB9\\u0BD0\\u0C05-\\u0C0C\\u0C0E-\\u0C10\\u0C12-\\u0C28\\u0C2A-\\u0C39\\u0C3D\\u0C58-\\u0C5A\\u0C60-\\u0C61\\u0C85-\\u0C8C\\u0C8E-\\u0C90\\u0C92-\\u0CA8\\u0CAA-\\u0CB3\\u0CB5-\\u0CB9\\u0CBD\\u0CDE\\u0CE0-\\u0CE1\\u0CF1-\\u0CF2\\u0D05-\\u0D0C\\u0D0E-\\u0D10\\u0D12-\\u0D3A\\u0D3D\\u0D4E\\u0D5F-\\u0D61\\u0D7A-\\u0D7F\\u0D85-\\u0D96\\u0D9A-\\u0DB1\\u0DB3-\\u0DBB\\u0DBD\\u0DC0-\\u0DC6\\u0E01-\\u0E30\\u0E32-\\u0E33\\u0E40-\\u0E46\\u0E81-\\u0E82\\u0E84\\u0E87-\\u0E88\\u0E8A\\u0E8D\\u0E94-\\u0E97\\u0E99-\\u0E9F\\u0EA1-\\u0EA3\\u0EA5\\u0EA7\\u0EAA-\\u0EAB\\u0EAD-\\u0EB0\\u0EB2-\\u0EB3\\u0EBD\\u0EC0-\\u0EC4\\u0EC6\\u0EDC-\\u0EDF\\u0F00\\u0F40-\\u0F47\\u0F49-\\u0F6C\\u0F88-\\u0F8C\\u1000-\\u102A\\u103F\\u1050-\\u1055\\u105A-\\u105D\\u1061\\u1065-\\u1066\\u106E-\\u1070\\u1075-\\u1081\\u108E\\u10A0-\\u10C5\\u10C7\\u10CD\\u10D0-\\u10FA\\u10FC-\\u1248\\u124A-\\u124D\\u1250-\\u1256\\u1258\\u125A-\\u125D\\u1260-\\u1288\\u128A-\\u128D\\u1290-\\u12B0\\u12B2-\\u12B5\\u12B8-\\u12BE\\u12C0\\u12C2-\\u12C5\\u12C8-\\u12D6\\u12D8-\\u1310\\u1312-\\u1315\\u1318-\\u135A\\u1380-\\u138F\\u13A0-\\u13F5\\u13F8-\\u13FD\\u1401-\\u166C\\u166F-\\u167F\\u1681-\\u169A\\u16A0-\\u16EA\\u16F1-\\u16F8\\u1700-\\u170C\\u170E-\\u1711\\u1720-\\u1731\\u1740-\\u1751\\u1760-\\u176C\\u176E-\\u1770\\u1780-\\u17B3\\u17D7\\u17DC\\u1820-\\u1877\\u1880-\\u18A8\\u18AA\\u18B0-\\u18F5\\u1900-\\u191E\\u1950-\\u196D\\u1970-\\u1974\\u1980-\\u19AB\\u19B0-\\u19C9\\u1A00-\\u1A16\\u1A20-\\u1A54\\u1AA7\\u1B05-\\u1B33\\u1B45-\\u1B4B\\u1B83-\\u1BA0\\u1BAE-\\u1BAF\\u1BBA-\\u1BE5\\u1C00-\\u1C23\\u1C4D-\\u1C4F\\u1C5A-\\u1C7D\\u1CE9-\\u1CEC\\u1CEE-\\u1CF1\\u1CF5-\\u1CF6\\u1D00-\\u1DBF\\u1E00-\\u1F15\\u1F18-\\u1F1D\\u1F20-\\u1F45\\u1F48-\\u1F4D\\u1F50-\\u1F57\\u1F59\\u1F5B\\u1F5D\\u1F5F-\\u1F7D\\u1F80-\\u1FB4\\u1FB6-\\u1FBC\\u1FBE\\u1FC2-\\u1FC4\\u1FC6-\\u1FCC\\u1FD0-\\u1FD3\\u1FD6-\\u1FDB\\u1FE0-\\u1FEC\\u1FF2-\\u1FF4\\u1FF6-\\u1FFC\\u2071\\u207F\\u2090-\\u209C\\u2102\\u2107\\u210A-\\u2113\\u2115\\u2119-\\u211D\\u2124\\u2126\\u2128\\u212A-\\u212D\\u212F-\\u2139\\u213C-\\u213F\\u2145-\\u2149\\u214E\\u2183-\\u2184\\u2C00-\\u2C2E\\u2C30-\\u2C5E\\u2C60-\\u2CE4\\u2CEB-\\u2CEE\\u2CF2-\\u2CF3\\u2D00-\\u2D25\\u2D27\\u2D2D\\u2D30-\\u2D67\\u2D6F\\u2D80-\\u2D96\\u2DA0-\\u2DA6\\u2DA8-\\u2DAE\\u2DB0-\\u2DB6\\u2DB8-\\u2DBE\\u2DC0-\\u2DC6\\u2DC8-\\u2DCE\\u2DD0-\\u2DD6\\u2DD8-\\u2DDE\\u2E2F\\u3005-\\u3006\\u3031-\\u3035\\u303B-\\u303C\\u3041-\\u3096\\u309D-\\u309F\\u30A1-\\u30FA\\u30FC-\\u30FF\\u3105-\\u312D\\u3131-\\u318E\\u31A0-\\u31BA\\u31F0-\\u31FF\\u3400-\\u4DB5\\u4E00-\\u9FD5\\uA000-\\uA48C\\uA4D0-\\uA4FD\\uA500-\\uA60C\\uA610-\\uA61F\\uA62A-\\uA62B\\uA640-\\uA66E\\uA67F-\\uA69D\\uA6A0-\\uA6E5\\uA717-\\uA71F\\uA722-\\uA788\\uA78B-\\uA7AD\\uA7B0-\\uA7B7\\uA7F7-\\uA801\\uA803-\\uA805\\uA807-\\uA80A\\uA80C-\\uA822\\uA840-\\uA873\\uA882-\\uA8B3\\uA8F2-\\uA8F7\\uA8FB\\uA8FD\\uA90A-\\uA925\\uA930-\\uA946\\uA960-\\uA97C\\uA984-\\uA9B2\\uA9CF\\uA9E0-\\uA9E4\\uA9E6-\\uA9EF\\uA9FA-\\uA9FE\\uAA00-\\uAA28\\uAA40-\\uAA42\\uAA44-\\uAA4B\\uAA60-\\uAA76\\uAA7A\\uAA7E-\\uAAAF\\uAAB1\\uAAB5-\\uAAB6\\uAAB9-\\uAABD\\uAAC0\\uAAC2\\uAADB-\\uAADD\\uAAE0-\\uAAEA\\uAAF2-\\uAAF4\\uAB01-\\uAB06\\uAB09-\\uAB0E\\uAB11-\\uAB16\\uAB20-\\uAB26\\uAB28-\\uAB2E\\uAB30-\\uAB5A\\uAB5C-\\uAB65\\uAB70-\\uABE2\\uAC00-\\uD7A3\\uD7B0-\\uD7C6\\uD7CB-\\uD7FB\\uF900-\\uFA6D\\uFA70-\\uFAD9\\uFB00-\\uFB06\\uFB13-\\uFB17\\uFB1D\\uFB1F-\\uFB28\\uFB2A-\\uFB36\\uFB38-\\uFB3C\\uFB3E\\uFB40-\\uFB41\\uFB43-\\uFB44\\uFB46-\\uFBB1\\uFBD3-\\uFD3D\\uFD50-\\uFD8F\\uFD92-\\uFDC7\\uFDF0-\\uFDFB\\uFE70-\\uFE74\\uFE76-\\uFEFC\\uFF21-\\uFF3A\\uFF41-\\uFF5A\\uFF66-\\uFFBE\\uFFC2-\\uFFC7\\uFFCA-\\uFFCF\\uFFD2-\\uFFD7\\uFFDA-\\uFFDC";
+            var pattern = new RegExp("^[" + letter + "_][" + letter + "_\\d]*$");
+            return pattern.test(nameCandidate);
         }
         Designer.validateName = validateName;
         function replaceInvalidSymbols(text) {
             return text.replace(/[\W_]+/g, "_");
         }
         Designer.replaceInvalidSymbols = replaceInvalidSymbols;
-        function validateGuid(guid) {
-            return guid && (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(guid)
-                || /^\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}$/.test(guid)
-                || /^\([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)$/.test(guid)
-                || /^[0-9a-fA-F]{32}$/.test(guid));
-        }
-        Designer.validateGuid = validateGuid;
-        Designer.nameValidationRules = [{ type: "custom", validationCallback: function (options) { return validateName(options.value); }, message: DevExpress.Designer.getLocalization('Name is required and should be a valid identifier.') }];
-        Designer.guidValidationRules = [{ type: "custom", validationCallback: function (options) { return validateGuid(options.value); }, message: DevExpress.Designer.getLocalization('Guid is required and should have a valid format.') }];
+        Designer.nameValidationRules = [{ type: "custom", validationCallback: function (options) { return validateName(options.value); }, message: DevExpress.Designer.getLocalization('Name is required and should be a valid identifier.', 'ASPxReportsStringId.ReportDesigner_NameIsRequired_Error') }];
         function floatFromModel(val) {
             return ko.observable(val === undefined || val === null ? null : parseFloat(val));
         }
@@ -12274,7 +14917,8 @@ var DevExpress;
         };
         function fromEnum(value) {
             var shotEnumValueKey = getShortTypeName(value);
-            return ko.observable((this.values && this.values[shotEnumValueKey] !== undefined) ? shotEnumValueKey : value);
+            var valuesArrayItem = this.valuesArray && this.valuesArray.filter(function (item) { return item.value == shotEnumValueKey; })[0];
+            return ko.observable((this.values && this.values[shotEnumValueKey] !== undefined || valuesArrayItem) ? shotEnumValueKey : value);
         }
         Designer.fromEnum = fromEnum;
         function getTypeNameFromFullName(controlType) {
@@ -12291,24 +14935,6 @@ var DevExpress;
             return displayName + (controlType ? (' (' + Designer.getLocalization(getShortTypeName(controlType)) + ')') : '');
         }
         Designer.getControlFullName = getControlFullName;
-        function classExists(selector) {
-            var lowerCaseSelector = selector.toLowerCase(), result = false;
-            for (var i = 0; i < (document.styleSheets || []).length; i++) {
-                var rules = document.styleSheets[i]["rules"] ? document.styleSheets[i]["rules"] : document.styleSheets[i]["cssRules"];
-                for (var i = 0; i < (rules || []).length; i++) {
-                    if (rules[i].selectorText && rules[i].selectorText.toLowerCase() === lowerCaseSelector) {
-                        result = true;
-                        break;
-                    }
-                }
-                if (result) {
-                    break;
-                }
-            }
-            ;
-            return result;
-        }
-        Designer.classExists = classExists;
         function parseBool(val) {
             return ko.observable(val !== void 0 ? String(val).toLowerCase() === "true" : val);
         }
@@ -12513,7 +15139,7 @@ var DevExpress;
                 visited.push(target);
                 for (var i = 0, len = collectionsToProcess.length; i < len; i++) {
                     if (target[collectionsToProcess[i]]) {
-                        visitor(target[collectionsToProcess[i]]);
+                        visitor(target[collectionsToProcess[i]], target);
                         (target[collectionsToProcess[i]]() || []).forEach(function (item) { return collectionsVisitor(item, visitor, collectionsToProcess, visited); });
                     }
                 }
@@ -12651,7 +15277,9 @@ var DevExpress;
                         }
                         _this._subscriptions = [];
                         _this.allControls([]);
-                        _this._collectControls(newTarget);
+                        if (newTarget) {
+                            _this._collectControls(newTarget);
+                        }
                     }));
                     unwrappedTarget = target.peek();
                 }
@@ -12819,7 +15447,7 @@ var DevExpress;
                     return _this.createFont(control["font"] && control["font"]() || "");
                 };
                 this.paddingsCss = function () {
-                    var controlPaddings = ko.unwrap(control["padding"]) || Designer.Widgets.PaddingModel.from(Designer.Widgets.PaddingModel.defaultVal);
+                    var controlPaddings = ko.unwrap(control["paddingObj"] || control["padding"]) || Designer.Widgets.PaddingModel.from(Designer.Widgets.PaddingModel.defaultVal);
                     var paddings = {};
                     paddings["paddingLeft"] = _this._getPixelValueFromUnit(controlPaddings.left(), control) + "px";
                     paddings["paddingTop"] = _this._getPixelValueFromUnit(controlPaddings.top(), control) + "px";
@@ -13116,12 +15744,12 @@ var DevExpress;
                     var result = $.Deferred();
                     if (!pathRequest.fullPath) {
                         result.resolve((rootITems || []).map(function (item) {
-                            return { name: item.displayName, displayName: Designer.getLocalization(item.displayName), isList: true, specifics: item.className, dragData: { noDragable: true }, data: ko.unwrap(item.data) };
+                            return { name: item.name, displayName: Designer.getLocalization(item.displayName) || item.name, isList: true, specifics: item.className, dragData: { noDragable: true }, data: ko.unwrap(item.data) };
                         }));
                     }
                     else {
-                        var target = rootITems.filter(function (item) { return item.displayName === pathRequest.fullPath.split('.')[0]; })[0];
-                        result.resolve(_this.getObjectPropertiesForPath(ko.unwrap(target.model), pathRequest.fullPath, target.displayName));
+                        var target = rootITems.filter(function (item) { return item.name === pathRequest.fullPath.split('.')[0]; })[0];
+                        result.resolve(_this.getObjectPropertiesForPath(ko.unwrap(target.model), pathRequest.fullPath, target.name));
                     }
                     return result.promise();
                 };
@@ -13272,7 +15900,7 @@ var DevExpress;
                 _super.call(this);
                 this.tabs = [];
                 this.collapsed = ko.observable(false);
-                this.toggleCollapsedText = ko.pureComputed(function () { return DevExpress.Designer.getLocalization(_this.collapsed() ? "Open" : "Collapse"); });
+                this.toggleCollapsedText = ko.pureComputed(function () { return DevExpress.Designer.getLocalization(_this.collapsed() ? "Open" : "Collapse", _this.collapsed() ? "DevExpress.XtraCharts.StockLevel.Open" : "PivotGridStringId.PopupMenuCollapse"); });
                 var _self = this;
                 this.tabs = tabs;
                 this._disposables.push(ko.computed(function () {
@@ -13341,13 +15969,14 @@ var DevExpress;
         Designer.TabPanel = TabPanel;
         var TabInfo = (function (_super) {
             __extends(TabInfo, _super);
-            function TabInfo(text, template, model, imageBaseName, computedVisible) {
+            function TabInfo(text, template, model, localizationId, imageBaseName, computedVisible) {
                 var _this = this;
                 _super.call(this);
                 this.active = ko.observable(false);
                 this.visible = ko.observable();
                 imageBaseName = imageBaseName || text.toLowerCase();
-                this.text = text;
+                this._text = text;
+                this._localizationId = localizationId;
                 this.imageClassName = ko.pureComputed(function () {
                     return "dxrd-image-" + imageBaseName + (_this.active() ? "-active" : "-inactive");
                 });
@@ -13360,6 +15989,13 @@ var DevExpress;
                 }));
                 this.model = model;
             }
+            Object.defineProperty(TabInfo.prototype, "text", {
+                get: function () {
+                    return Designer.getLocalization(this._text, this._localizationId);
+                },
+                enumerable: true,
+                configurable: true
+            });
             return TabInfo;
         })(Designer.Disposable);
         Designer.TabInfo = TabInfo;
@@ -13474,11 +16110,11 @@ var DevExpress;
         };
         function generateDefaultParts(model) {
             return [
-                { templateName: Designer.DesignerBaseElements.MenuButton, model: model },
-                { templateName: Designer.DesignerBaseElements.Toolbar, model: model },
-                { templateName: Designer.DesignerBaseElements.Toolbox, model: model },
-                { templateName: Designer.DesignerBaseElements.Surface, model: model },
-                { templateName: Designer.DesignerBaseElements.RightPanel, model: model }
+                { id: Designer.DesignerBaseElements.MenuButton, templateName: Designer.DesignerBaseElements.MenuButton, model: model },
+                { id: Designer.DesignerBaseElements.Toolbar, templateName: Designer.DesignerBaseElements.Toolbar, model: model },
+                { id: Designer.DesignerBaseElements.Toolbox, templateName: Designer.DesignerBaseElements.Toolbox, model: model },
+                { id: Designer.DesignerBaseElements.Surface, templateName: Designer.DesignerBaseElements.Surface, model: model },
+                { id: Designer.DesignerBaseElements.RightPanel, templateName: Designer.DesignerBaseElements.RightPanel, model: model }
             ];
         }
         Designer.generateDefaultParts = generateDefaultParts;
@@ -13520,8 +16156,6 @@ var DevExpress;
         }
         Designer.findNextSelection = findNextSelection;
         Designer.editorTypeMapper = {
-            "multiValueWithLookUp": DevExpress.Designer.Widgets.editorTemplates.multiValue,
-            "multiValue": DevExpress.Designer.Widgets.editorTemplates.multiValueEditable,
             "Enum": DevExpress.JS.Widgets.editorTemplates.combobox,
             "System.String": DevExpress.JS.Widgets.editorTemplates.text,
             "System.Guid": DevExpress.Designer.Widgets.editorTemplates.guid,
@@ -13559,17 +16193,17 @@ var DevExpress;
             };
         }
         Designer.createActionWrappingFunction = createActionWrappingFunction;
-        function createDesigner(model, surface, controlsFactory, groups, editors, parts, rtl, selection, designControlsHelper, undoEngine) {
+        function createDesigner(model, surface, controlsFactory, groups, editors, parts, rtl, selection, designControlsHelper, undoEngine, customMerge, snapLinesCollector, groupLocalizationIDs) {
             if (groups === void 0) { groups = {}; }
             if (editors === void 0) { editors = []; }
             var undoEngine = undoEngine || ko.observable(new DevExpress.JS.Utils.UndoEngine(model)), actionUndoEngineWrappingFunction = createActionWrappingFunction("WrapWithUndoEngine", function (model, handler) {
                 undoEngine().start();
                 handler(model);
                 undoEngine().end();
-            }), selection = selection || new Designer.SurfaceSelection(), contextActionProviders = [], snapHelper = new Designer.SnapLinesHelper(surface), controlsHelper = designControlsHelper || new DesignControlsHelper(model, [{
+            }), selection = selection || new Designer.SurfaceSelection(), contextActionProviders = [], snapHelper = new Designer.SnapLinesHelper(surface, Designer.SnapLinesHelper.snapTolerance, snapLinesCollector || new Designer.SnapLinesCollector()), controlsHelper = designControlsHelper || new DesignControlsHelper(model, [{
                     added: function (control) { },
                     deleted: function (control) { control.surface == selection.focused() && selection.focused(findNextSelection(control.surface)); }
-                }]), dragHelperContent = new Designer.DragHelperContent(selection), toolboxItems = Designer.getToolboxItems(controlsFactory.controlsMap), appMenuVisible = ko.observable(false), inlineTextEdit = new InlineTextEdit(selection), editableObject = Designer.CombinedObject.getEditableObject(selection, undoEngine).extend({ throttle: 1 }), popularProperties = new DevExpress.JS.Widgets.ObjectProperties(ko.pureComputed(function () {
+                }]), dragHelperContent = new Designer.DragHelperContent(selection), toolboxItems = Designer.getToolboxItems(controlsFactory.controlsMap), appMenuVisible = ko.observable(false), inlineTextEdit = new InlineTextEdit(selection), editableObject = Designer.CombinedObject.getEditableObject(selection, undoEngine, customMerge).extend({ throttle: 1 }), propertyGrid = new Designer.Widgets.ControlProperties(editableObject, { groups: groups, editors: editors, groupLocalizationIDs: groupLocalizationIDs }, null), popularProperties = new DevExpress.JS.Widgets.ObjectProperties(ko.pureComputed(function () {
                 var popularPropertiesObject = { getInfo: function () { return []; } }, editable = editableObject();
                 if (editable) {
                     var controlInfo = controlsFactory.controlsMap[editable.controlType], propertiesInfo = createPopularProperties(controlInfo && controlInfo.info || [], controlInfo && controlInfo.popularProperties || []);
@@ -13588,13 +16222,16 @@ var DevExpress;
                     popularPropertiesObject["getActionClassName"] = function (name) {
                         return editable["getActionClassName"] ? editable["getActionClassName"](name) : "";
                     };
-                    popularPropertiesObject["isPropertyVisible"] = editable["isPropertyVisible"];
+                    popularPropertiesObject["isPropertyVisible"] = function (propertyName) {
+                        return editable["isPropertyVisible"](propertyName);
+                    };
                     popularPropertiesObject["isPropertyDisabled"] = function (name) {
                         return editable.isPropertyDisabled ? editable.isPropertyDisabled(name) : false;
                     };
+                    popularPropertiesObject["isSame"] = function (x) { return x === editable; };
                 }
                 return popularPropertiesObject;
-            }), undefined, undefined, undefined), tabPanel = new TabPanel([new TabInfo("Properties", "dxrd-propertiestab", new Designer.Widgets.ControlProperties(editableObject, { groups: groups, editors: editors }, null), undefined)], undefined, rtl);
+            }), undefined, undefined, undefined), tabPanel = new TabPanel([new TabInfo("Properties", "dxrd-propertiestab", propertyGrid, 'ReportStringId.Cmd_Properties', undefined, ko.pureComputed(function () { return !!model(); }))], undefined, rtl);
             var designerModel = {
                 parts: parts,
                 model: model,
@@ -13614,6 +16251,8 @@ var DevExpress;
                 toggleAppMenu: function () {
                     appMenuVisible(!appMenuVisible());
                 },
+                getMenuPopupContainer: function (el) { return $(el).closest(".dxrd-menu-button").prev(".dxrd-menu-container"); },
+                getMenuPopupTarget: function (el) { return $(el).closest(".dxrd-menu-button").find(".dxrd-menu-place"); },
                 actionLists: new Designer.ActionLists(surface, selection, undoEngine, function () { }),
                 contextActionProviders: contextActionProviders,
                 contextActions: ko.pureComputed(function () {
@@ -13624,6 +16263,7 @@ var DevExpress;
                     actionUndoEngineWrappingFunction(contextActions);
                     return contextActions;
                 }),
+                actionsGroupTitle: function () { return Designer.getLocalization('Actions', 'ASPxReportsStringId.ReportDesigner_Actions'); },
                 inlineTextEdit: inlineTextEdit,
                 resizeHandler: {
                     starting: function () {
@@ -13634,12 +16274,14 @@ var DevExpress;
                         undoEngine().end();
                         setTimeout(function () { selection.expectClick = false; }, 100);
                     },
-                    disabled: Designer.DragDropHandler.started
+                    disabled: Designer.DragDropHandler.started,
+                    snapHelper: snapHelper
                 },
                 snapHelper: snapHelper,
                 dragHelperContent: dragHelperContent,
                 dragHandler: new Designer.SelectionDragDropHandler(surface, selection, undoEngine, snapHelper, dragHelperContent),
                 toolboxDragHandler: new Designer.ToolboxDragDropHandler(surface, selection, undoEngine, snapHelper, dragHelperContent, controlsFactory),
+                dragDropStarted: DevExpress.Designer.DragDropHandler.started,
                 updateFont: function (values) {
                     $.extend(DevExpress.JS.Widgets.availableFonts, values);
                 }
@@ -13654,10 +16296,10 @@ var DevExpress;
         function localizeNoneString(noneValue) {
             var value = ko.unwrap(noneValue);
             if (value === "none") {
-                return Designer.getLocalization("none");
+                return Designer.getLocalization("none", "DataAccessStringId.ParameterListEmpty");
             }
             else if (value === "(none)") {
-                return (Designer.getLocalization("(none)") !== "(none)") ? Designer.getLocalization("(none)") : ("(" + Designer.getLocalization("none") + ")");
+                return (Designer.getLocalization("(none)", "ChartStringId.WizNoBackImage") !== "(none)") ? Designer.getLocalization("(none)", "ChartStringId.WizNoBackImage") : ("(" + Designer.getLocalization("none", "DataAccessStringId.ParameterListEmpty") + ")");
             }
             return value;
         }
@@ -13670,6 +16312,25 @@ var DevExpress;
                 }
             }
         };
+        function binaryIndexOf(ar, el, compare) {
+            var m = 0;
+            var n = ar.length - 1;
+            while (m <= n) {
+                var k = (n + m) >> 1;
+                var cmp = compare(el, ar[k]);
+                if (cmp > 0) {
+                    m = k + 1;
+                }
+                else if (cmp < 0) {
+                    n = k - 1;
+                }
+                else {
+                    return k;
+                }
+            }
+            return ~m;
+        }
+        Designer.binaryIndexOf = binaryIndexOf;
     })(Designer = DevExpress.Designer || (DevExpress.Designer = {}));
 })(DevExpress || (DevExpress = {}));
 /// <reference path="utils.ts" />
@@ -13677,112 +16338,6 @@ var DevExpress;
 (function (DevExpress) {
     var Designer;
     (function (Designer) {
-        var SnapLine = (function (_super) {
-            __extends(SnapLine, _super);
-            function SnapLine(x, y, isVertical, maxHeight, maxWidth) {
-                var _this = this;
-                if (y === void 0) { y = ko.observable(0); }
-                if (isVertical === void 0) { isVertical = true; }
-                if (maxHeight === void 0) { maxHeight = ko.observable(1001); }
-                if (maxWidth === void 0) { maxWidth = ko.observable(1001); }
-                _super.call(this);
-                this.originalX = ko.observable(0);
-                this.originalY = ko.observable(0);
-                this.active = ko.observable(false);
-                this.position = new Designer.Rectangle();
-                this.isVertical = true;
-                this.maxHeight = ko.observable(0);
-                this.maxWidth = ko.observable(0);
-                this.isVertical = isVertical;
-                this._disposables.push(ko.computed(function () {
-                    _this.maxHeight(maxHeight());
-                    _this.maxWidth(maxWidth());
-                    _this.originalX(x());
-                    _this.originalY(y());
-                    if (isVertical) {
-                        _this.position.left(x());
-                        _this.position.height(maxHeight());
-                    }
-                    else {
-                        _this.position.top(y());
-                        _this.position.width(maxWidth());
-                    }
-                }));
-            }
-            SnapLine.prototype.activate = function (position) {
-                if (this.isVertical) {
-                    var top = Math.min(this.originalY(), position.top), bottom = Math.max(this.originalY(), position.top);
-                    this.position.height(bottom - top);
-                    this.position.top(top);
-                }
-                else {
-                    var left = Math.min(this.originalX(), position.left), right = Math.max(this.originalX(), position.left);
-                    this.position.width(right - left);
-                    this.position.left(left);
-                }
-                this.active(this.position.left() + this.position.width() < this.maxWidth() && this.position.height() + this.position.top() < this.maxHeight() && this.position.left() >= 0 && this.position.top() >= 0);
-            };
-            return SnapLine;
-        })(Designer.Disposable);
-        Designer.SnapLine = SnapLine;
-        var SnapLinesHelper = (function () {
-            function SnapLinesHelper(surface) {
-                if (surface === void 0) { surface = null; }
-                this.snapLines = ko.observableArray([]);
-                this._surfaceContext = surface;
-            }
-            SnapLinesHelper.prototype._getActiveSnapLines = function (position, tolerance) {
-                if (tolerance === void 0) { tolerance = SnapLinesHelper.snapTolerance; }
-                var result = [], horizontalIndex = null, horizontalDistance = null, verticalIndex = null, verticalDistance = null;
-                for (var i = 0; i < this.snapLines().length; i++) {
-                    if (this.snapLines()[i].isVertical) {
-                        var currentDistance = Math.abs(this.snapLines()[i].position.left() - position.left);
-                        if (currentDistance < tolerance && (!verticalDistance || verticalDistance > currentDistance)) {
-                            verticalDistance = currentDistance;
-                            verticalIndex = i;
-                        }
-                    }
-                    else {
-                        var currentDistance = Math.abs(this.snapLines()[i].position.top() - position.top);
-                        if (currentDistance < tolerance && (!horizontalDistance || horizontalDistance > currentDistance)) {
-                            horizontalDistance = currentDistance;
-                            horizontalIndex = i;
-                        }
-                    }
-                }
-                verticalIndex !== null && result.push(this.snapLines()[verticalIndex]);
-                horizontalIndex !== null && result.push(this.snapLines()[horizontalIndex]);
-                return result;
-            };
-            SnapLinesHelper.prototype.updateSnapLines = function () {
-                var controls = [];
-                var newSnapLines = [];
-                Designer.collectionsVisitor(this._surfaceContext(), function (targetProperty) {
-                    controls.push.apply(controls, targetProperty());
-                }, ["bands", "controls", "rows", "cells"]);
-                for (var i = 0; i < controls.length; i++) {
-                    if (controls[i].isSnapTarget) {
-                        Array.prototype.push.apply(newSnapLines, controls[i].snapLines());
-                    }
-                }
-                this.snapLines(newSnapLines);
-            };
-            SnapLinesHelper.prototype.deactivateSnapLines = function () {
-                for (var i = 0; i < this.snapLines().length; i++) {
-                    this.snapLines()[i].active(false);
-                }
-                ;
-            };
-            SnapLinesHelper.prototype.activateSnapLines = function (position) {
-                var activeSnapLines = this._getActiveSnapLines(position);
-                for (var i = 0; i < activeSnapLines.length; i++) {
-                    activeSnapLines[i].activate(position);
-                }
-            };
-            SnapLinesHelper.snapTolerance = 10;
-            return SnapLinesHelper;
-        })();
-        Designer.SnapLinesHelper = SnapLinesHelper;
         var DragHelperContent = (function (_super) {
             __extends(DragHelperContent, _super);
             function DragHelperContent(selectionProvider) {
@@ -13861,15 +16416,7 @@ var DevExpress;
             };
             DragDropHandler.prototype.startDrag = function (draggable) { };
             DragDropHandler.prototype.drag = function (event, ui) {
-                this.snapHelper && this.snapHelper.deactivateSnapLines();
-                if (event.altKey !== true) {
-                    var position = this._getAbsoluteSurfacePosition(ui);
-                    this.snapHelper && this.snapHelper.activateSnapLines(position);
-                    if (this._size.width() !== 0) {
-                        this.snapHelper && this.snapHelper.activateSnapLines({ left: position.left + (this._size.width()), top: position.top });
-                        this.snapHelper && this.snapHelper.activateSnapLines({ left: position.left, top: position.top + (this._size.height()) });
-                    }
-                }
+                var needToActivateSnapLines = event.altKey !== true;
                 if (this.selection.dropTarget) {
                     var dropTarget = this.selection.dropTarget.getControlModel().getMetaData().isContainer ? this.selection.dropTarget : (this.selection.dropTarget.parent || this.selection.dropTarget), locked = dropTarget.locked;
                     var controlModel = ko.dataFor(event.target).getControlModel && ko.dataFor(event.target).getControlModel();
@@ -13879,11 +16426,23 @@ var DevExpress;
                     }
                     if (locked) {
                         this.snapHelper && this.snapHelper.deactivateSnapLines();
+                        needToActivateSnapLines = false;
                         this.dragHelperContent && this.dragHelperContent.isLocked(true);
                     }
                     else {
                         this.dragHelperContent && this.dragHelperContent.isLocked(false);
                     }
+                }
+                if (needToActivateSnapLines) {
+                    var position = this._getAbsoluteSurfacePosition(ui);
+                    var snapDelta = this.snapHelper && this.snapHelper.activateSnapLines({
+                        left: position.left,
+                        top: position.top,
+                        right: position.left + this._size.width(),
+                        bottom: position.top + this._size.height()
+                    });
+                    ui.position.left -= snapDelta.left;
+                    ui.position.top -= snapDelta.top;
                 }
             };
             DragDropHandler.prototype.doStopDrag = function (ui, draggable, event) { };
@@ -13904,6 +16463,9 @@ var DevExpress;
                 this.containment = '.dxrd-ghost-container';
                 this["helper"] = function (draggable) {
                     _super.prototype.helper.call(_this, draggable);
+                    if (_this.selection.selectedItems.indexOf(draggable) === -1) {
+                        _this.selection.updateSelection(draggable);
+                    }
                     dragHelperContent.update(draggable);
                     _this._size.width(dragHelperContent.width());
                     _this._size.height(dragHelperContent.height());
@@ -14032,8 +16594,10 @@ var DevExpress;
     var Designer;
     (function (Designer) {
         var SurfaceSelection = (function () {
-            function SurfaceSelection() {
+            function SurfaceSelection(ignoreMultiSelectProperties) {
                 var _this = this;
+                if (ignoreMultiSelectProperties === void 0) { ignoreMultiSelectProperties = ["name"]; }
+                this.ignoreMultiSelectProperties = ignoreMultiSelectProperties;
                 this._focused = ko.observable(null);
                 this._selectedControls = ko.observableArray();
                 this._selectedControlsInner = [];
@@ -14086,6 +16650,10 @@ var DevExpress;
                 enumerable: true,
                 configurable: true
             });
+            SurfaceSelection.prototype.clear = function () {
+                this.focused(null);
+                this._selectedControls([]);
+            };
             SurfaceSelection.prototype.applySelection = function () {
                 this._selectedControls(this._selectedControlsInner);
             };
@@ -14198,105 +16766,127 @@ var DevExpress;
         var CombinedObject = (function () {
             function CombinedObject() {
             }
-            CombinedObject.combineInfo = function (infos) {
-                var info = [];
-                for (var i = 0; i < infos[0].length; i++) {
-                    if (infos.filter(function (info) { return info.filter(function (x) { return x.propertyName === infos[0][i].propertyName; }).length > 0; }).length === infos.length) {
-                        info.push(infos[0][i]);
+            CombinedObject.getInfo = function (controls) {
+                var infos = controls.map(function (item) { return item["getInfo"](); });
+                return function () {
+                    var info = [];
+                    for (var i = 0; i < infos[0].length; i++) {
+                        if (infos.filter(function (info) { return info.filter(function (x) { return x.propertyName === infos[0][i].propertyName; }).length > 0; }).length === infos.length) {
+                            info.push(infos[0][i]);
+                        }
                     }
-                }
-                return info;
+                    return info;
+                };
             };
-            CombinedObject.collectProperties = function (controls, allProperties) {
-                for (var propertyName in controls[0]) {
-                    if (CombinedObject.skipPropertyNames.indexOf(propertyName) !== -1) {
-                        continue;
+            CombinedObject.isPropertyDisabled = function (controls) {
+                return function (name) {
+                    for (var i = 0; i < controls.length; i++) {
+                        if (controls[i]["isPropertyDisabled"](name)) {
+                            return true;
+                        }
                     }
-                    if (controls.filter(function (item) { return item[propertyName]; }).length === controls.length) {
-                        var property = controls[0][propertyName];
+                    return false;
+                };
+            };
+            CombinedObject.isPropertyVisible = function (controls) {
+                return function (name) {
+                    for (var i = 0; i < controls.length; i++) {
+                        if (!controls[i]["isPropertyVisible"](name)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+            };
+            CombinedObject.mergeProperty = function (controls, propertyName, undoEngine, customMerge) {
+                var property = controls[0][propertyName];
+                var combinedObj = null;
+                var subscriptions = null;
+                if (controls.filter(function (x) { return !!x[propertyName]; }).length === controls.length) {
+                    combinedObj = customMerge && customMerge(propertyName, controls, undoEngine);
+                    if (!combinedObj) {
                         if (ko.isObservable(property) && !property["push"]) {
-                            allProperties[propertyName] = { properties: [].concat(controls.map(function (item) { return item[propertyName]; })) };
-                        }
-                        else if ($.isPlainObject(property) && !allProperties[propertyName]) {
-                            allProperties[propertyName] = { object: {} };
-                            CombinedObject.collectProperties(controls.map(function (item) { return item[propertyName]; }), allProperties[propertyName].object);
-                        }
-                        else if (propertyName === "getInfo") {
-                            allProperties[propertyName] = function () {
-                                return CombinedObject.combineInfo(controls.map(function (item) { return item["getInfo"](); }));
+                            if (!controls.every(function (control) { return ko.isObservable(control[propertyName]); }))
+                                return combinedObj;
+                            var combinedObservable = ko.observable(controls.every(function (control) { return controls[0][propertyName].peek() === control[propertyName].peek(); }) ? controls[0][propertyName].peek() : null);
+                            combinedObj = {
+                                result: combinedObservable,
+                                subscriptions: [combinedObservable.subscribe(function (newVal) {
+                                        undoEngine && undoEngine().start();
+                                        controls.forEach(function (control) { control[propertyName](newVal); });
+                                        undoEngine && undoEngine().end();
+                                    })]
                             };
                         }
-                        else if (propertyName === "isPropertyDisabled") {
-                            allProperties[propertyName] = function (name) {
-                                for (var i = 0; i < controls.length; i++) {
-                                    if (controls[i]["isPropertyDisabled"](name)) {
-                                        return true;
-                                    }
-                                }
-                                return false;
-                            };
-                        }
-                        else if (propertyName === "isPropertyVisible") {
-                            allProperties[propertyName] = function (name) {
-                                for (var i = 0; i < controls.length; i++) {
-                                    if (!controls[i]["isPropertyVisible"](name)) {
-                                        return false;
-                                    }
-                                }
-                                return true;
-                            };
+                        else if (typeof property === "object" && !$.isArray(property)) {
+                            combinedObj = this._merge(controls.map(function (x) { return x[propertyName]; }), undoEngine, customMerge);
                         }
                     }
                 }
+                return combinedObj;
             };
-            CombinedObject.createSubscribe = function (object, undoEngine, propertyName, properties) {
-                object[propertyName].subscribe(function (val) {
-                    undoEngine && undoEngine().start();
-                    properties.properties.forEach(function (property) {
-                        property(val);
-                    });
-                    undoEngine && undoEngine().end();
+            CombinedObject._createProperty = function (result, propertyName, propertyValue) {
+                if (propertyValue) {
+                    if (typeof propertyValue === "object" && $.isEmptyObject(propertyValue))
+                        return;
+                    result[propertyName] = propertyValue;
+                }
+            };
+            CombinedObject._merge = function (controls, undoEngine, customMerge, ignoreProperties) {
+                var _this = this;
+                var result = {};
+                var subscriptions = [];
+                ["getInfo", "isPropertyVisible", "isPropertyDisabled"].forEach(function (propertyName) {
+                    if (controls[0][propertyName])
+                        _this._createProperty(result, propertyName, _this[propertyName](controls));
                 });
-            };
-            CombinedObject.generateMergedObject = function (object, allProperties, controlsCount, undoEngine) {
-                var isAdded = false;
-                for (var propertyName in allProperties) {
-                    if (propertyName === "getInfo" || propertyName === "isPropertyVisible" || propertyName === "isPropertyDisabled") {
-                        object[propertyName] = allProperties[propertyName];
-                    }
-                    else if (allProperties[propertyName].object) {
-                        var subObject = {};
-                        if (CombinedObject.generateMergedObject(subObject, allProperties[propertyName].object, controlsCount, undoEngine)) {
-                            isAdded = true;
-                            object[propertyName] = subObject;
+                if (ignoreProperties) {
+                    var oldPropertyDisabled = result["isPropertyDisabled"];
+                    result["isPropertyDisabled"] = function (name) {
+                        return (oldPropertyDisabled && oldPropertyDisabled()) || ignoreProperties.indexOf(name) !== -1;
+                    };
+                }
+                if (result && result["getInfo"]) {
+                    result["getInfo"]().map(function (x) { return x.propertyName; }).forEach(function (propertyName) {
+                        var combinedObj = _this.mergeProperty(controls, propertyName, undoEngine, customMerge);
+                        if (combinedObj) {
+                            subscriptions = [].concat.apply(subscriptions, combinedObj.subscriptions);
+                            _this._createProperty(result, propertyName, combinedObj.result);
+                        }
+                    });
+                }
+                else {
+                    for (var propertyName in controls[0]) {
+                        var combinedObj = this.mergeProperty(controls, propertyName, undoEngine, customMerge);
+                        if (combinedObj) {
+                            subscriptions = [].concat.apply(subscriptions, combinedObj.subscriptions);
+                            this._createProperty(result, propertyName, combinedObj.result);
                         }
                     }
-                    else if (allProperties[propertyName].properties && allProperties[propertyName].properties.length === controlsCount) {
-                        isAdded = true;
-                        var firstValue = allProperties[propertyName].properties[0].peek();
-                        object[propertyName] = ko.observable(allProperties[propertyName].properties.every(function (property) { return firstValue === property.peek(); }) ? firstValue : null);
-                        CombinedObject.createSubscribe(object, undoEngine, propertyName, allProperties[propertyName]);
-                    }
                 }
-                ;
-                return isAdded;
+                return { result: result, subscriptions: subscriptions };
             };
-            CombinedObject.mergeControls = function (controls, undoEngine) {
-                var allProperties = {}, result = {};
-                CombinedObject.collectProperties(controls, allProperties);
-                CombinedObject.generateMergedObject(result, allProperties, controls.length, undoEngine);
-                $.extend(result, { controlType: "multiselect", displayName: ko.observable("") });
-                return result;
+            CombinedObject.mergeControls = function (controls, undoEngine, customMerge, ignoreProperties) {
+                var combinedObj = this._merge(controls, undoEngine, customMerge, ignoreProperties);
+                return {
+                    result: $.extend(combinedObj.result, { controlType: "multiselect", displayName: ko.observable("") }),
+                    subscriptions: combinedObj.subscriptions
+                };
             };
-            CombinedObject.getEditableObject = function (selectionProvider, undoEngine) {
+            CombinedObject.getEditableObject = function (selectionProvider, undoEngine, customMerge) {
+                var _this = this;
                 var editableObject = ko.observable(null);
+                var subscriptions = [];
                 selectionProvider.focused.subscribe(function (newVal) {
-                    newVal && editableObject(newVal.getControlModel());
+                    editableObject(newVal && newVal.getControlModel());
                 });
                 return ko.pureComputed({
                     read: function () {
+                        subscriptions.forEach(function (x) { return x.dispose(); });
                         if (selectionProvider.selectedItems.length > 1) {
-                            return CombinedObject.mergeControls(selectionProvider.selectedItems.map(function (item) { return item.getControlModel(); }), undoEngine);
+                            var combinedObj = _this.mergeControls(selectionProvider.selectedItems.map(function (item) { return item.getControlModel(); }), undoEngine, customMerge, selectionProvider.ignoreMultiSelectProperties);
+                            subscriptions = combinedObj.subscriptions;
+                            return combinedObj.result;
                         }
                         else {
                             return editableObject();
@@ -14316,6 +16906,225 @@ var DevExpress;
             return CombinedObject;
         })();
         Designer.CombinedObject = CombinedObject;
+    })(Designer = DevExpress.Designer || (DevExpress.Designer = {}));
+})(DevExpress || (DevExpress = {}));
+var DevExpress;
+(function (DevExpress) {
+    var Designer;
+    (function (Designer) {
+        var SnapLineSurface = (function () {
+            function SnapLineSurface() {
+                this._position = ko.observable(SnapLineSurface._blankPosition);
+            }
+            SnapLineSurface.prototype.transform = function () {
+                var position = this._position();
+                return "matrix(" + position.width + ", 0, 0, " + position.height + ", " + position.left + ", " + position.top + ")";
+            };
+            SnapLineSurface.prototype.updatePosition = function (position) {
+                this._position(position);
+            };
+            SnapLineSurface.prototype.reset = function () {
+                this.updatePosition(SnapLineSurface._blankPosition);
+            };
+            SnapLineSurface._blankPosition = { top: 0, left: 0, width: 0, height: 0, };
+            return SnapLineSurface;
+        })();
+        Designer.SnapLineSurface = SnapLineSurface;
+        var SnapLinesCollector = (function () {
+            function SnapLinesCollector() {
+                this._verticalSnapLines = [];
+                this._horizontalSnapLines = [];
+                this._snapTargetToIgnore = null;
+            }
+            SnapLinesCollector.prototype._appendSnapLine = function (position, limitInf, limitSup, snapLines) {
+                var line = {
+                    position: position,
+                    limitInf: limitInf,
+                    limSup: limitSup
+                };
+                var index = Designer.binaryIndexOf(snapLines, line, function (a, b) { return a.position - b.position; });
+                if (index > -1) {
+                    snapLines[index].limitInf = Math.min(snapLines[index].limitInf, limitInf);
+                    snapLines[index].limSup = Math.max(snapLines[index].limSup, limitSup);
+                }
+                else {
+                    snapLines.splice(~index, 0, line);
+                }
+            };
+            SnapLinesCollector.prototype._collectSnaplines = function (parent, parentAbsoluteProsition) {
+                var _this = this;
+                this._enumerateCollection(parent, parentAbsoluteProsition, function (item, itemAbsoluteRect) {
+                    if (item !== _this._snapTargetToIgnore) {
+                        _this._appendSnapLine(itemAbsoluteRect.left, itemAbsoluteRect.top, itemAbsoluteRect.bottom, _this._verticalSnapLines);
+                        _this._appendSnapLine(itemAbsoluteRect.right, itemAbsoluteRect.top, itemAbsoluteRect.bottom, _this._verticalSnapLines);
+                        _this._appendSnapLine(itemAbsoluteRect.top, itemAbsoluteRect.left, itemAbsoluteRect.right, _this._horizontalSnapLines);
+                        _this._appendSnapLine(itemAbsoluteRect.bottom, itemAbsoluteRect.left, itemAbsoluteRect.right, _this._horizontalSnapLines);
+                        _this._collectSnaplines(item, itemAbsoluteRect);
+                    }
+                });
+            };
+            SnapLinesCollector.prototype._getCollection = function (parent) {
+                return parent["controls"] && parent["controls"]();
+            };
+            SnapLinesCollector.prototype._enumerateCollection = function (parent, parentAbsoluteProsition, callback) {
+                var collection = this._getCollection(parent);
+                if (!collection)
+                    return;
+                for (var i = 0; i < collection.length; i++) {
+                    var itemRect = collection[i].rect && collection[i].rect();
+                    if (itemRect) {
+                        callback(collection[i], {
+                            top: itemRect.top + parentAbsoluteProsition.top,
+                            bottom: itemRect.bottom + parentAbsoluteProsition.top,
+                            left: itemRect.left + parentAbsoluteProsition.left,
+                            right: itemRect.right + parentAbsoluteProsition.left
+                        });
+                    }
+                }
+            };
+            SnapLinesCollector.prototype.collectSnaplines = function (root, snapTargetToIgnore) {
+                this._snapTargetToIgnore = snapTargetToIgnore;
+                this._verticalSnapLines.splice(0);
+                this._horizontalSnapLines.splice(0);
+                this._collectSnaplines(root, { top: 0, left: 0 });
+                return {
+                    vertical: this._verticalSnapLines,
+                    horizontal: this._horizontalSnapLines
+                };
+            };
+            return SnapLinesCollector;
+        })();
+        Designer.SnapLinesCollector = SnapLinesCollector;
+        var SnapLinesHelper = (function () {
+            function SnapLinesHelper(surface, snapTolerance, snapLinesCollector) {
+                if (surface === void 0) { surface = null; }
+                if (snapTolerance === void 0) { snapTolerance = SnapLinesHelper.snapTolerance; }
+                if (snapLinesCollector === void 0) { snapLinesCollector = new SnapLinesCollector(); }
+                this.snapLineSurfaces = [new SnapLineSurface(), new SnapLineSurface(), new SnapLineSurface(), new SnapLineSurface()];
+                this.verticalSnapLines = [];
+                this.horizontalSnapLines = [];
+                this._surfaceContext = surface;
+                this._snapTolerance = snapTolerance;
+                this._snapLinesCollector = snapLinesCollector;
+            }
+            SnapLinesHelper.prototype._findClosestSnapLine = function (position, snapLines) {
+                var line = {
+                    position: position,
+                    limitInf: 0,
+                    limSup: 0
+                };
+                var index = Designer.binaryIndexOf(snapLines, line, function (a, b) { return a.position - b.position; });
+                var snapLineCandidate;
+                if (index > -1) {
+                    snapLineCandidate = {
+                        snapLine: snapLines[index],
+                        distance: position - snapLines[index].position
+                    };
+                }
+                else {
+                    index = ~index;
+                    var delta1 = snapLines[index] ? (position - snapLines[index].position) : Number.MAX_VALUE;
+                    var delta2 = snapLines[index - 1] ? (position - snapLines[index - 1].position) : Number.MAX_VALUE;
+                    snapLineCandidate = Math.abs(delta1) > Math.abs(delta2) ?
+                        { snapLine: snapLines[index - 1], distance: delta2 } :
+                        { snapLine: snapLines[index], distance: delta1 };
+                }
+                return snapLineCandidate;
+            };
+            SnapLinesHelper.prototype._getActiveSnapLines = function (position1, position2, snapLines) {
+                var line1 = this._findClosestSnapLine(position1, snapLines);
+                var line2 = this._findClosestSnapLine(position2, snapLines);
+                var result = {
+                    lines: [],
+                    distance: 0
+                };
+                if (Math.abs(line1.distance - line2.distance) >= 1) {
+                    var line = Math.abs(line1.distance) < Math.abs(line2.distance) ? line1 : line2;
+                    if (Math.abs(line.distance) <= this._snapTolerance) {
+                        result.lines = [line];
+                        result.distance = line.distance;
+                    }
+                }
+                else if (Math.abs(line1.distance) <= this._snapTolerance) {
+                    result.lines = [line1, line2];
+                    result.distance = line1.distance;
+                }
+                return result;
+            };
+            SnapLinesHelper.prototype.updateSnapLines = function (snapTargetToIgnore) {
+                if (snapTargetToIgnore === void 0) { snapTargetToIgnore = null; }
+                this.verticalSnapLines.splice(0);
+                this.horizontalSnapLines.splice(0);
+                var result = this._snapLinesCollector.collectSnaplines(this._surfaceContext(), snapTargetToIgnore);
+                this.verticalSnapLines.push.apply(this.verticalSnapLines, result.vertical);
+                this.horizontalSnapLines.push.apply(this.horizontalSnapLines, result.horizontal);
+            };
+            SnapLinesHelper.prototype.deactivateSnapLines = function () {
+                this.snapLineSurfaces[0].reset();
+                this.snapLineSurfaces[1].reset();
+                this.snapLineSurfaces[2].reset();
+                this.snapLineSurfaces[3].reset();
+            };
+            SnapLinesHelper.prototype.activateSnapLines = function (position) {
+                var vertical = this._getActiveSnapLines(position.left, position.right, this.verticalSnapLines);
+                var horizontal = this._getActiveSnapLines(position.top, position.bottom, this.horizontalSnapLines);
+                for (var i = 0; i < 2; i++) {
+                    var line = vertical.lines[i];
+                    if (!line) {
+                        this.snapLineSurfaces[i].reset();
+                    }
+                    else {
+                        var top = Math.min(line.snapLine.limitInf, position.top);
+                        var bottom = Math.max(line.snapLine.limSup, position.bottom);
+                        if (position.top < line.snapLine.limitInf) {
+                            top -= horizontal.distance;
+                        }
+                        if (position.bottom > line.snapLine.limSup) {
+                            bottom -= horizontal.distance;
+                        }
+                        this.snapLineSurfaces[i].updatePosition({
+                            top: top,
+                            left: line.snapLine.position,
+                            height: bottom - top,
+                            width: 1
+                        });
+                    }
+                }
+                for (var i = 0; i < 2; i++) {
+                    var line = horizontal.lines[i];
+                    if (!line) {
+                        this.snapLineSurfaces[i + 2].reset();
+                    }
+                    else {
+                        var left = Math.min(line.snapLine.limitInf, position.left);
+                        var right = Math.max(line.snapLine.limSup, position.right);
+                        if (position.left < line.snapLine.limitInf) {
+                            left -= vertical.distance;
+                        }
+                        if (position.right > line.snapLine.limSup) {
+                            right -= vertical.distance;
+                        }
+                        this.snapLineSurfaces[i + 2].updatePosition({
+                            top: line.snapLine.position,
+                            left: left,
+                            width: right - left,
+                            height: 1
+                        });
+                    }
+                }
+                return {
+                    left: vertical.distance,
+                    top: horizontal.distance
+                };
+            };
+            SnapLinesHelper.prototype.snapPosition = function (position, horizontal) {
+                var line = this._findClosestSnapLine(position, horizontal ? this.horizontalSnapLines : this.verticalSnapLines);
+                return (line && Math.abs(line.distance) <= this._snapTolerance) ? (position - line.distance) : position;
+            };
+            SnapLinesHelper.snapTolerance = 10;
+            return SnapLinesHelper;
+        })();
+        Designer.SnapLinesHelper = SnapLinesHelper;
     })(Designer = DevExpress.Designer || (DevExpress.Designer = {}));
 })(DevExpress || (DevExpress = {}));
 var DevExpress;
@@ -14387,9 +17196,10 @@ var DevExpress;
                     actions.push({
                         id: Designer.ActionId.Cut,
                         text: "Cut",
+                        displayText: function () { return Designer.getLocalization("Cut", "ReportStringId.UD_TTip_EditCut"); },
                         imageClassName: "dxrd-image-cut",
                         disabled: ko.pureComputed(function () {
-                            return !copyPasteHandler.canCopy() || selectionControlsLocked();
+                            return !surfaceContext() || !copyPasteHandler.canCopy() || selectionControlsLocked();
                         }),
                         visible: true,
                         clickAction: function () {
@@ -14402,9 +17212,10 @@ var DevExpress;
                     actions.push({
                         id: Designer.ActionId.Copy,
                         text: "Copy",
+                        displayText: function () { return Designer.getLocalization("Copy", "ReportStringId.Cmd_Copy"); },
                         imageClassName: "dxrd-image-copy",
                         disabled: ko.pureComputed(function () {
-                            return !copyPasteHandler.canCopy() || selectionControlsLocked();
+                            return !surfaceContext() || !copyPasteHandler.canCopy() || selectionControlsLocked();
                         }),
                         visible: true,
                         clickAction: function () {
@@ -14415,9 +17226,10 @@ var DevExpress;
                     actions.push({
                         id: Designer.ActionId.Paste,
                         text: "Paste",
+                        displayText: function () { return Designer.getLocalization("Paste", "ReportStringId.Cmd_Paste"); },
                         imageClassName: "dxrd-image-paste",
                         disabled: ko.pureComputed(function () {
-                            return !copyPasteHandler.canPaste() || selectionControlsLocked();
+                            return !surfaceContext() || !copyPasteHandler.canPaste() || selectionControlsLocked();
                         }),
                         visible: true,
                         clickAction: function () {
@@ -14430,6 +17242,7 @@ var DevExpress;
                     actions.push({
                         id: Designer.ActionId.Delete,
                         text: "Delete",
+                        displayText: function () { return Designer.getLocalization("Delete", "ReportStringId.Cmd_Delete"); },
                         imageClassName: "dxrd-image-delete",
                         disabled: ko.pureComputed(function () {
                             if (selection.focused()) {
@@ -14451,8 +17264,9 @@ var DevExpress;
                 actions.push({
                     id: Designer.ActionId.Undo,
                     text: "Undo",
+                    displayText: function () { return Designer.getLocalization("Undo", "ReportStringId.UD_Capt_Undo"); },
                     imageClassName: "dxrd-image-undo",
-                    disabled: ko.pureComputed(function () { return !undoEngine().undoEnabled() || (selection && selectionControlsLocked()); }),
+                    disabled: ko.pureComputed(function () { return !surfaceContext() || !undoEngine() || (undoEngine() && !undoEngine().undoEnabled()) || (selection && selectionControlsLocked()); }),
                     visible: true,
                     clickAction: function () {
                         undoEngine().undo();
@@ -14463,8 +17277,9 @@ var DevExpress;
                 actions.push({
                     id: Designer.ActionId.Redo,
                     text: "Redo",
+                    displayText: function () { return Designer.getLocalization("Redo", "ReportStringId.UD_Capt_Redo"); },
                     imageClassName: "dxrd-image-redo",
-                    disabled: ko.pureComputed(function () { return !undoEngine().redoEnabled() || (selection && selectionControlsLocked()); }),
+                    disabled: ko.pureComputed(function () { return !surfaceContext() || !undoEngine() || (undoEngine() && !undoEngine().redoEnabled()) || (selection && selectionControlsLocked()); }),
                     visible: true,
                     clickAction: function () {
                         undoEngine().redo();
@@ -14474,8 +17289,11 @@ var DevExpress;
                 actions.push({
                     id: Designer.ActionId.ZoomOut,
                     text: "Zoom Out",
+                    displayText: function () { return Designer.getLocalization("Zoom Out", "ReportStringId.UD_Capt_ZoomOut"); },
                     imageClassName: "dxrd-image-zoomout",
-                    disabled: ko.observable(false),
+                    disabled: ko.pureComputed(function () {
+                        return !surfaceContext();
+                    }),
                     visible: true,
                     hotKey: { ctrlKey: true, keyCode: 109 },
                     zoomStep: zoomStep,
@@ -14487,8 +17305,11 @@ var DevExpress;
                 actions.push({
                     id: Designer.ActionId.ZoomSelector,
                     text: "Zoom 100%",
+                    displayText: function () { return Designer.getLocalization("Zoom 100%"); },
                     imageClassName: "dxrd-image-zoom",
-                    disabled: ko.observable(false),
+                    disabled: ko.pureComputed(function () {
+                        return !surfaceContext();
+                    }),
                     visible: true,
                     hotKey: { ctrlKey: true, keyCode: 187 },
                     clickAction: function () {
@@ -14497,15 +17318,18 @@ var DevExpress;
                     templateName: "dxrd-zoom-select-template",
                     zoomLevels: ko.observableArray([5, 2, 1.5, 1, 0.75, 0.5, 0.25]),
                     zoom: ko.pureComputed({
-                        read: function () { return surfaceContext().zoom(); },
+                        read: function () { return surfaceContext() && surfaceContext().zoom(); },
                         write: function (val) { surfaceContext().zoom(val); }
                     })
                 });
                 actions.push({
                     id: Designer.ActionId.ZoomIn,
                     text: "Zoom In",
+                    displayText: function () { return Designer.getLocalization("Zoom In", "ReportStringId.UD_Capt_ZoomIn"); },
                     imageClassName: "dxrd-image-zoomin",
-                    disabled: ko.observable(false),
+                    disabled: ko.pureComputed(function () {
+                        return !surfaceContext();
+                    }),
                     visible: true,
                     hotKey: { ctrlKey: true, keyCode: 107 },
                     zoomStep: zoomStep,
@@ -14709,6 +17533,7 @@ var DevExpress;
     (function (Designer) {
         var ToolboxItem = (function () {
             function ToolboxItem(info) {
+                this.disabled = ko.observable(false);
                 this.info = info;
             }
             Object.defineProperty(ToolboxItem.prototype, "type", {
@@ -14720,7 +17545,7 @@ var DevExpress;
             });
             Object.defineProperty(ToolboxItem.prototype, "imageClassName", {
                 get: function () {
-                    return Designer.getImageClassName(this.type);
+                    return [Designer.getImageClassName(this.type), this.disabled() ? "dxrd-disabled-button" : ""].join(' ');
                 },
                 enumerable: true,
                 configurable: true
@@ -14863,6 +17688,7 @@ var DevExpress;
                 this._parentViewport = "";
                 this.option("path") && this._path(this.option("path"));
                 this.option("value") && this._value(this.option("value"));
+                this.option("valueChangeEvent", "change");
                 this._parentViewport = this["_$element"].parents(".dx-viewport");
             }
             dxFieldListPicker.prototype._showDropDown = function () {
@@ -14956,10 +17782,11 @@ var DevExpress;
             var PaddingModel = (function (_super) {
                 __extends(PaddingModel, _super);
                 function PaddingModel(left, right, top, bottom, dpi) {
-                    if (left === void 0) { left = ko.observable(0); }
-                    if (right === void 0) { right = ko.observable(0); }
-                    if (top === void 0) { top = ko.observable(0); }
-                    if (bottom === void 0) { bottom = ko.observable(0); }
+                    var _this = this;
+                    if (left === void 0) { left = ko.observable(null); }
+                    if (right === void 0) { right = ko.observable(null); }
+                    if (top === void 0) { top = ko.observable(null); }
+                    if (bottom === void 0) { bottom = ko.observable(null); }
                     if (dpi === void 0) { dpi = ko.observable(100); }
                     _super.call(this);
                     this.left = left;
@@ -14967,41 +17794,51 @@ var DevExpress;
                     this.top = top;
                     this.bottom = bottom;
                     this.dpi = dpi;
+                    ["left", "right", "top", "bottom"].forEach(function (propertyName) {
+                        _this['_' + propertyName] = ko.observable(_this[propertyName]());
+                        _this[propertyName] = ko.computed({
+                            read: function () {
+                                return _this['_' + propertyName]() || 0;
+                            },
+                            write: function (newVal) {
+                                _this['_' + propertyName](newVal);
+                            }
+                        });
+                    });
                 }
                 PaddingModel.prototype.getInfo = function () {
                     return Widgets.paddingSerializationsInfo;
                 };
+                PaddingModel.prototype.resetValue = function () {
+                    var _this = this;
+                    ["left", "right", "top", "bottom"].forEach(function (name) { return _this['_' + name](null); });
+                };
                 PaddingModel.prototype.isEmpty = function () {
-                    return this._toString(true).indexOf("0, 0, 0, 0") === 0;
+                    var _this = this;
+                    return ["left", "right", "top", "bottom"].map(function (x) { return ko.unwrap(_this['_' + x]); }).every(function (x) { return x === null; });
                 };
                 PaddingModel.prototype.applyFromString = function (value) {
-                    var components = (value || "").split(',');
-                    this.left(parseInt(components[0]) || 0);
-                    this.right(parseInt(components[1]) || 0);
-                    this.top(parseInt(components[2]) || 0);
-                    this.bottom(parseInt(components[3]) || 0);
+                    if (value) {
+                        var components = (value || "").split(',');
+                        this.left(parseInt(components[0]) || 0);
+                        this.right(parseInt(components[1]) || 0);
+                        this.top(parseInt(components[2]) || 0);
+                        this.bottom(parseInt(components[3]) || 0);
+                    }
                     return this;
                 };
                 PaddingModel.from = function (val) {
                     return new PaddingModel().applyFromString(val);
                 };
                 PaddingModel.prototype.toString = function () {
-                    var value = this._toString();
-                    if (value.indexOf("0,0,0,0") === 0) {
-                        return {};
-                    }
-                    else {
-                        return value;
-                    }
-                };
-                PaddingModel.prototype._getProperty = function (name, inner) {
-                    if (inner === void 0) { inner = false; }
-                    return parseInt(ko.unwrap(inner ? (this["_" + name] || this[name]) : this[name]));
+                    if (this.isEmpty())
+                        return;
+                    return this._toString();
                 };
                 PaddingModel.prototype._toString = function (inner) {
                     var _this = this;
                     if (inner === void 0) { inner = false; }
-                    return ["left", "right", "top", "bottom"].map(function (x) { return _this._getProperty(x, inner); }).concat(this.dpi()).join(', ');
+                    return ["left", "right", "top", "bottom"].map(function (x) { return parseInt(ko.unwrap(_this[x])); }).concat(this.dpi()).join(', ');
                 };
                 PaddingModel.defaultVal = "0, 0, 0, 0, 100";
                 PaddingModel.unitProperties = ["left", "right", "top", "bottom"];

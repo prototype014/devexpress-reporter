@@ -34,6 +34,11 @@ namespace DevExpressASPNETCoreReporting.DevExpressOverrides {
         public void RegisterTransient<T, TImpl>() where TImpl : T {
             services.AddTransient(typeof(T), typeof(TImpl));
         }
+
+        public void RegisterScoped<T, TImpl>() where TImpl : T
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

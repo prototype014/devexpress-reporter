@@ -10,5 +10,9 @@ namespace DevExpressASPNETCoreReporting.Data
         }
 
         public DbSet<Report> Reports { get; set; }
+        public DbSet<Organisation> Organisation { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<ProdUnit> ProdUnit { get; set; }
+        public DbSet<Unit> Unit { get; set; }
     }
 }
